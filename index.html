@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Awesome Python App</title>
+  </head>
+  <body>
+    <h1>Python Output</h1>
+    <br>
+    <br>
+    <p id="python-output"></p>
+  </body>
+  <script>
+    const { spawn } = require('child_process');
+    
+    const pythonProcess = spawn('python', ['echo.py', 'hello', 'world']);
+
+    pythonProcess.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+      document.getElementById("python-output").innerHTML = data;
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+  </script>
+</html>
