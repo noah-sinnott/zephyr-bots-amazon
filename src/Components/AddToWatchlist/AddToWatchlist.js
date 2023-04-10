@@ -10,7 +10,7 @@ import { spawn } from 'child_process'
     function submit(){
 
         const pyPath = path.join(process.cwd(), 'python', 'amazon.py');
-        const pythonProcess = spawn('python', [pyPath, url1, 0.3, 2.7, 'noah@gmail.com', '1234', 'Checkout-page','shipping', 1]);  
+        const pythonProcess = spawn('python', [pyPath, url1, 0.3, 2.7, 'noah.sinnott12@gmail.com', '123456', 'Checkout-page', 'GB', 'Noah Sinnott', '07484783803', 'ln44hn', 'st michaels house', 'church street', 'billinghay']);  
 
         pythonProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
