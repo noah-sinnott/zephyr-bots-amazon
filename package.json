@@ -50,5 +50,8 @@
     "buildDir": "./build",
     "cacheDir": "./cache",
     "macIcns": "./src/logo.icns"
+  },
+  "window": {
+    "maximizable": true
   }
 }

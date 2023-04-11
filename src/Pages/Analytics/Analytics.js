@@ -2,17 +2,17 @@ import React from "react";
 import Navbar from '../../Components/Navbar/Navbar'
 import styles from './styles'
 import Header from "../../Components/Header/Header";
- 
-function Settings() {
+
+  function Analytics() {
     return (
       <div style={styles.containerMain}>
-        <Navbar at={'Settings'}/>
+        <Navbar at={'Analytics'}/>
         <div>
-        <Header title={'Settings'}/>
+        <Header title={'Analytics'}/>
         </div>
       </div>
     );
   }
   
-  export default Settings;
+  export default Analytics;
   

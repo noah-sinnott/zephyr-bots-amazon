@@ -1,18 +1,21 @@
 import React, {useState} from "react";
-import Header from '../../Components/Header/Header'
+import Navbar from '../../Components/Navbar/Navbar'
 import AddToWatchlist from '../../Components/AddToWatchlist/AddToWatchlist'
-
+import styles from './styles'
+import Header from "../../Components/Header/Header";
   function Home() {
 
     const [addItemPopup, setAddItemPopup] = useState(false)
 
     return (
-      <div>
-        <Header/>
-        <p>Watclist</p>
+      <div style={styles.containerMain}>
+        <Navbar at={'Home'}/>
+        <div>
+        <Header title={'Tasks'}/>
         <button onClick={() => setAddItemPopup(true)}>
-            <p>Add item</p>
+            <p>Add Task</p>
         </button>
+        </div>
         {addItemPopup && <AddToWatchlist setPopup={setAddItemPopup}/>}
       </div>
     );
