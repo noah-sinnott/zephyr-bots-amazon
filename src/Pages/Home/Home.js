@@ -2,7 +2,9 @@ import React, {useState} from "react";
 import Navbar from '../../Components/Navbar/Navbar'
 import AddToWatchlist from '../../Components/AddToWatchlist/AddToWatchlist'
 import styles from './styles'
-import Header from "../../Components/Header/Header";
+import TaskGroupList from '../../Components/TaskGroupsList/TaskGroupList'
+import ActiveTasks from '../../Components/ActiveTasks/ActiveTasks'
+
   function Home() {
 
     const [addItemPopup, setAddItemPopup] = useState(false)
@@ -10,12 +12,8 @@ import Header from "../../Components/Header/Header";
     return (
       <div style={styles.containerMain}>
         <Navbar at={'Home'}/>
-        <div>
-        <Header title={'Tasks'}/>
-        <button onClick={() => setAddItemPopup(true)}>
-            <p>Add Task</p>
-        </button>
-        </div>
+        <TaskGroupList/>
+        <ActiveTasks/>
         {addItemPopup && <AddToWatchlist setPopup={setAddItemPopup}/>}
       </div>
     );

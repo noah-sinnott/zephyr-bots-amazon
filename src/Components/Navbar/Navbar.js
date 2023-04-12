@@ -15,16 +15,16 @@ function Navbar({at}) {
       <div style={styles.containerMain}>
 
         <button style={at !== 'Home'? styles.button: styles.selectedButton} onClick={() => navigate('/')}>
-        <img style={styles.image} src={home}/>
+        <img style={styles.image} alt='Home' src={home}/>
         </button>
         <button style={at !== 'Notifications'? styles.button: styles.selectedButton} onClick={() => navigate('/Notifications')}>
-        <img style={styles.image} src={bell}/>
+        <img style={styles.image} alt={'Notifications'} src={bell}/>
         </button>
         <button  style={at !=='Settings'? styles.button: styles.selectedButton} onClick={() => navigate('/Settings')}>
-          <img style={styles.image} src={gear}/>
+          <img style={styles.image} alt={'Settings'} src={gear}/>
         </button>
         <button style={at !=='Analytics'? styles.button: styles.selectedButton} onClick={() => navigate('/Analytics')}>
-          <img src={analytics} style={styles.image}/>
+          <img src={analytics} alt={'Analytics'} style={styles.image}/>
         </button>
 
       </div>

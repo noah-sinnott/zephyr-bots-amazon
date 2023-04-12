@@ -2,18 +2,19 @@
 const styles = {
     containerMain: {
       backgroundColor: '#304D6D',
+      width: '55px',
       height: '100vh',
-      width: '80px',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginRight: 20
     },
     button: {
       backgroundColor: 'transparent',
       border: 'transparent',
       borderRadius: '20%',
-      height: '65px',
-      width: '65px',
+      height: '45px',
+      width: '45px',
       margin: 5,
       display: 'flex',
       alignItems: 'center',
@@ -23,16 +24,16 @@ const styles = {
       backgroundColor: '#82a0bc',
       border: 'transparent',
       borderRadius: '20%',
-      height: '65px',
-      width: '65px',
+      height: '45px',
+      width: '45px',
       margin: 5,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     },
     image: {
-      width: '50px',
-      height: '50px',
+      width: '35px',
+      height: '35px',
     }
   }
   
