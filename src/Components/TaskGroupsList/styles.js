@@ -9,7 +9,9 @@ const styles = {
       width: '100%',
       backgroundColor: 'lightblue',
       display: 'flex',
-      justifyContent: 'center'
+      flexDirection: 'column',
+      alignItems: 'center',
+      overflow: 'auto'
     },
     task:{ 
         width: '80%',
@@ -17,6 +19,10 @@ const styles = {
         backgroundColor: 'blue',
         border: 'none',
         marginTop: 20
+    },
+    image: {
+      width: '100%',
+      height: '100%'
     }
   };
   

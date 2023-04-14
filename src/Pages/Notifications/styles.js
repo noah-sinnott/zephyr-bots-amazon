@@ -3,6 +3,7 @@ const styles = {
     containerMain: {
         display: 'flex',
         flexDirection: 'row',
+        height: '100%'
     },
   }
   

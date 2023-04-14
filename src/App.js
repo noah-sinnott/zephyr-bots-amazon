@@ -3,15 +3,45 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import React from 'react'
+
+import React, {useEffect, createContext, useState} from 'react'
 
 import Home from './Pages/Home/Home'
 import Settings from './Pages/Settings/Settings'
 import Notifications from './Pages/Notifications/Notifications'
 import Analytics from './Pages/Analytics/Analytics'
+
+export const Context = createContext({ 
+    data: {database:{}},
+    updateData: () => {}
+  });
+
 function App() {
+
+  const [data, setData] = useState({database: {taskGroups: [], settings: {}}});
+
+  useEffect(() => {
+    const storedDatabase = localStorage.getItem("database");
+    if (!storedDatabase) {
+      const initialDatabase = {database: {taskGroups: [], settings: []}};
+      localStorage.setItem("database", JSON.stringify(initialDatabase));
+    } else {
+      const parsedDatabase = JSON.parse(storedDatabase);
+      setData(parsedDatabase);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("database", JSON.stringify(data));
+  }, [data])
+
+
+  const updateData = (newData) => {
+    setData({...data, ...newData});
+  };
+
   return (
-  <div style={{width: '100%', height: '100%'}}>
+<Context.Provider value={{ data, updateData }}>
   <HashRouter>
     <Routes>
       <Route path="/" Component={ Home } />
@@ -20,8 +50,7 @@ function App() {
       <Route path="/Analytics" Component={ Analytics } />
     </Routes>
   </HashRouter>    
-  </div>
-
+  </Context.Provider>
   );
 }
 

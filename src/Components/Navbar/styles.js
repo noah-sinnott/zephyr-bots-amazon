@@ -3,7 +3,7 @@ const styles = {
     containerMain: {
       backgroundColor: '#304D6D',
       width: '55px',
-      height: '100vh',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
