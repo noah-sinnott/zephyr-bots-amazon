@@ -1,51 +1,67 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 
-import path from 'path'
-import { spawn } from 'child_process'
+import {Context} from '../../App'
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'
 
+import { amazon } from "../../ScriptRunner";
+
   function AddTaskModal({setOpen, isOpen, taskGroup}) {
+
+    const context = useContext(Context)
 
     const [accountType, setAccountType] = useState('Single Account');
     const [endpoint, setEndpoint] = useState('Item page');
     const [endpoinDropdown, setEndpointDropdown] = useState(false);
     const [proxy, setProxy] = useState('None');
     const [proxyDropdown, setProxyDropdown] = useState(false);
+    const [quantity, setQuantity] = useState('');
+    const [refreshRate, setRefreshRate] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [url, setURL] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const url1 = 'https://www.amazon.co.uk/Cadbury-Dairy-Milk-Chocolate-Bar/dp/B07N7BG9WV/ref=sr_1_6?crid=3E2P0CTAAP8HT&keywords=dairy+milk&qid=1680979389&sprefix=dairymilk%2Caps%2C87&sr=8-6'
-    const url2 = 'https://www.amazon.co.uk/SHOWKINGS-GT-730-Graphics-Computer/dp/B09PY6MK7X/ref=sr_1_1_sspa?keywords=gpu&qid=1681142991&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1'
-    
-    function startTask(){
-        const pyPath = path.join(process.cwd(), 'python', 'amazon.py');
-        const pythonProcess = spawn('python', [pyPath, url1, 0.3, 2.7, 'noah.sinnott12@gmail.com', '123456', 'Checkout-page', 'GB', 'Noah Sinnott', '07484783803', 'ln44hn', 'st michaels house', 'church street', 'billinghay']);  
 
-        pythonProcess.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-        });
+    async function AddTask(start){
+      let newTask = {
+        type: 'amazon',
+        email: email,
+        password: password,
+        url: url,
+        proxy: false,
+        accountPool :false,
+        endpoint: endpoint,
+        quantity: quantity,
+        refreshRate: refreshRate,
+        maxPrice: maxPrice,
+        notifications: [],
+        pythonPID: false
+      }
 
-        pythonProcess.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        });
 
-        pythonProcess.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
-        });
-    }
+      if(start){
+        let index = context.data.database.taskGroups[taskGroup].tasks.length
+        const pythonPID = await amazon(newTask, context, index, taskGroup);     
+        newTask.pythonPID = pythonPID
+      } 
 
-    function AddTask(start){
-
+        const currentTaskGroups = context.data.database.taskGroups;
+        const updatedTaskGroup = [...currentTaskGroups[taskGroup].tasks, newTask];
+        const updatedTaskGroups = [...currentTaskGroups];
+        updatedTaskGroups[taskGroup].tasks = updatedTaskGroup;
+        const updatedDatabase = { ...context.data.database, taskGroups: updatedTaskGroups };
+        context.updateData({database: updatedDatabase });
+      
       exit()
     }
 
@@ -56,6 +72,12 @@ import Button from '@material-ui/core/Button'
       setEndpointDropdown(false);
       setProxy('None');
       setProxyDropdown(false);
+      setQuantity('');
+      setRefreshRate('');
+      setMaxPrice('');
+      setURL('');
+      setEmail('');
+      setPassword('');
     }
 
     return (
@@ -63,7 +85,7 @@ import Button from '@material-ui/core/Button'
       {isOpen &&
       <div style={styles.background}>
         <div style={styles.mainContainer}>
-        <FormControl style={styles.form}>
+        <div style={styles.form}>
 
         <div style={styles.wide}>
           <RadioGroup style={styles.flex} aria-label="Account Info" name="Account Info" value={accountType} onChange={(event) => setAccountType(event.target.value)}>
@@ -72,23 +94,20 @@ import Button from '@material-ui/core/Button'
           </RadioGroup>
         </div>
           
-          
-          
           {accountType == 'Single Account' ?
           <>
-          
-                <TextField id="email" label="Email / Number" variant="outlined" />
-                <TextField id="Password" label="Password" variant="outlined" />
+              <TextField value={email} onChange={(event) => setEmail(event.target.value)} id="email" label="Email / Number" variant="outlined" />
+              <TextField value={password} onChange={(event) => setPassword(event.target.value)} id="Password" label="Password" variant="outlined" />
           </>
         :null}
 
-          <TextField id="url" label="Item url" variant="outlined" />
+          <TextField value={url} onChange={(event) => setURL(event.target.value)} id="url" label="Item url" variant="outlined" />
 
-          <TextField id="url" label="Max overall price including shipping and tax" type='number' variant="outlined" />
+          <TextField  value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" label="Max overall price including shipping and tax" type='number' variant="outlined" />
           
-          <TextField id="RefreshRate" label="Refresh Rate  (Seconds)" type='number' variant="outlined" />
+          <TextField value={refreshRate} onChange={(event) => setRefreshRate(event.target.value)} id="RefreshRate" label="Refresh Rate  (Seconds)" type='number' variant="outlined" />
 
-          <TextField id="Quantity" label="Quantity" type='number' variant="outlined" />
+          <TextField  value={quantity} onChange={(event) => setQuantity(event.target.value)} id="Quantity" label="Quantity" type='number' variant="outlined" />
 
         <div style={styles.endpoint}>
             <FormLabel>End At</FormLabel>
@@ -129,11 +148,11 @@ import Button from '@material-ui/core/Button'
         <Button variant="contained" size="large" onClick={() => AddTask(true)}>
           Add Task and start
         </Button> 
-        <Button variant="outlined" color="error" size="large" onClick={() => exit()}>
+        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
           Cancel
         </Button>         
         </div>
-        </FormControl>
+        </div>
         </div>
       </div> 
       }

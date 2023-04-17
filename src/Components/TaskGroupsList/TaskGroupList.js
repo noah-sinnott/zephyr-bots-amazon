@@ -28,7 +28,7 @@ function removeTaskGroup(index) {
             </button>
             {context.data.database.taskGroups && <>
                 {context.data.database.taskGroups.map((taskGroup, index) => (
-                  <button style={styles.task} onClick={() => setTaskGroup(index)}>
+                  <button style={styles.task} onClick={() => setTaskGroup(index)} key={index}>
                     <p>{taskGroup.name}</p>
                   </button>
                 ))}

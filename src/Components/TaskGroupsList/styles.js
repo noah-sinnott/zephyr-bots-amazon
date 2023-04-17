@@ -1,6 +1,6 @@
 const styles = {
     containerMain: {
-      width: '30%',
+      width: '20%',
       display: 'flex',
       alignItems: 'center',
     },

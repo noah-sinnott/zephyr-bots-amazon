@@ -13,6 +13,7 @@ const styles = {
         backgroundColor: 'lightblue',
         display: 'flex',
         flexDirection: 'column',
+        alignItems:'center'
       },
       actions: {
         display: 'flex',
@@ -28,18 +29,20 @@ const styles = {
       button: {
         height: '30px',
       },
-      tableHeaders: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: 'blue',
-        borderRadius: '10px',
+      table: {
+        backgroundColor: 'lightgrey',
         width: 'calc(100% - 20px)',
+        marginLeft: '10px',
         marginTop: '10px',
         marginRight: '10px',
-        marginLeft: '10px'
+      },
+      tableHeader:{
+        textAlign: 'start'
+      },
+      image: {
+        width: '20px',
+        height: '20px'
       }
-
   };
   
   export default styles;

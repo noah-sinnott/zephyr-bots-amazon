@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
-    if (!storedDatabase) {
+    if (storedDatabase) {
       const initialDatabase = {database: {taskGroups: [], settings: []}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
     } else {
