@@ -1,32 +1,39 @@
 import React from "react";
-import { useNavigate  } from 'react-router-dom'; 
+import { useNavigate, useLocation  } from 'react-router-dom'; 
 import styles from './styles'
 
 import gear from '../../assets/gear.png'
-import bell from '../../assets/bell.png'
-import analytics from '../../assets/analytics.png'
 import home from '../../assets/home.png'
+import Proxy from '../../assets/proxy.png'
+import Profile from '../../assets/profile.png'
+import Help from '../../assets/help.png'
+import Card from '../../assets/card.png'
 
-function Navbar({at}) {
+function Navbar() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
     return (
       <div style={styles.containerMain}>
-
-        <button style={at !== 'Home'? styles.button: styles.selectedButton} onClick={() => navigate('/')}>
+        <button style={location.pathname !== '/'? styles.button: styles.selectedButton} onClick={() => navigate('/')}>
         <img style={styles.image} alt='Home' src={home}/>
         </button>
-        <button style={at !== 'Notifications'? styles.button: styles.selectedButton} onClick={() => navigate('/Notifications')}>
-        <img style={styles.image} alt={'Notifications'} src={bell}/>
+        <button  style={location.pathname !=='/Accounts'? styles.button: styles.selectedButton} onClick={() => navigate('/Accounts')}>
+          <img style={styles.image} alt={'Accounts'} src={Profile}/>
         </button>
-        <button  style={at !=='Settings'? styles.button: styles.selectedButton} onClick={() => navigate('/Settings')}>
+        <button  style={location.pathname !=='/Billing'? styles.button: styles.selectedButton} onClick={() => navigate('/Billing')}>
+          <img style={styles.image} alt={'Billing'} src={Card}/>
+        </button>
+        <button  style={location.pathname !=='/Proxies'? styles.button: styles.selectedButton} onClick={() => navigate('/Proxies')}>
+          <img style={styles.image} alt={'Proxies'} src={Proxy}/>
+        </button>
+        <button  style={location.pathname !=='/Help'? styles.button: styles.selectedButton} onClick={() => navigate('/Help')}>
+          <img style={styles.image} alt={'Help'} src={Help}/>
+        </button>
+        <button  style={location.pathname !=='/Settings'? styles.button: styles.selectedButton} onClick={() => navigate('/Settings')}>
           <img style={styles.image} alt={'Settings'} src={gear}/>
         </button>
-        <button style={at !=='Analytics'? styles.button: styles.selectedButton} onClick={() => navigate('/Analytics')}>
-          <img src={analytics} alt={'Analytics'} style={styles.image}/>
-        </button>
-
       </div>
     );
   }

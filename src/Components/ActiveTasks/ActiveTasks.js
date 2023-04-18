@@ -82,7 +82,7 @@ function ActiveTasks({taskGroup}) {
             <tbody>
              {context.data.database.taskGroups[taskGroup].tasks.map((task, index) => {
               return (
-                <tr style={styles.tableRow}>
+                <tr style={styles.tableRow} key={index}>
                   <td>{task.email}</td>
                   <td>{task.proxy ? task.proxy : 'false'}</td>
                   <td>{task.pythonPID !== false ? (task.notifications.length != 0 ? task.notifications[task.notifications.length - 1] : 'starting') : 'idle'}</td>

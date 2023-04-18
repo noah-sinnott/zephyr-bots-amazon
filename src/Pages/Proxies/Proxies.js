@@ -1,16 +1,16 @@
 import React from "react";
 import Navbar from '../../Components/Navbar/Navbar'
 import styles from './styles'
- 
-function Settings() {
+
+  function Notifications() {
     return (
       <div style={styles.containerMain}>
-        <Navbar/>
+        <Navbar at={'Notifications'}/>
         <div>
         </div>
       </div>
     );
   }
   
-  export default Settings;
+  export default Notifications;
   

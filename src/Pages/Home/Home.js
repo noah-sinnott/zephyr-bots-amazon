@@ -10,7 +10,7 @@ import ActiveTasks from '../../Components/ActiveTasks/ActiveTasks'
 
     return (
       <div style={styles.containerMain}>
-        <Navbar at={'Home'}/>
+        <Navbar/>
         <TaskGroupList setTaskGroup={setSelectedTaskGroup} />
         <ActiveTasks taskGroup={selectedTaskGroup}/>
       </div>
