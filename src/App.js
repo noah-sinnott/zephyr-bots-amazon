@@ -25,11 +25,12 @@ function App() {
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
-    if (!storedDatabase) {
-      const initialDatabase = {database: {taskGroups: [], settings: []}};
+    if (storedDatabase) {
+      const initialDatabase = {database: {taskGroups: [], settings: [], userInfo: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
     } else {
       const parsedDatabase = JSON.parse(storedDatabase);
+      parsedDatabase.database.taskGroups = []
       setData(parsedDatabase);
     }
   }, []);
@@ -37,7 +38,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem("database", JSON.stringify(data));
   }, [data])
-
 
   const updateData = (newData) => {
     setData({...data, ...newData});

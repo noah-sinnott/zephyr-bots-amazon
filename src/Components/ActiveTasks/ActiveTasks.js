@@ -1,16 +1,22 @@
 import React, {useContext, useEffect, useState} from "react";
 import styles from './styles'
 import { Context } from "../../App";
+
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
+import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
+
 import {kill, amazon} from '../../ScriptRunner'
+
 import play from '../../assets/play.png'
 import bin from '../../assets/bin.png'
 import stop from '../../assets/stop.png'
 import info from '../../assets/info.png'
 
-function ActiveTasks({taskGroup}) {
+function ActiveTasks({taskGroup, setTaskGroup}) {
 
   const [addTaskModal, setAddTaskModal] = useState(false)
+  const [editTaskGroupModal, setEditTaskGroupModal] = useState(false)
+
   const context = useContext(Context)
 
   function addTask(){
@@ -59,10 +65,15 @@ function ActiveTasks({taskGroup}) {
 
     return (
       <div style={styles.containerMain}>
+
         <AddTaskModal setOpen={setAddTaskModal} isOpen={addTaskModal} taskGroup={taskGroup}/>
+
+        <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroup={taskGroup} setTaskGroup={setTaskGroup}/>
+
         <div style={styles.containerMain2}>
               {taskGroup != -1 && <>
             <div style={styles.actions}>
+                <button style={styles.button} onClick={() => setEditTaskGroupModal(!editTaskGroupModal)}>Edit Task Group</button>
                 <p>Tasks: {context.data.database.taskGroups[taskGroup].tasks.length}</p>
                 <button style={styles.button} onClick={() => addTask()}>Add Task</button>
                 <button style={styles.button}>Start All</button>

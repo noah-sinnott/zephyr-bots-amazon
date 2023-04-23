@@ -7,7 +7,7 @@ function TaskGroupList({setTaskGroup}) {
 const context = useContext(Context)
 
 function addTaskGroup(){
-  let newTaskGroup ={name: `Task Group ${context.data.database.taskGroups.length}`, tasks: []}
+  let newTaskGroup ={Name: `Task Group ${context.data.database.taskGroups.length}`, tasks: []}
   const newTaskGroups = [...context.data.database.taskGroups, newTaskGroup];
   context.updateData({ database: { ...context.data.database, taskGroups: newTaskGroups } });
 }
@@ -29,7 +29,7 @@ function removeTaskGroup(index) {
             {context.data.database.taskGroups && <>
                 {context.data.database.taskGroups.map((taskGroup, index) => (
                   <button style={styles.task} onClick={() => setTaskGroup(index)} key={index}>
-                    <p>{taskGroup.name}</p>
+                    <p>{taskGroup.Name}</p>
                   </button>
                 ))}
               </>
