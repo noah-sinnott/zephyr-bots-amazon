@@ -3,82 +3,68 @@ import styles from './styles'
 
 import {Context} from '../../App'
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'
 
-import { amazon } from "../../helpers/ScriptRunner";
-import { generateId } from '../../helpers/generateId'
+import { amazon, kill } from "../../helpers/ScriptRunner";
 
-  function AddTaskModal({setOpen, isOpen, taskGroupId}) {
+  function UpdateAllTasksModal({setOpen, isOpen, taskGroupId}) {
 
     const context = useContext(Context)
 
-    const [accountType, setAccountType] = useState('Single Account');
-    const [endpoint, setEndpoint] = useState('Item page');
+    const [endpoint, setEndpoint] = useState('');
     const [endpoinDropdown, setEndpointDropdown] = useState(false);
-    const [proxy, setProxy] = useState('None');
+    const [proxy, setProxy] = useState('');
     const [proxyDropdown, setProxyDropdown] = useState(false);
     const [quantity, setQuantity] = useState('');
     const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    async function AddTask(start){
-    
-      let id = generateId()
+    async function updateAll(start){
+      
+      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+        if(value.pythonPID !== false){
+          kill(value.pythonPID)
+        }
+      });
 
-      let newTask = {
-        type: 'amazon',
-        email: email,
-        password: password,
-        url: url,
-        proxy: false,
-        accountPool :false,
-        endpoint: endpoint,
-        quantity: quantity,
-        refreshRate: refreshRate,
-        maxPrice: maxPrice,
-        notifications: [],
-        pythonPID: false,
-      }
+      let taskGroups = context.data.database.taskGroups
 
+     await Object.entries(taskGroups[taskGroupId].tasks).map(([key, value]) => {
+        if(url != '') value.url = url
+        if(endpoint != '') value.endpoint = endpoint
+        if(proxy != '') value.proxy = proxy
+        if(quantity != '') value.quantity = quantity
+        if(refreshRate != '') value.refreshRate = refreshRate
+        if(maxPrice != '') value.maxPrice = maxPrice
+      })
 
       if(start){
-        const pythonPID = await amazon(newTask, context, taskGroupId);     
-        newTask.pythonPID = pythonPID
-      } 
-
-        let taskgroups = context.data.database.taskGroups
-        taskgroups[taskGroupId].tasks[id] = newTask
-  
-        const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
-        context.updateData({database: updatedDatabase });
+        for (const [key, value] of Object.entries(taskGroups[taskGroupId].tasks)) {
+          const pythonPID = await amazon(key, value, context, taskGroupId);
+          taskGroups[taskGroupId].tasks[key].pythonPID = pythonPID;
+        }             
+      }             
       
+      const updatedDatabase = { ...context.data.database, taskGroups: taskGroups };
+      context.updateData({database: updatedDatabase });
       exit()
     }
 
     function exit(){
       setOpen(false)
-      setAccountType('Single Account');
-      setEndpoint('Item page');
+      setEndpoint('');
       setEndpointDropdown(false);
-      setProxy('None');
+      setProxy('');
       setProxyDropdown(false);
       setQuantity('');
       setRefreshRate('');
       setMaxPrice('');
       setURL('');
-      setEmail('');
-      setPassword('');
     }
 
     return (
@@ -87,20 +73,6 @@ import { generateId } from '../../helpers/generateId'
       <div style={styles.background}>
         <div style={styles.mainContainer}>
         <div style={styles.form}>
-
-        <div style={styles.wide}>
-          <RadioGroup style={styles.flex} aria-label="Account Info" name="Account Info" value={accountType} onChange={(event) => setAccountType(event.target.value)}>
-            <FormControlLabel value="Single Account" control={<Radio />} label="Single Account" />
-            <FormControlLabel value="Account pool" control={<Radio />} label="Account pool" />
-          </RadioGroup>
-        </div>
-          
-          {accountType == 'Single Account' ?
-          <>
-              <TextField value={email} onChange={(event) => setEmail(event.target.value)} id="email" label="Email / Number" variant="outlined" />
-              <TextField value={password} onChange={(event) => setPassword(event.target.value)} id="Password" label="Password" variant="outlined" />
-          </>
-        :null}
 
           <TextField value={url} onChange={(event) => setURL(event.target.value)} id="url" label="Item url" variant="outlined" />
 
@@ -120,6 +92,7 @@ import { generateId } from '../../helpers/generateId'
             onOpen={() => setEndpointDropdown(true)}
             value={endpoint}
             onChange={(event) => setEndpoint(event.target.value)}>
+            <MenuItem value={''}></MenuItem>
             <MenuItem value={'Item page'}>Item Page</MenuItem>
             <MenuItem value={'Login page'}>Login Page</MenuItem>
             <MenuItem value={'Shipping Page'}>Shipping Page</MenuItem>
@@ -129,7 +102,7 @@ import { generateId } from '../../helpers/generateId'
           </div>
           
           <div style={styles.endpoint}>
-            <FormLabel>Proxy</FormLabel>
+          <FormLabel>Proxy</FormLabel>
           <Select
             labelId="proxyDropdown"
             id="proxyDropdown"
@@ -138,16 +111,17 @@ import { generateId } from '../../helpers/generateId'
             onOpen={() => setProxyDropdown(true)}
             value={proxy}
             onChange={(event) => setProxy(event.target.value)}>
+            <MenuItem value={''}></MenuItem>
             <MenuItem value={'None'}>None</MenuItem>
           </Select>
           </div>
 
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => AddTask(false)}>
-          Add Task
+        <Button variant="contained" size="large" onClick={() => updateAll(false)}>
+          Update All
         </Button>
-        <Button variant="contained" size="large" onClick={() => AddTask(true)}>
-          Add Task and start
+        <Button variant="contained" size="large" onClick={() => updateAll(true)}>
+          Update All and start
         </Button> 
         <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
           Cancel
@@ -161,5 +135,5 @@ import { generateId } from '../../helpers/generateId'
     );
   }
   
-  export default AddTaskModal;
+  export default UpdateAllTasksModal;
   

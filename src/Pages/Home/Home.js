@@ -6,13 +6,13 @@ import ActiveTasks from '../../Components/ActiveTasks/ActiveTasks'
 
   function Home() {
 
-    const [selectedTaskGroup, setSelectedTaskGroup] = useState(-1)
+    const [selectedTaskGroup, setSelectedTaskGroup] = useState(false)
 
     return (
       <div style={styles.containerMain}>
         <Navbar/>
-        <TaskGroupList setTaskGroup={setSelectedTaskGroup} />
-        <ActiveTasks taskGroup={selectedTaskGroup} setTaskGroup={setSelectedTaskGroup}/>
+        <TaskGroupList setTaskGroupId={setSelectedTaskGroup} />
+        <ActiveTasks taskGroupId={selectedTaskGroup} setTaskGroupId={setSelectedTaskGroup}/>
       </div>
     );
   }

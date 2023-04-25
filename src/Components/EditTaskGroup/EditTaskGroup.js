@@ -7,37 +7,43 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-import {kill} from '../../ScriptRunner'
+import {kill} from '../../helpers/ScriptRunner'
 
-  function EditTaskGroup({setOpen, isOpen, taskGroup, setTaskGroup}) {
+  function EditTaskGroup({setOpen, isOpen, taskGroupId, setTaskGroupId}) {
 
     const context = useContext(Context)
     
     const [name, setName] = useState('')
 
     useEffect(() => {
-      if(taskGroup == -1) return
-      setName(context.data.database.taskGroups[taskGroup].Name)
-    }, [taskGroup])
+      if(taskGroupId == false) return
+      setName(context.data.database.taskGroups[taskGroupId].Name)
+    }, [taskGroupId])
 
     function saveChanges(){
-      let newTaskGroup = {Name: name, tasks: [...context.data.database.taskGroups[taskGroup].tasks]}
-      let taskGroups = [...context.data.database.taskGroups]
-      taskGroups[taskGroup] = newTaskGroup
-      context.updateData({ database: { ...context.data.database, taskGroups: taskGroups } })
+
+      let taskgroups = context.data.database.taskGroups
+      taskgroups[taskGroupId].Name = name
+
+      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+      context.updateData({database: updatedDatabase });
+
       exit()
     }
 
-    function deleteTaskGroup() {
-      const taskGroups = [...context.data.database.taskGroups];
-      const deletedTaskGroup = taskGroups.splice(taskGroup, 1)[0];     
-      deletedTaskGroup.tasks.forEach((task) => {
-        if (task.pythonPID !== false) {
-          kill(task.pythonPID);
+    function deleteTaskGroup() { 
+      setTaskGroupId(false) 
+      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+        if (value.pythonPID !== false) {
+          kill(value.pythonPID);
         }
       });
-      setTaskGroup(-1)
-      context.updateData({ database: { ...context.data.database, taskGroups: taskGroups } });
+
+      let taskgroups = context.data.database.taskGroups
+      delete taskgroups[taskGroupId]
+
+      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+      context.updateData({database: updatedDatabase });
       exit();
     }
 

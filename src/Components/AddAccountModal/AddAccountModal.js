@@ -6,6 +6,7 @@ import {Context} from '../../App'
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
+import { generateId } from "../../helpers/generateId";
 
   function AddAccountModal({setOpen, isOpen}) {
 
@@ -20,17 +21,15 @@ import Button from '@material-ui/core/Button'
       if(!username) return
       if(!password) return
 
+      let id = generateId()
       let newAccount = {
         Name: name,
         username: username,
         password: password,
       }
-
-        const currentAccounts = context.data.database.accounts;
-        currentAccounts.push(newAccount)
-        const updatedDatabase = { ...context.data.database, accounts: currentAccounts };
-        context.updateData({database: updatedDatabase });
-      
+      let database = context.data.database
+      database.accounts[id] = newAccount
+      context.updateData({database: database });
       exit()
     }
 

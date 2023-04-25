@@ -1,23 +1,18 @@
 import React, {useContext, useEffect} from "react";
 import styles from './styles'
 import { Context } from "../../App";
+import { generateId } from "../../helpers/generateId";
 
-function TaskGroupList({setTaskGroup}) {
+function TaskGroupList({setTaskGroupId}) {
 
 const context = useContext(Context)
 
 function addTaskGroup(){
-  let newTaskGroup ={Name: `Task Group ${context.data.database.taskGroups.length}`, tasks: []}
-  const newTaskGroups = [...context.data.database.taskGroups, newTaskGroup];
-  context.updateData({ database: { ...context.data.database, taskGroups: newTaskGroups } });
-}
-
-function removeTaskGroup(index) {
-  const newTaskGroups = [
-    ...context.data.database.taskGroups.slice(0, index),
-    ...context.data.database.taskGroups.slice(index + 1),
-  ];
-  context.updateData({ database: { ...context.data.database, taskGroups: newTaskGroups } });
+  let id = generateId()
+  let newTaskGroup ={Name: `Task Group ${Object.keys(context.data.database.taskGroups).length + 1}`, tasks: {}}
+  let taskGroups = context.data.database.taskGroups
+  taskGroups[id] = newTaskGroup
+  context.updateData({ database: { ...context.data.database, taskGroups: taskGroups } });
 }
 
     return (
@@ -27,9 +22,9 @@ function removeTaskGroup(index) {
                 <p>New task group</p>
             </button>
             {context.data.database.taskGroups && <>
-                {context.data.database.taskGroups.map((taskGroup, index) => (
-                  <button style={styles.task} onClick={() => setTaskGroup(index)} key={index}>
-                    <p>{taskGroup.Name}</p>
+                {Object.entries(context.data.database.taskGroups).map(([key, value]) => (
+                  <button style={styles.task} onClick={() => setTaskGroupId(key)} key={key}>
+                    <p>{value.Name}</p>
                   </button>
                 ))}
               </>

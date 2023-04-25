@@ -21,12 +21,12 @@ export const Context = createContext({
 
 function App() {
 
-  const [data, setData] = useState({database: {taskGroups: [], settings: {}, userInfo: {}, accounts: [], billing: [], proxies: []}});
+  const [data, setData] = useState({database: {taskGroups: {}, settings: {}, userInfo: {}, accounts: {}, billing: {}, proxies: {}}});
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
     if (storedDatabase) {
-      const initialDatabase = {database: {taskGroups: [], settings: {}, userInfo: {}, accounts: [], billing: [], proxies: []}};
+      const initialDatabase = {database: {taskGroups: {}, settings: {}, userInfo: {}, accounts: {}, billing: {}, proxies: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
     } else {
       const parsedDatabase = JSON.parse(storedDatabase);

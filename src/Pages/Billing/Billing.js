@@ -5,7 +5,7 @@ import styles from './styles'
   function Analytics() {
     return (
       <div style={styles.containerMain}>
-        <Navbar at={'Analytics'}/>
+        <Navbar/>
         <div>
         </div>
       </div>

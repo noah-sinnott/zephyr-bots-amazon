@@ -4,18 +4,19 @@ import { Context } from "../../App";
 
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
 import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
-
-import {kill, amazon} from '../../ScriptRunner'
+import BulkEditTasksModal from '../UpdateAllTasksModal/UpdateAllTasksModal'
+import {kill, amazon} from '../../helpers/ScriptRunner'
 
 import play from '../../assets/play.png'
 import bin from '../../assets/bin.png'
 import stop from '../../assets/stop.png'
 import info from '../../assets/info.png'
 
-function ActiveTasks({taskGroup, setTaskGroup}) {
+function ActiveTasks({taskGroupId, setTaskGroupId}) {
 
   const [addTaskModal, setAddTaskModal] = useState(false)
   const [editTaskGroupModal, setEditTaskGroupModal] = useState(false)
+  const [BulkEditTasks, setBulkEditTasks] = useState(false)
 
   const context = useContext(Context)
 
@@ -23,63 +24,83 @@ function ActiveTasks({taskGroup, setTaskGroup}) {
     setAddTaskModal(true)
   }
 
-  function deleteTask(task, index){
+  function updateAll(){
+    setBulkEditTasks(true)
+  }
+
+  function deleteAll(){
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+      deleteTask(key, value)
+    })
+  }  
+
+  function startAll(){
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+      stopTask(key, value)
+    })
+  }  
+  
+  function stopAll(){
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+      stopTask(key, value)
+    })
+  }
+  
+  function deleteTask(key, task){
     if(task.pythonPID !== false){
       kill(task.pythonPID)
     }
-    const currentTaskGroups = context.data.database.taskGroups;
-    const tasks = currentTaskGroups[taskGroup].tasks;
-    tasks.splice(index, 1);
-    const updatedTaskGroup = [...tasks];
-    const updatedTaskGroups = [...currentTaskGroups];
-    updatedTaskGroups[taskGroup].tasks = updatedTaskGroup;
-    const updatedDatabase = { ...context.data.database, taskGroups: updatedTaskGroups };
+
+    let taskgroups = context.data.database.taskGroups
+    delete taskgroups[taskGroupId].tasks[key]
+
+    const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
     context.updateData({database: updatedDatabase });
   }
 
-  async function startTask(task, index) {
+  async function startTask(id, task) {
     if (task.pythonPID !== false) return;
-    const pythonPID = await amazon(task, context, index, taskGroup);
-    task.pythonPID = pythonPID;
-    const currentTaskGroups = context.data.database.taskGroups;
-    const tasks = currentTaskGroups[taskGroup].tasks;
-    tasks[index] = task; 
-    const updatedTaskGroups = [...currentTaskGroups];
-    updatedTaskGroups[taskGroup].tasks = tasks;
-    const updatedDatabase = { ...context.data.database, taskGroups: updatedTaskGroups };
-    context.updateData({ database: updatedDatabase });
+    const pythonPID = await amazon(id, task, context, taskGroupId);
+
+    let taskgroups = context.data.database.taskGroups
+    taskgroups[taskGroupId].tasks[id].pythonPID = pythonPID
+
+    const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+    context.updateData({database: updatedDatabase });
   }
   
-  function stopTask(task, index){
+  function stopTask(id, task){
     if(task.pythonPID !== false){
       kill(task.pythonPID)
-      const currentTaskGroups = context.data.database.taskGroups;
-      const tasks = currentTaskGroups[taskGroup].tasks;
-      tasks[index].pythonPID = false;
-      const updatedTaskGroups = [...currentTaskGroups];
-      updatedTaskGroups[taskGroup].tasks = tasks;
-      const updatedDatabase = { ...context.data.database, taskGroups: updatedTaskGroups };
+    }
+
+    let taskgroups = context.data.database.taskGroups
+    taskgroups[taskGroupId].tasks[id].pythonPID = false
+
+      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
       context.updateData({database: updatedDatabase });
     }
-  }
+  
 
     return (
       <div style={styles.containerMain}>
 
-        <AddTaskModal setOpen={setAddTaskModal} isOpen={addTaskModal} taskGroup={taskGroup}/>
+        <AddTaskModal setOpen={setAddTaskModal} isOpen={addTaskModal} taskGroupId={taskGroupId}/>
 
-        <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroup={taskGroup} setTaskGroup={setTaskGroup}/>
+        <BulkEditTasksModal setOpen={setBulkEditTasks} isOpen={BulkEditTasks} taskGroupId={taskGroupId}/>
+
+        <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroupId={taskGroupId} setTaskGroupId={setTaskGroupId}/>
 
         <div style={styles.containerMain2}>
-              {taskGroup != -1 && <>
+            {taskGroupId != false && <>
             <div style={styles.actions}>
                 <button style={styles.button} onClick={() => setEditTaskGroupModal(!editTaskGroupModal)}>Edit Task Group</button>
-                <p>Tasks: {context.data.database.taskGroups[taskGroup].tasks.length}</p>
+                <p>Tasks: {Object.keys(context.data.database.taskGroups[taskGroupId].tasks).length}</p>
                 <button style={styles.button} onClick={() => addTask()}>Add Task</button>
-                <button style={styles.button}>Start All</button>
-                <button style={styles.button}>Stop All</button>
-                <button style={styles.button}>Update All</button>
-                <button style={styles.button}>Delete All</button>
+                <button style={styles.button} onClick={() => startAll()}>Start All</button>
+                <button style={styles.button} onClick={() => stopAll()}>Stop All</button>
+                <button style={styles.button} onClick={() => updateAll()}>Update All</button>
+                <button style={styles.button} onClick={() => deleteAll()}>Delete All</button>
             </div>
             <table style={styles.table}>
             <thead>
@@ -91,19 +112,19 @@ function ActiveTasks({taskGroup, setTaskGroup}) {
               </tr>
             </thead>
             <tbody>
-             {context.data.database.taskGroups[taskGroup].tasks.map((task, index) => {
+             {Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
               return (
-                <tr style={styles.tableRow} key={index}>
-                  <td>{task.email}</td>
-                  <td>{task.proxy ? task.proxy : 'false'}</td>
-                  <td>{task.pythonPID !== false ? (task.notifications.length != 0 ? task.notifications[task.notifications.length - 1] : 'starting') : 'idle'}</td>
+                <tr style={styles.tableRow} key={key}>
+                  <td>{value.email}</td>
+                  <td>{value.proxy ? value.proxy : 'false'}</td>
+                  <td>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td>
-                    {task.pythonPID !== false ?
-                     <img src={stop} style={styles.image} onClick={() => stopTask(task, index)}/> 
+                    {value.pythonPID !== false ?
+                     <img src={stop} style={styles.image} onClick={() => stopTask(key, value)}/> 
                     :
-                    <img src={play} style={styles.image} onClick={() => startTask(task, index)}/> 
+                    <img src={play} style={styles.image} onClick={() => startTask(key, value)}/> 
                   }
-                     <img src={bin} style={styles.image} onClick={() => deleteTask(task, index)}/> 
+                     <img src={bin} style={styles.image} onClick={() => deleteTask(key, value)}/> 
                      
                      <img src={info} style={styles.image}/> 
                   </td>
@@ -117,6 +138,7 @@ function ActiveTasks({taskGroup, setTaskGroup}) {
       </div>
     );
   }
+
 
   export default ActiveTasks;
   

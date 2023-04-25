@@ -5,7 +5,7 @@ import styles from './styles'
   function Notifications() {
     return (
       <div style={styles.containerMain}>
-        <Navbar at={'Notifications'}/>
+        <Navbar/>
         <div>
         </div>
       </div>

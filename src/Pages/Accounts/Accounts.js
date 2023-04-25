@@ -12,7 +12,7 @@ import AddAccountModal from '../../Components/AddAccountModal/AddAccountModal';
     return (
       <div style={styles.containerMain}>
         <AddAccountModal isOpen={addAccountModal} setOpen={setAddAccountModal}/>
-        <Navbar at={'Notifications'}/>
+        <Navbar/>
           <div style={styles.TableAreaHolder}>
             <div style={styles.TableArea}>
                 <div style={styles.actions}>
@@ -31,12 +31,12 @@ import AddAccountModal from '../../Components/AddAccountModal/AddAccountModal';
               </tr>
             </thead>
             <tbody>
-             {context.data.database.accounts.map((account, index) => {
+            {Object.entries(context.data.database.accounts).map(([key, value]) => {
               return (
-                <tr style={styles.tableRow} key={index}>
-                  <td>{account.Name}</td>
-                  <td>{account.username}</td>
-                  <td>{account.password}</td>
+                <tr style={styles.tableRow} key={key}>
+                  <td>{value.Name}</td>
+                  <td>{value.username}</td>
+                  <td>{value.password}</td>
                   <td>
                      <img src={Stop} style={styles.image}/> 
                      <img src={Stop} style={styles.image}/> 

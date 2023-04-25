@@ -4,9 +4,9 @@ import { spawn } from 'child_process';
 const url1 = 'https://www.amazon.co.uk/Cadbury-Dairy-Milk-Chocolate-Bar/dp/B07N7BG9WV/ref=sr_1_6?crid=3E2P0CTAAP8HT&keywords=dairy+milk&qid=1680979389&sprefix=dairymilk%2Caps%2C87&sr=8-6';
 const url2 = 'https://www.amazon.co.uk/SHOWKINGS-GT-730-Graphics-Computer/dp/B09PY6MK7X/ref=sr_1_1_sspa?keywords=gpu&qid=1681142991&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1';
 
-let pythonProcesses = new Map(); // Use a Map to store child processes with pid as key
+let pythonProcesses = new Map();
 
-export function amazon(task, context, taskIndex, taskGroupIndex) {
+export function amazon(taskId, task, context, taskGroupId) {
   const pyPath = path.join(process.cwd(), 'python', 'amazon.py');
   const pythonProcess = spawn('python', [
     '-u',
@@ -29,10 +29,10 @@ export function amazon(task, context, taskIndex, taskGroupIndex) {
   pythonProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
     const cleanStr = data.toString().replace(/[\r\n]+/gm, '');
-    let notifs = context.data.database.taskGroups[taskGroupIndex].tasks[taskIndex].notifications;
+    let notifs = context.data.database.taskGroups[taskGroupId].tasks[taskId].notifications;
     let newNotifs = [...notifs, cleanStr];
     let newDB = context.data.database;
-    newDB.taskGroups[taskGroupIndex].tasks[taskIndex].notifications = newNotifs;
+    newDB.taskGroups[taskGroupId].tasks[taskId].notifications = newNotifs;
     context.updateData({ database: newDB });
   });
 
@@ -42,7 +42,10 @@ export function amazon(task, context, taskIndex, taskGroupIndex) {
 
   pythonProcess.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
-    pythonProcesses.delete(pythonProcess.pid); // Remove child process from Map by pid
+    pythonProcesses.delete(pythonProcess.pid); 
+    let newDB = context.data.database;
+    newDB.taskGroups[taskGroupId].tasks[taskId].pythonPID = false;
+    context.updateData({ database: newDB });
   });
 
   pythonProcesses.set(pythonProcess.pid, pythonProcess);
