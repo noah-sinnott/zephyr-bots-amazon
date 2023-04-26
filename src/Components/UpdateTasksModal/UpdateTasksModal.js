@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button'
 
 import { amazon, kill } from "../../helpers/ScriptRunner";
 
-  function UpdateAllTasksModal({setOpen, isOpen, taskGroupId}) {
+  function UpdateAllTasksModal({setOpen, isOpen, taskGroupId, taskId}) {
 
     const context = useContext(Context)
 
@@ -24,16 +24,26 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
 
-    async function updateAll(start){
+    async function update(start){
       
-      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+      let taskGroups = context.data.database.taskGroups
+
+      if(taskId){
+        if(taskGroups[taskGroupId].tasks[taskId].pythonPID !== false){
+          kill(taskGroups[taskGroupId].tasks[taskId].pythonPID)
+        }
+        if(url != '') taskGroups[taskGroupId].tasks[taskId].url = url
+        if(endpoint != '') taskGroups[taskGroupId].tasks[taskId].endpoint = endpoint
+        if(proxy != '') taskGroups[taskGroupId].tasks[taskId].proxy = proxy
+        if(quantity != '') taskGroups[taskGroupId].tasks[taskId].quantity = quantity
+        if(refreshRate != '') taskGroups[taskGroupId].tasks[taskId].refreshRate = refreshRate
+        if(maxPrice != '') taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
+      } else {
+        Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
         if(value.pythonPID !== false){
           kill(value.pythonPID)
         }
       });
-
-      let taskGroups = context.data.database.taskGroups
-
      await Object.entries(taskGroups[taskGroupId].tasks).map(([key, value]) => {
         if(url != '') value.url = url
         if(endpoint != '') value.endpoint = endpoint
@@ -42,12 +52,20 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
         if(refreshRate != '') value.refreshRate = refreshRate
         if(maxPrice != '') value.maxPrice = maxPrice
       })
+      }
+      
 
       if(start){
-        for (const [key, value] of Object.entries(taskGroups[taskGroupId].tasks)) {
+
+        if(taskId){
+          const pythonPID = await amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
+          taskGroups[taskGroupId].tasks[taskId].pythonPID = pythonPID;
+        } else {
+          for (const [key, value] of Object.entries(taskGroups[taskGroupId].tasks)) {
           const pythonPID = await amazon(key, value, context, taskGroupId);
           taskGroups[taskGroupId].tasks[key].pythonPID = pythonPID;
-        }             
+           }  
+        }
       }             
       
       const updatedDatabase = { ...context.data.database, taskGroups: taskGroups };
@@ -117,11 +135,11 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
           </div>
 
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => updateAll(false)}>
-          Update All
+        <Button variant="contained" size="large" onClick={() => update(false)}>
+          Update
         </Button>
-        <Button variant="contained" size="large" onClick={() => updateAll(true)}>
-          Update All and start
+        <Button variant="contained" size="large" onClick={() => update(true)}>
+          Update and start
         </Button> 
         <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
           Cancel

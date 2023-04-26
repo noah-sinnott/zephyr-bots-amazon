@@ -1,13 +1,19 @@
-import React from "react";
 import Navbar from '../../Components/Navbar/Navbar'
+import React, {useContext, useState} from "react";
 import styles from './styles'
- 
-function Settings() {
+import { Context } from "../../App";
+
+  function Settings() {
+
+    const context = useContext(Context)
+
     return (
       <div style={styles.containerMain}>
         <Navbar/>
-        <div>
-        </div>
+          <div style={styles.area}>
+            <div style={styles.mainArea}>
+            </div>
+        </div>  
       </div>
     );
   }

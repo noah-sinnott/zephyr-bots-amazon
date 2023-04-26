@@ -4,7 +4,7 @@ import { Context } from "../../App";
 
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
 import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
-import BulkEditTasksModal from '../UpdateAllTasksModal/UpdateAllTasksModal'
+import UpdateTasksModal from '../UpdateTasksModal/UpdateTasksModal'
 import {kill, amazon} from '../../helpers/ScriptRunner'
 
 import play from '../../assets/play.png'
@@ -16,7 +16,8 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
 
   const [addTaskModal, setAddTaskModal] = useState(false)
   const [editTaskGroupModal, setEditTaskGroupModal] = useState(false)
-  const [BulkEditTasks, setBulkEditTasks] = useState(false)
+  const [updateTasksModal, setUpdateTasksModal] = useState(false)
+  const [taskId, setTaskId] = useState(false)
 
   const context = useContext(Context)
 
@@ -25,13 +26,20 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
   }
 
   function updateAll(){
-    setBulkEditTasks(true)
+    setTaskId(false)
+    setUpdateTasksModal(true)
   }
 
   function deleteAll(){
     Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
-      deleteTask(key, value)
+      if(value.pythonPID !== false){
+        kill(value.pythonPID)
+      }
     })
+    let taskgroups = context.data.database.taskGroups
+    taskgroups[taskGroupId].tasks = {}
+    const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+    context.updateData({database: updatedDatabase });
   }  
 
   function startAll(){
@@ -73,10 +81,8 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
     if(task.pythonPID !== false){
       kill(task.pythonPID)
     }
-
-    let taskgroups = context.data.database.taskGroups
-    taskgroups[taskGroupId].tasks[id].pythonPID = false
-
+      let taskgroups = context.data.database.taskGroups
+      taskgroups[taskGroupId].tasks[id].pythonPID = false
       const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
       context.updateData({database: updatedDatabase });
     }
@@ -87,7 +93,7 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
 
         <AddTaskModal setOpen={setAddTaskModal} isOpen={addTaskModal} taskGroupId={taskGroupId}/>
 
-        <BulkEditTasksModal setOpen={setBulkEditTasks} isOpen={BulkEditTasks} taskGroupId={taskGroupId}/>
+        <UpdateTasksModal setOpen={setUpdateTasksModal} isOpen={updateTasksModal} taskGroupId={taskGroupId} taskId={taskId}/>
 
         <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroupId={taskGroupId} setTaskGroupId={setTaskGroupId}/>
 
@@ -122,11 +128,16 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
                     {value.pythonPID !== false ?
                      <img src={stop} style={styles.image} onClick={() => stopTask(key, value)}/> 
                     :
+                    <>  
                     <img src={play} style={styles.image} onClick={() => startTask(key, value)}/> 
+                    <img src={info} style={styles.image}  onClick={() => {
+                      setUpdateTasksModal(true)
+                      setTaskId(key)
+                    } }/> 
+                    </>
                   }
                      <img src={bin} style={styles.image} onClick={() => deleteTask(key, value)}/> 
                      
-                     <img src={info} style={styles.image}/> 
                   </td>
                 </tr>
               );

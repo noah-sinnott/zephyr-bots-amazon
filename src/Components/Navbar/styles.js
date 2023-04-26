@@ -7,7 +7,6 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginRight: 20
     },
     button: {
       backgroundColor: 'transparent',

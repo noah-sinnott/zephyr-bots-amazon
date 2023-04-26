@@ -24,8 +24,8 @@ import { generateId } from "../../helpers/generateId";
       let id = generateId()
       let newAccount = {
         Name: name,
-        username: username,
-        password: password,
+        Username: username,
+        Password: password,
       }
       let database = context.data.database
       database.accounts[id] = newAccount

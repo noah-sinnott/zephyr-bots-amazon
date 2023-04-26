@@ -11,7 +11,8 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      overflow: 'auto'
+      overflow: 'auto',
+      marginLeft: 20
     },
     task:{ 
         width: '80%',
