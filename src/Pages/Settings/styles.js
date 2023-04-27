@@ -18,8 +18,15 @@ const styles = {
       backgroundColor: 'lightblue',
       display: 'flex',
       flexDirection: 'column',
-      alignItems:'center'
+      padding: '20px'
+    },
+    advancedSettings: {
+      width: '100%',
+      borderBottom: '1px solid black'
+    },
+    sliderContainer: {
+      width: '30%'
     }
-}
+  }
 
 export default styles
