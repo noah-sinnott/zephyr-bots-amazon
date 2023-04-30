@@ -9,12 +9,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditProxyGroup from '../EditProxyGroup/EditProxyGroup'
 import AddProxiesModal from "../AddProxiesModal/AddProxiesModal";
 import UpdateProxyModal from "../UpdateProxyModal/UpdateProxyModal";
+import BulkEditProxies from "../BulkEditProxies/BulkEditProxies";
 
 function ProxyGroup({proxyGroupId, setProxyGroupId}) {
 
   const [addProxiesModal, setAddProxiesModal] = useState(false)
   const [editProxyGroupModal, setEditProxyGroupModal] = useState(false)
   const [updateProxiesModal, setUpdateProxiesModal] = useState(false)
+  const [updateProxyModal, setUpdateProxyModal] = useState(false)
   const [proxyId, setProxyId] = useState(false)
 
   const context = useContext(Context)
@@ -24,7 +26,6 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
   }
 
   function updateAll(){
-    setProxyId(false)
     setUpdateProxiesModal(true)
   }
 
@@ -44,13 +45,14 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
     context.updateData({database: updatedDatabase });
   }
   
-    function MouseOver(event) {
-      event.target.parentElement.style.background = colors.highlightMini;
-    }
-  
-    function MouseOut(event){
-      event.target.parentElement.style.background="";
-    }
+  function MouseOver(event) {
+    event.target.closest('tr').style.background = colors.highlightMini;
+  }
+
+  function MouseOut(event){
+    const row = event.target.closest('tr');
+    row.style.background = "";   
+   }
 
     return (
       <div style={styles.containerMain}>
@@ -62,8 +64,9 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
 
             <EditProxyGroup setOpen={setEditProxyGroupModal} isOpen={editProxyGroupModal} proxyGroupId={proxyGroupId} setProxyGroupId={setProxyGroupId}/>
 
-            <UpdateProxyModal setOpen={setUpdateProxiesModal} isOpen={updateProxiesModal} proxyGroupId={proxyGroupId} proxyId={proxyId}/>
+            <UpdateProxyModal setOpen={setUpdateProxyModal} isOpen={updateProxyModal} proxyGroupId={proxyGroupId} proxyId={proxyId}/>
             
+            <BulkEditProxies setOpen={setUpdateProxiesModal} isOpen={updateProxiesModal} proxyGroupId={proxyGroupId}/>
             <div style={styles.actions}>
                 <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setEditProxyGroupModal(!editProxyGroupModal)}>
                         Edit Proxy Group
@@ -99,7 +102,7 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
                   <td style={styles.tableItem}>{value.password}</td>
                   <td style={styles.tableItem}>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
-                      setUpdateProxiesModal(true)
+                      setUpdateProxyModal(true)
                       setProxyId(key)
                       }}>
                       <EditIcon />

@@ -4,9 +4,9 @@ import { Context } from "../../App";
 
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
 import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
-import UpdateTasksModal from '../UpdateTaskModal/UpdateTaskModal'
+import UpdateTaskModal from '../UpdateTaskModal/UpdateTaskModal'
 import {kill, amazon} from '../../helpers/ScriptRunner'
-
+import BulkUpdateTasks from "../BulkUpdateTasks/BulkUpdateTasks";
 
 import colors from "../../colors/colors";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -15,10 +15,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 
-function ActiveTasks({taskGroupId, setTaskGroupId}) {
+function TaskGroup({taskGroupId, setTaskGroupId}) {
 
   const [addTaskModal, setAddTaskModal] = useState(false)
   const [editTaskGroupModal, setEditTaskGroupModal] = useState(false)
+  const [updateTaskModal, setUpdateTaskModal] = useState(false)
   const [updateTasksModal, setUpdateTasksModal] = useState(false)
   const [taskId, setTaskId] = useState(false)
 
@@ -29,7 +30,6 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
   }
 
   function updateAll(){
-    setTaskId(false)
     setUpdateTasksModal(true)
   }
 
@@ -89,24 +89,27 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
       const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
       context.updateData({database: updatedDatabase });
     }
-  
     function MouseOver(event) {
-      event.target.parentElement.style.background = colors.highlightMini;
+      event.target.closest('tr').style.background = colors.highlightMini;
     }
   
     function MouseOut(event){
-      event.target.parentElement.style.background="";
-    }
+      const row = event.target.closest('tr');
+      row.style.background = "";   
+     }
+
 
     return (
       <div style={styles.containerMain}>
 
         <AddTaskModal setOpen={setAddTaskModal} isOpen={addTaskModal} taskGroupId={taskGroupId}/>
 
-        <UpdateTasksModal setOpen={setUpdateTasksModal} isOpen={updateTasksModal} taskGroupId={taskGroupId} taskId={taskId}/>
+        <UpdateTaskModal setOpen={setUpdateTaskModal} isOpen={updateTaskModal} taskGroupId={taskGroupId} taskId={taskId}/>
 
         <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroupId={taskGroupId} setTaskGroupId={setTaskGroupId}/>
 
+        <BulkUpdateTasks setOpen={setUpdateTasksModal} isOpen={updateTasksModal} taskGroupId={taskGroupId}/>
+        
         <div style={styles.containerMain2}>
             {taskGroupId != false ? <>
             <div style={styles.actions}>
@@ -159,7 +162,7 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
                       <PlayArrowRoundedIcon />
                     </IconButton>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
-                      setUpdateTasksModal(true)
+                      setUpdateTaskModal(true)
                       setTaskId(key)
                       }}>
                       <EditIcon />
@@ -186,5 +189,5 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
   }
 
 
-  export default ActiveTasks;
+  export default TaskGroup;
   

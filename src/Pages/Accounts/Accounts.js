@@ -8,10 +8,13 @@ import UpdateAccountsModal from '../../Components/UpdateAccountModal/UpdateAccou
 import { Button, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts'
+
   function Accounts() {
 
     const context = useContext(Context)
     const [addAccountModal, setAddAccountModal] = useState(false)
+    const [updateAccount, setUpdateAccount] = useState(false)
     const [updateAccounts, setUpdateAccounts] = useState(false)
     const [updateAccountId, setUpdateAccountId] = useState(false)
 
@@ -39,7 +42,8 @@ import EditIcon from '@mui/icons-material/Edit';
     return (
       <div style={styles.containerMain}>
         <AddAccountModal isOpen={addAccountModal} setOpen={setAddAccountModal}/>
-        <UpdateAccountsModal isOpen={updateAccounts} setOpen={setUpdateAccounts} accountId={updateAccountId}/>
+        <UpdateAccountsModal isOpen={updateAccount} setOpen={setUpdateAccount} accountId={updateAccountId}/>
+        <BulkEditAccounts isOpen={updateAccounts} setOpen={setUpdateAccounts}/>
         <Navbar/>
           <div style={styles.TableAreaHolder}>
             <div style={styles.TableArea}>
@@ -49,8 +53,7 @@ import EditIcon from '@mui/icons-material/Edit';
                         Add Account
                       </Button>
                       <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => {
-                      setUpdateAccounts(!updateAccounts)
-                      setUpdateAccountId(false)
+                      setUpdateAccounts(!updateAccount)
                       }}>
                         Update All
                       </Button>
@@ -79,7 +82,7 @@ import EditIcon from '@mui/icons-material/Edit';
                       <DeleteIcon />
                     </IconButton>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
-                      setUpdateAccounts(!updateAccounts)
+                      setUpdateAccount(!updateAccount)
                       setUpdateAccountId(key)
                       }}>
                       <EditIcon />

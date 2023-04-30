@@ -14,12 +14,11 @@ import Select from "react-select";
     const context = useContext(Context)
 
     const [endpoint, setEndpoint] = useState({ label: "Item Page", value: 'Item Page' });
-    const [proxy, setProxy] = useState({ label: "None", value: 'None'});
+    const [proxy, setProxy] = useState({ label: "None", value: false});
     const [quantity, setQuantity] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [refreshRate, setRefreshRate] = useState('');
     const [accounts, setAccounts] = useState([]);
     const [account, setAccount] = useState([]);
     const [billing, setBilling] = useState([]);
@@ -57,13 +56,12 @@ import Select from "react-select";
 
       let newTask = {
         type: 'amazon',
-        email: email,
-        password: password,
         url: url,
         proxy: proxy,
         endpoint: endpoint,
         quantity: quantity,
         maxPrice: maxPrice,
+        refreshRate: refreshRate,
         notifications: [],
         pythonPID: false,
         account: account,
@@ -86,13 +84,14 @@ import Select from "react-select";
 
     function exit(){
       setOpen(false)
-      setEndpoint('Item page');
-      setProxy('None');
       setQuantity('');
+      setRefreshRate('');
       setMaxPrice('');
       setURL('');
-      setEmail('');
-      setPassword('');
+      setAccount([])
+      setProxy({ label: "None", value: false})
+      setBilling([])
+      setEndpoint({ label: "Item Page", value: 'Item Page' })
     }
 
     return (
@@ -144,13 +143,18 @@ import Select from "react-select";
         </div>
 
         <div  style={styles.inputContainer}>
+          <p>Refresh Rate:</p>
+          <Input value={refreshRate} disableUnderline={true} onChange={(event) => setRefreshRate(event.target.value)} id="refreshRate" style={styles.textInput} placeholder="Enter Refresh Rate"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
             <p>End At</p>
             <Select
               name="Ends At"
               options={endpoints}
               onChange={(e) => setEndpoint(e)}
               styles={styles.dropDown}
-              defaultValue={{ label: "Item Page", value: 'Item Page' }}
+              value={{ label: "Item Page", value: 'Item Page' }}
             />
         </div>
           
@@ -161,7 +165,7 @@ import Select from "react-select";
               options={proxies}
               onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
-              defaultValue={{ label: "None", value: false}}
+              value={{ label: "None", value: false}}
             />
           </div>
 

@@ -8,12 +8,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddBillingModal from '../../Components/AddBillingModal/AddBillingModal';
 import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillingModal.js'
+import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBilling';
 
   function Billing() {
 
     const context = useContext(Context)
     const [addBillingModal, setAddBillingModal] = useState(false)
     const [updateBillingModal, setUpdateBillingModal] = useState(false)
+    const [updateBillings, setUpdateBillings] = useState(false)
     const [updateBillingId, setUpdateBillingId] = useState(false)
 
     function deleteAll () {
@@ -42,6 +44,7 @@ import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillin
       <div style={styles.containerMain}>
         <AddBillingModal isOpen={addBillingModal} setOpen={setAddBillingModal}/>
         <UpdateBillingModal isOpen={updateBillingModal} setOpen={setUpdateBillingModal} billingId={updateBillingId}/>
+        <BulkUpdateBilling isOpen={updateBillings} setOpen={setUpdateBillings}/>
         <Navbar/>
           <div style={styles.TableAreaHolder}>
             <div style={styles.TableArea}>
@@ -51,8 +54,7 @@ import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillin
                         Add Billing Profile
                       </Button>
                       <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => {
-                                    setUpdateBillingModal(!updateBillingModal)
-                                    setUpdateBillingId(false)
+                                    setUpdateBillings(!updateBillings)
                       }}>
                         Update All
                       </Button>

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Navbar from '../../Components/Navbar/Navbar'
 import styles from './styles'
 import TaskGroupList from '../../Components/TaskGroupsList/TaskGroupList'
-import ActiveTasks from '../../Components/ActiveTasks/ActiveTasks'
+import TaskGroup from '../../Components/TaskGroup/TaskGroup'
 
   function Home() {
 
@@ -12,7 +12,7 @@ import ActiveTasks from '../../Components/ActiveTasks/ActiveTasks'
       <div style={styles.containerMain}>
         <Navbar/>
         <TaskGroupList setTaskGroupId={setSelectedTaskGroup} />
-        <ActiveTasks taskGroupId={selectedTaskGroup} setTaskGroupId={setSelectedTaskGroup}/>
+        <TaskGroup taskGroupId={selectedTaskGroup} setTaskGroupId={setSelectedTaskGroup}/>
       </div>
     );
   }
