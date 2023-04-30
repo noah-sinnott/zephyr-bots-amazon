@@ -4,7 +4,7 @@ import styles from './styles'
 import { Context } from "../../App";
 import colors from '../../colors/colors';
 import AddAccountModal from '../../Components/AddAccountModal/AddAccountModal';
-import UpdateAccountsModal from '../../Components/UpdateAccountsModal/UpdateAccountsModal.js'
+import UpdateAccountsModal from '../../Components/UpdateAccountModal/UpdateAccountModal.js'
 import { Button, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';

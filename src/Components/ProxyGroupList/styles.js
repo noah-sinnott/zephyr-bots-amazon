@@ -6,7 +6,7 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
     },
-    tasksHolder: {
+    proxyHolder: {
       height: '90%',
       width: '100%',
       backgroundColor: colors.primary,
@@ -18,7 +18,7 @@ const styles = {
       borderRadius: '5px',
       border: `1px solid ${colors.highlight}`
     },
-    task:{ 
+    proxy:{ 
         width: '80%',
         height: '10%',
         backgroundColor: colors.highlight,

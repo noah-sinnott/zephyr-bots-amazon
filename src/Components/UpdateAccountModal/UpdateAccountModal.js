@@ -5,7 +5,7 @@ import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 
 
-  function UpdateAccountsModal({setOpen, isOpen, accountId}) {
+  function UpdateAccountModal({setOpen, isOpen, accountId}) {
 
     const context = useContext(Context)
 
@@ -85,5 +85,5 @@ import { Input, Modal, Button } from "@mui/material";
     );
   }
   
-  export default UpdateAccountsModal;
+  export default UpdateAccountModal;
   

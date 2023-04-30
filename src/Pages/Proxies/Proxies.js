@@ -1,24 +1,21 @@
+import React, {useState} from "react";
 import Navbar from '../../Components/Navbar/Navbar'
-import React, {useContext, useState} from "react";
 import styles from './styles'
-import { Context } from "../../App";
+import ProxyGroupList from "../../Components/ProxyGroupList/ProxyGroupList";
+import ProxyGroup from "../../Components/ProxyGroup/ProxyGroup"; 
 
+  function Home() {
 
-  function Proxies() {
-
-    const context = useContext(Context)
+    const [selectedProxyGroup, setSelectedProxyGroup] = useState(false)
 
     return (
       <div style={styles.containerMain}>
         <Navbar/>
-          <div style={styles.area}>
-            <div style={styles.mainArea}>
-              <p>Coming soon</p>
-            </div>
-        </div>  
+        <ProxyGroupList setProxyGroupId={setSelectedProxyGroup} />
+        <ProxyGroup proxyGroupId={selectedProxyGroup} setProxyGroupId={setSelectedProxyGroup}/>
       </div>
     );
   }
   
-  export default Proxies;
+  export default Home;
   

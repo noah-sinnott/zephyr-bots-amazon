@@ -8,7 +8,7 @@ import Select from "react-select";
 
 import { amazon, kill } from "../../helpers/ScriptRunner";
 
-  function UpdateAllTasksModal({setOpen, isOpen, taskGroupId, taskId}) {
+  function UpdateAllTaskModal({setOpen, isOpen, taskGroupId, taskId}) {
 
     const context = useContext(Context)
 
@@ -22,16 +22,14 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [account, setAccount] = useState([]);
     const [billing, setBilling] = useState([]);
     const [billings, setBillings] = useState([]);
-    
+    const [proxies, setProxies] = useState([]);
+
    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
    { value: 'Login Page', label: 'Login Page' },
    { value: 'Shipping Page', label: 'Shipping Page' },
    { value: 'Checkout Page', label: 'Checkout Page' },
    { value: 'Success Page', label: 'Success Page' },
  ]
-
- const proxys = [{ value: false, label: 'None' }]
-
  
  useEffect(() => {
   if(!taskId) return
@@ -46,13 +44,18 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
   let accountsTemp = []
   let billingsTemp = []
+  let proxiesTemp = [{ value: false, label: 'None' }]
   Object.entries(context.data.database.accounts).map(([key, value]) => {
     accountsTemp.push({value: key, label: value.name})
   })
   Object.entries(context.data.database.billing).map(([key, value]) => {
     billingsTemp.push({value: key, label: value.name})
   })
+  Object.entries(context.data.database.proxyGroups).map(([key, value]) => {
+    proxiesTemp.push({value: key, label: value.name})
+  })
   setAccounts(accountsTemp)
+  setProxies(proxiesTemp)
   setBillings(billingsTemp)
 }, [isOpen])
 
@@ -157,7 +160,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
           <p>Proxy</p>
           <Select
               name="Proxy"
-              options={proxys}
+              options={proxies}
               onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
               value={proxy}
@@ -180,5 +183,5 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     );
   }
   
-  export default UpdateAllTasksModal;
+  export default UpdateAllTaskModal;
   

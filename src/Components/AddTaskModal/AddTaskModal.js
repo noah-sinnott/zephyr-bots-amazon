@@ -24,6 +24,7 @@ import Select from "react-select";
     const [account, setAccount] = useState([]);
     const [billing, setBilling] = useState([]);
     const [billings, setBillings] = useState([]);
+    const [proxies, setProxies] = useState([]);
 
    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
     { value: 'Login Page', label: 'Login Page' },
@@ -32,19 +33,22 @@ import Select from "react-select";
     { value: 'Success Page', label: 'Success Page' },
   ]
 
-  const proxys = [{ value: false, label: 'None' }]
-
   useEffect(() => {
     let accountsTemp = []
     let billingsTemp = []
+    let proxiesTemp = [{ value: false, label: 'None' }]
     Object.entries(context.data.database.accounts).map(([key, value]) => {
       accountsTemp.push({value: key, label: value.name})
     })
     Object.entries(context.data.database.billing).map(([key, value]) => {
       billingsTemp.push({value: key, label: value.name})
     })
+    Object.entries(context.data.database.proxyGroups).map(([key, value]) => {
+      proxiesTemp.push({value: key, label: value.name})
+    })
     setAccounts(accountsTemp)
     setBillings(billingsTemp)
+    setProxies(proxiesTemp)
   }, [isOpen])
 
     async function AddTask(start){
@@ -154,10 +158,10 @@ import Select from "react-select";
           <p>Proxy</p>
           <Select
               name="Proxy"
-              options={proxys}
+              options={proxies}
               onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
-              defaultValue={{ label: "None", value: 'None'}}
+              defaultValue={{ label: "None", value: false}}
             />
           </div>
 

@@ -4,7 +4,7 @@ import { Context } from "../../App";
 
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
 import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
-import UpdateTasksModal from '../UpdateTasksModal/UpdateTasksModal'
+import UpdateTasksModal from '../UpdateTaskModal/UpdateTaskModal'
 import {kill, amazon} from '../../helpers/ScriptRunner'
 
 
@@ -177,7 +177,7 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
           </table>
               </> :
               <div style={{width: '100%', height: '100%', display: 'flex',alignItems: 'center', justifyContent: 'center'}}>  
-                <p>Select a Task Group</p>
+                <p>Select or Create a Task Group</p>
               </div>
               }
         </div>

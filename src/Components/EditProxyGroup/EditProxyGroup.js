@@ -5,42 +5,35 @@ import {Context} from '../../App'
 
 import { Input, Modal, Button } from "@mui/material";
 
-import {kill} from '../../helpers/ScriptRunner'
-
-  function EditTaskGroup({setOpen, isOpen, taskGroupId, setTaskGroupId}) {
+  function EditProxyGroup({setOpen, isOpen, proxyGroupId, setProxyGroupId}) {
 
     const context = useContext(Context)
     
     const [name, setName] = useState('')
 
     useEffect(() => {
-      if(taskGroupId == false) return
-      setName(context.data.database.taskGroups[taskGroupId].name)
-    }, [taskGroupId])
+      if(!proxyGroupId) return
+      setName(context.data.database.proxyGroups[proxyGroupId].name)
+    }, [proxyGroupId])
 
     function saveChanges(){
 
-      let taskgroups = context.data.database.taskGroups
-      taskgroups[taskGroupId].name = name
+      let proxyGroups = context.data.database.proxyGroups
+      proxyGroups[proxyGroupId].name = name
 
-      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups };
       context.updateData({database: updatedDatabase });
 
       exit()
     }
 
-    function deleteTaskGroup() { 
-      setTaskGroupId(false) 
-      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
-        if (value.pythonPID !== false) {
-          kill(value.pythonPID);
-        }
-      });
+    function deleteProxyGroup() { 
+      setProxyGroupId(false) 
 
-      let taskgroups = context.data.database.taskGroups
-      delete taskgroups[taskGroupId]
+      let proxyGroups = context.data.database.proxyGroups
+      delete proxyGroups[proxyGroupId]
 
-      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups };
       context.updateData({database: updatedDatabase });
       exit();
     }
@@ -53,28 +46,28 @@ import {kill} from '../../helpers/ScriptRunner'
       <Modal
         open={isOpen}
         onClose={() => exit()}
-        aria-labelledby="Edit Task Group"
-        aria-describedby="Edit Task Group"
+        aria-labelledby="Edit Proxy Group"
+        aria-describedby="Edit Proxy Group"
       >
         <div style={styles.content}>
 
         <div style={styles.title}>
-          <h1>Edit Task Group</h1>
+          <h1>Edit Proxy Group</h1>
         </div>
 
         <div style={styles.inputContainer}>
-        <p>Task Group Name:</p>
+        <p>Proxy Group Name:</p>
         <Input value={name} disableUnderline={true} onChange={(event) => setName(event.target.value)} id="name" sx={styles.textInput} placeholder="Enter Task Group Name"/>
         </div>
 
         <div style={styles.submitButtons}>
 
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => saveChanges()}>
-          Save Task Group
+          Save Proxy Group
         </Button>
 
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => deleteTaskGroup()}>
-          Delete Task Group
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => deleteProxyGroup()}>
+          Delete Proxy Group
         </Button> 
 
         <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
@@ -87,5 +80,5 @@ import {kill} from '../../helpers/ScriptRunner'
     );
   }
   
-  export default EditTaskGroup;
+  export default EditProxyGroup;
   
