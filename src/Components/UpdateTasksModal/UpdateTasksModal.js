@@ -3,11 +3,8 @@ import styles from './styles'
 
 import {Context} from '../../App'
 
-import FormLabel from '@material-ui/core/FormLabel';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button'
+import { Input, Modal, Button  } from "@mui/material";
+import Select from "react-select";
 
 import { amazon, kill } from "../../helpers/ScriptRunner";
 
@@ -16,13 +13,21 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const context = useContext(Context)
 
     const [endpoint, setEndpoint] = useState('');
-    const [endpoinDropdown, setEndpointDropdown] = useState(false);
     const [proxy, setProxy] = useState('');
-    const [proxyDropdown, setProxyDropdown] = useState(false);
     const [quantity, setQuantity] = useState('');
     const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
+
+    
+   const endpoints = [{ value: 'Item Page', label: 'Item Page' },
+   { value: 'Login Page', label: 'Login Page' },
+   { value: 'Shipping Page', label: 'Shipping Page' },
+   { value: 'Checkout Page', label: 'Checkout Page' },
+   { value: 'Success Page', label: 'Success Page' },
+ ]
+
+ const proxys = [{ value: 'None', label: 'None' }]
 
     async function update(start){
       
@@ -76,9 +81,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     function exit(){
       setOpen(false)
       setEndpoint('');
-      setEndpointDropdown(false);
       setProxy('');
-      setProxyDropdown(false);
       setQuantity('');
       setRefreshRate('');
       setMaxPrice('');
@@ -86,70 +89,68 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     }
 
     return (
-      <>
-      {isOpen &&
-      <div style={styles.background}>
-        <div style={styles.mainContainer}>
-        <div style={styles.form}>
+      <Modal
+      open={isOpen}
+      onClose={() => exit()}
+      aria-labelledby="Add Task"
+      aria-describedby="Add Task"
+    >
+        <div style={styles.content}>
 
-          <TextField value={url} onChange={(event) => setURL(event.target.value)} id="url" label="Item url" variant="outlined" />
+        <div style={styles.title}>
+          <h1>Add Task</h1>
+        </div>
 
-          <TextField  value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" label="Max overall price including shipping and tax" type='number' variant="outlined" />
+        <div style={styles.inputContainer}>
+          <p>Item url:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Max overall price including shipping and tax:</p>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Quantity:</p>
+          <Input value={quantity} disableUnderline={true} onChange={(event) => setQuantity(event.target.value)} id="quantity" style={styles.textInput} placeholder="Enter quantity"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+            <p>End At</p>
+            <Select
+              name="Ends At"
+              options={endpoints}
+              onChange={(e) => setEndpoint(e.value)}
+              styles={styles.dropDown}
+              defaultValue={{ label: "Item Page", value: 'Item Page' }}
+            />
+        </div>
           
-          <TextField value={refreshRate} onChange={(event) => setRefreshRate(event.target.value)} id="RefreshRate" label="Refresh Rate  (Seconds)" type='number' variant="outlined" />
-
-          <TextField  value={quantity} onChange={(event) => setQuantity(event.target.value)} id="Quantity" label="Quantity" type='number' variant="outlined" />
-
-        <div style={styles.endpoint}>
-            <FormLabel>End At</FormLabel>
+          <div style={styles.inputContainer}>
+          <p>Proxy</p>
           <Select
-            labelId="EndpointDropdown"
-            id="EndpointDropdown"
-            open={endpoinDropdown}
-            onClose={() => setEndpointDropdown(false)}
-            onOpen={() => setEndpointDropdown(true)}
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}>
-            <MenuItem value={''}></MenuItem>
-            <MenuItem value={'Item page'}>Item Page</MenuItem>
-            <MenuItem value={'Login page'}>Login Page</MenuItem>
-            <MenuItem value={'Shipping Page'}>Shipping Page</MenuItem>
-            <MenuItem value={'Checkout Page'}>Checkout Page</MenuItem>
-            <MenuItem value={'Success Page'}>Success Page</MenuItem>
-          </Select>
-          </div>
-          
-          <div style={styles.endpoint}>
-          <FormLabel>Proxy</FormLabel>
-          <Select
-            labelId="proxyDropdown"
-            id="proxyDropdown"
-            open={proxyDropdown}
-            onClose={() => setProxyDropdown(false)}
-            onOpen={() => setProxyDropdown(true)}
-            value={proxy}
-            onChange={(event) => setProxy(event.target.value)}>
-            <MenuItem value={''}></MenuItem>
-            <MenuItem value={'None'}>None</MenuItem>
-          </Select>
+              name="Proxy"
+              options={proxys}
+              onChange={(e) => setProxy(e.value)}
+              styles={styles.dropDown}
+              defaultValue={{ label: "None", value: 'None'}}
+            />
           </div>
 
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => update(false)}>
-          Update
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(false)}>
+          Update Task
         </Button>
-        <Button variant="contained" size="large" onClick={() => update(true)}>
-          Update and start
-        </Button> 
-        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(true)}>
+          Update Task And Start
+        </Button>
+        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel
-        </Button>         
+        </Button>     
         </div>
         </div>
-        </div>
-      </div> 
-      }
-      </>
+    </Modal>
     );
   }
   

@@ -2,9 +2,8 @@ import React, {useContext, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
+import { Input, Modal, Button } from "@mui/material";
 
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
 
   function UpdateAccountsModal({setOpen, isOpen, accountId}) {
 
@@ -41,32 +40,47 @@ import Button from '@material-ui/core/Button'
     }
 
     return (
-      <>
-      {isOpen &&
-      <div style={styles.background}>
-        <div style={styles.mainContainer}>
-        <div style={styles.form}>
+      <Modal
+        open={isOpen}
+        onClose={() => exit()}
+        aria-labelledby="Add Account"
+        aria-describedby="Add Account"
+      >
+      <div style={styles.content}>
 
-        {accountId && 
-          <TextField value={name} onChange={(event) => setName(event.target.value)} id="name" label="Name" variant="outlined" />
-        }
-          <TextField value={username} onChange={(event) => setUsername(event.target.value)} id="username" label="Username" variant="outlined" />
+        <div style={styles.title}>
+          <h1>Update Account</h1>
+        </div>
 
-          <TextField  value={password} onChange={(event) => setPassword(event.target.value)} id="password" label="Password"variant="outlined" />
+ 
+        <div style={styles.inputContainer}>
+        <p>Account Name:</p>
+        <Input value={name} disableUnderline={true} onChange={(event) => setName(event.target.value)} id="name" sx={styles.textInput} placeholder="Enter Account Name"/>
+        </div>
+
+        <div style={styles.inputContainer}>
+            <p>Username:</p>
+          <Input value={username} onChange={(event) => setUsername(event.target.value)} sx={styles.textInput} disableUnderline={true} placeholder="Enter Username" id="username" />
+        </div>
+     
+      <div style={styles.inputContainer}>
+      <p>Password:</p>
+      <Input value={password} onChange={(event) => setPassword(event.target.value)} id="Password" sx={styles.textInput} disableUnderline={true} placeholder="Enter Password"/>
+      </div>
 
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => update()}>
-          Update All
+
+        <Button variant="contained" size="large" style={styles.updateButton}  disableElevation onClick={() => update()}>
+          Update Account
         </Button>
-        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
+
+        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel
         </Button>         
+
         </div>
         </div>
-        </div>
-      </div> 
-      }
-      </>
+        </Modal>
     );
   }
   

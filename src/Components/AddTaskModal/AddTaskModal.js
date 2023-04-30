@@ -3,34 +3,32 @@ import styles from './styles'
 
 import {Context} from '../../App'
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button'
+import { Input, Modal, Button  } from "@mui/material";
 
 import { amazon } from "../../helpers/ScriptRunner";
 import { generateId } from '../../helpers/generateId'
+import Select from "react-select";
 
   function AddTaskModal({setOpen, isOpen, taskGroupId}) {
 
     const context = useContext(Context)
 
-    const [accountType, setAccountType] = useState('Single Account');
-    const [endpoint, setEndpoint] = useState('Item page');
-    const [endpoinDropdown, setEndpointDropdown] = useState(false);
+    const [endpoint, setEndpoint] = useState('Item Page');
     const [proxy, setProxy] = useState('None');
-    const [proxyDropdown, setProxyDropdown] = useState(false);
     const [quantity, setQuantity] = useState('');
-    const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+   const endpoints = [{ value: 'Item Page', label: 'Item Page' },
+    { value: 'Login Page', label: 'Login Page' },
+    { value: 'Shipping Page', label: 'Shipping Page' },
+    { value: 'Checkout Page', label: 'Checkout Page' },
+    { value: 'Success Page', label: 'Success Page' },
+  ]
+
+  const proxys = [{ value: 'None', label: 'None' }]
 
     async function AddTask(start){
     
@@ -45,12 +43,10 @@ import { generateId } from '../../helpers/generateId'
         accountPool :false,
         endpoint: endpoint,
         quantity: quantity,
-        refreshRate: refreshRate,
         maxPrice: maxPrice,
         notifications: [],
         pythonPID: false,
       }
-
 
       if(start){
         const pythonPID = await amazon(newTask, context, taskGroupId);     
@@ -68,13 +64,9 @@ import { generateId } from '../../helpers/generateId'
 
     function exit(){
       setOpen(false)
-      setAccountType('Single Account');
       setEndpoint('Item page');
-      setEndpointDropdown(false);
       setProxy('None');
-      setProxyDropdown(false);
       setQuantity('');
-      setRefreshRate('');
       setMaxPrice('');
       setURL('');
       setEmail('');
@@ -82,82 +74,68 @@ import { generateId } from '../../helpers/generateId'
     }
 
     return (
-      <>
-      {isOpen &&
-      <div style={styles.background}>
-        <div style={styles.mainContainer}>
-        <div style={styles.form}>
+      <Modal
+      open={isOpen}
+      onClose={() => exit()}
+      aria-labelledby="Add Task"
+      aria-describedby="Add Task"
+    >
+        <div style={styles.content}>
 
-        <div style={styles.wide}>
-          <RadioGroup style={styles.flex} aria-label="Account Info" name="Account Info" value={accountType} onChange={(event) => setAccountType(event.target.value)}>
-            <FormControlLabel value="Single Account" control={<Radio />} label="Single Account" />
-            <FormControlLabel value="Account pool" control={<Radio />} label="Account pool" />
-          </RadioGroup>
+        <div style={styles.title}>
+          <h1>Add Task</h1>
+        </div>
+
+        <div style={styles.inputContainer}>
+          <p>Item url:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Max overall price including shipping and tax:</p>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Quantity:</p>
+          <Input value={quantity} disableUnderline={true} onChange={(event) => setQuantity(event.target.value)} id="quantity" style={styles.textInput} placeholder="Enter quantity"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+            <p>End At</p>
+            <Select
+              name="Ends At"
+              options={endpoints}
+              onChange={(e) => setEndpoint(e.value)}
+              styles={styles.dropDown}
+              defaultValue={{ label: "Item Page", value: 'Item Page' }}
+            />
         </div>
           
-          {accountType == 'Single Account' ?
-          <>
-              <TextField value={email} onChange={(event) => setEmail(event.target.value)} id="email" label="Email / Number" variant="outlined" />
-              <TextField value={password} onChange={(event) => setPassword(event.target.value)} id="Password" label="Password" variant="outlined" />
-          </>
-        :null}
-
-          <TextField value={url} onChange={(event) => setURL(event.target.value)} id="url" label="Item url" variant="outlined" />
-
-          <TextField  value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" label="Max overall price including shipping and tax" type='number' variant="outlined" />
-          
-          <TextField value={refreshRate} onChange={(event) => setRefreshRate(event.target.value)} id="RefreshRate" label="Refresh Rate  (Seconds)" type='number' variant="outlined" />
-
-          <TextField  value={quantity} onChange={(event) => setQuantity(event.target.value)} id="Quantity" label="Quantity" type='number' variant="outlined" />
-
-        <div style={styles.endpoint}>
-            <FormLabel>End At</FormLabel>
+          <div style={styles.inputContainer}>
+          <p>Proxy</p>
           <Select
-            labelId="EndpointDropdown"
-            id="EndpointDropdown"
-            open={endpoinDropdown}
-            onClose={() => setEndpointDropdown(false)}
-            onOpen={() => setEndpointDropdown(true)}
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}>
-            <MenuItem value={'Item page'}>Item Page</MenuItem>
-            <MenuItem value={'Login page'}>Login Page</MenuItem>
-            <MenuItem value={'Shipping Page'}>Shipping Page</MenuItem>
-            <MenuItem value={'Checkout Page'}>Checkout Page</MenuItem>
-            <MenuItem value={'Success Page'}>Success Page</MenuItem>
-          </Select>
-          </div>
-          
-          <div style={styles.endpoint}>
-            <FormLabel>Proxy</FormLabel>
-          <Select
-            labelId="proxyDropdown"
-            id="proxyDropdown"
-            open={proxyDropdown}
-            onClose={() => setProxyDropdown(false)}
-            onOpen={() => setProxyDropdown(true)}
-            value={proxy}
-            onChange={(event) => setProxy(event.target.value)}>
-            <MenuItem value={'None'}>None</MenuItem>
-          </Select>
+              name="Proxy"
+              options={proxys}
+              onChange={(e) => setProxy(e.value)}
+              styles={styles.dropDown}
+              defaultValue={{ label: "None", value: 'None'}}
+            />
           </div>
 
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => AddTask(false)}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => AddTask(false)}>
           Add Task
         </Button>
-        <Button variant="contained" size="large" onClick={() => AddTask(true)}>
-          Add Task and start
-        </Button> 
-        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => AddTask(true)}>
+          Add Task And Start
+        </Button>
+        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel
-        </Button>         
+        </Button>     
         </div>
         </div>
-        </div>
-      </div> 
-      }
-      </>
+    </Modal>
     );
   }
   

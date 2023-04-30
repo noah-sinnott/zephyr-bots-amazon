@@ -1,13 +1,13 @@
 import Navbar from '../../Components/Navbar/Navbar'
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 import { Context } from "../../App";
-import bin from '../../assets/bin.png'
-import Info from '../../assets/info.png'
-
+import colors from '../../colors/colors';
 import AddAccountModal from '../../Components/AddAccountModal/AddAccountModal';
 import UpdateAccountsModal from '../../Components/UpdateAccountsModal/UpdateAccountsModal.js'
-
+import { Button, IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
   function Accounts() {
 
     const context = useContext(Context)
@@ -27,6 +27,15 @@ import UpdateAccountsModal from '../../Components/UpdateAccountsModal/UpdateAcco
       context.updateData({database: updatedDatabase });
     }
 
+    function MouseOver(event) {
+      event.target.closest('tr').style.background = colors.highlightMini;
+    }
+  
+    function MouseOut(event){
+      const row = event.target.closest('tr');
+      row.style.background = "";   
+     }
+
     return (
       <div style={styles.containerMain}>
         <AddAccountModal isOpen={addAccountModal} setOpen={setAddAccountModal}/>
@@ -36,16 +45,22 @@ import UpdateAccountsModal from '../../Components/UpdateAccountsModal/UpdateAcco
             <div style={styles.TableArea}>
                 <div style={styles.actions}>
                     <p>Accounts: {Object.keys(context.data.database.accounts).length}</p>
-                    <button style={styles.button} onClick={() => setAddAccountModal(!addAccountModal)}>Add Account</button>
-                    <button style={styles.button} onClick={() => {
+                    <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setAddAccountModal(!addAccountModal)}>
+                        Add Account
+                      </Button>
+                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => {
                       setUpdateAccounts(!updateAccounts)
                       setUpdateAccountId(false)
-                      }}>Update All</button>
-                    <button style={styles.button} onClick={() => deleteAll()}>Delete All</button>
+                      }}>
+                        Update All
+                      </Button>
+                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => deleteAll()}>
+                        Delete All
+                      </Button>
                 </div>
             <table style={styles.table}>
             <thead>
-              <tr>
+              <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>Name</th>
                 <th style={styles.tableHeader}>Username</th>
                 <th style={styles.tableHeader}>Password</th>
@@ -55,16 +70,20 @@ import UpdateAccountsModal from '../../Components/UpdateAccountsModal/UpdateAcco
             <tbody>
             {Object.entries(context.data.database.accounts).map(([key, value]) => {
               return (
-                <tr style={styles.tableRow} key={key}>
-                  <td>{value.Name}</td>
-                  <td>{value.Username}</td>
-                  <td>{value.Password}</td>
-                  <td>
-                     <img src={bin} style={styles.image} onClick={() => deleteAccount(key)}/> 
-                     <img src={Info} style={styles.image} onClick={() => {
+                <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
+                  <td  style={styles.tableItem}>{value.Name}</td>
+                  <td  style={styles.tableItem}>{value.Username}</td>
+                  <td  style={styles.tableItem}>{value.Password}</td>
+                  <td  style={styles.tableItem}>
+                  <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => deleteAccount(key)}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
                       setUpdateAccounts(!updateAccounts)
                       setUpdateAccountId(key)
-                      }}/> 
+                      }}>
+                      <EditIcon />
+                    </IconButton>
                   </td>
                 </tr>
               );

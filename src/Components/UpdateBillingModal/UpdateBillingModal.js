@@ -3,8 +3,9 @@ import styles from './styles'
 
 import {Context} from '../../App'
 
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
+import { Input, Modal, Button, FormControlLabel, Checkbox, } from "@mui/material";
+import colors from "../../colors/colors";
+  
 
   function UpdateBillingModal({setOpen, isOpen, billingId}) {
 
@@ -24,6 +25,25 @@ import Button from '@material-ui/core/Button'
     const [sortCode, setSortCode] = useState('');
     const [CVC, setCVC] = useState('');
     const [expiresAt, setExpiresAt] = useState('');
+    
+    const [page, setPage] = useState(1);
+    const [billingSameAs, setBillingSameAs] = useState(false);
+
+    function handlePage (forward){
+      if(forward){
+        if(billingSameAs === true){
+          setPage(3)
+        } else {
+          setPage(page + 1)
+        }
+      } else {
+        if(billingSameAs === true){
+          setPage(1)
+        } else {
+          setPage(page - 1)    
+        }
+      }
+    }
 
     async function update(){
       
@@ -74,46 +94,185 @@ import Button from '@material-ui/core/Button'
       setSortCode('');
       setExpiresAt('');
       setCVC('');
+      setPage(1);
+      setBillingSameAs(false);
     }
 
     return (
-      <>
-      {isOpen &&
-      <div style={styles.background}>
-        <div style={styles.mainContainer}>
-        <div style={styles.form}>
+      <Modal
+      open={isOpen}
+      onClose={() => exit()}
+      aria-labelledby="Add Task"
+      aria-describedby="Add Task"
+    >
+        <div style={styles.content}>
 
-        {billingId && 
-          <TextField value={name} onChange={(event) => setName(event.target.value)} id="name" label="Name" variant="outlined" />
-        }
-          <TextField value={shippingAddressLine1} onChange={(event) => setShippingAddressLine(event.target.value)} id="shippingAddressLine1" label="Shipping Address Line 1" variant="outlined" />
-          <TextField value={shippingAddressLine2} onChange={(event) => setShippingAddressLine2(event.target.value)} id="shippingAddressLine2" label="Shipping Address Line 2"variant="outlined" />
-          <TextField value={shippingPostCode} onChange={(event) => setShippingPostCode(event.target.value)} id="shippingPostCode" label="Shipping PostCode"variant="outlined" />
+        <div style={styles.title}>
+          <h1>Add Billing Profile</h1>
+        </div>
 
-          <TextField value={billingAddressLine1} onChange={(event) => setBillingAddressLine1(event.target.value)} id="billingAddressLine1" label="Billing Address Line 1"variant="outlined" />
-          <TextField value={billingAddressLine2} onChange={(event) => setBillingAddressLine2(event.target.value)} id="billingAddressLine2" label="Billing Adress Line 1"variant="outlined" />
-          <TextField value={billingPostCode} onChange={(event) => setBillingPostCode(event.target.value)} id="billingPostCode" label="Billing Post Code"variant="outlined" />
+{page === 1 ? <>
+  <div style={styles.inputContainer}>
+  <p>Billing Profile Name:</p>
+  <Input
+    value={name}
+    disableUnderline={true}
+    onChange={(event) => setName(event.target.value)}
+    id="name"
+    sx={styles.textInput}
+    placeholder="Enter Billing Profile Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Shipping Address Line 1:</p>
+  <Input
+    value={shippingAddressLine1}
+    disableUnderline={true}
+    onChange={(event) => setShippingAddressLine(event.target.value)}
+    id="shippingAddressLine1"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address Line 1"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Shipping Address Line 2:</p>
+  <Input
+    value={shippingAddressLine2}
+    disableUnderline={true}
+    onChange={(event) => setShippingAddressLine2(event.target.value)}
+    id="shippingAddressLine2"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address Line 2"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Shipping Post Code:</p>
+  <Input
+    value={shippingPostCode}
+    disableUnderline={true}
+    onChange={(event) => setShippingPostCode(event.target.value)}
+    id="shippingPostCode"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Post Code"
+  />
+</div>
+<FormControlLabel control={<Checkbox checked={billingSameAs} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setBillingSameAs(e.target.checked)}/>} label="Billing Address Same As Shipping" />
 
-          <TextField value={cardNumber} onChange={(event) => setCardNumber(event.target.value)} id="cardNumber" label="Card Number"variant="outlined" />
-          <TextField value={sortCode} onChange={(event) => setSortCode(event.target.value)} id="sortCode" label="Sort Code"variant="outlined" />
-          <TextField value={expiresAt} onChange={(event) => setExpiresAt(event.target.value)} id="expiresAt" label="Expires At"variant="outlined" />
-          <TextField value={CVC} onChange={(event) => setCVC(event.target.value)} id="CVC" label="CVC"variant="outlined" />
+</> 
 
+: page === 2 ? <>
+<div style={styles.inputContainer}>
+  <p>Billing Address Line 1:</p>
+  <Input
+    value={billingAddressLine1}
+    disableUnderline={true}
+    onChange={(event) => setBillingAddressLine1(event.target.value)}
+    id="billingAddressLine1"
+    sx={styles.textInput}
+    placeholder="Enter Billing Address Line 1"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Billing Address Line 2:</p>
+  <Input
+    value={billingAddressLine2}
+    disableUnderline={true}
+    onChange={(event) => setBillingAddressLine2(event.target.value)}
+    id="billingAddressLine2"
+    sx={styles.textInput}
+    placeholder="Enter Billing Address Line 2"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Billing Post Code:</p>
+  <Input
+    value={billingPostCode}
+    disableUnderline={true}
+    onChange={(event) => setBillingPostCode(event.target.value)}
+    id="billingPostCode"
+    sx={styles.textInput}
+    placeholder="Enter Billing Post Code"
+  />
+</div> </>: <>
+<div style={styles.inputContainer}>
+  <p>Card Number:</p>
+  <Input
+    value={cardNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardNumber(event.target.value)}
+    id="cardNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Number"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Sort Code:</p>
+  <Input
+    value={sortCode}
+    disableUnderline={true}
+    onChange={(event) => setSortCode(event.target.value)}
+    id="sortCode"
+    sx={styles.textInput}
+    placeholder="Enter Sort Code"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Expires At:</p>
+  <Input
+    value={expiresAt}
+    disableUnderline={true}
+    onChange={(event) => setExpiresAt(event.target.value)}
+    id="expiresAt"
+    sx={styles.textInput}
+    placeholder="Enter Expires At"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>CVC:</p>
+  <Input
+    value={CVC}
+    disableUnderline={true}
+    onChange={(event) => setCVC(event.target.value)}
+    id="CVC"        
+    sx={styles.textInput}
+    placeholder="Enter CVC"
+  />
+</div>
+</>
+  }
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" onClick={() => update()}>
-          Update All
+          {page == 1 ? 
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
+          Next
+        </Button> 
+        : page === 2 ? 
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
+          Back
         </Button>
-        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
+         Next
+        </Button>
+        </>
+        : 
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
+          Back
+        </Button>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update()}>
+          Update Billing Profile
+        </Button>
+        </>
+        }
+        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel
-        </Button>         
+        </Button>      
         </div>
         </div>
-        </div>
-      </div> 
-      }
-      </>
+        </Modal>
     );
   }
-  
+
+
   export default UpdateBillingModal;
   

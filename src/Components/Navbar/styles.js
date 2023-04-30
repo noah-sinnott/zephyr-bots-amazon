@@ -1,7 +1,7 @@
-
+import colors from "../../colors/colors"
 const styles = {
     containerMain: {
-      backgroundColor: '#304D6D',
+      backgroundColor: colors.primary,
       width: '55px',
       height: '100%',
       display: 'flex',
@@ -20,7 +20,7 @@ const styles = {
       justifyContent: 'center'
     },
     selectedButton: {
-      backgroundColor: '#82a0bc',
+      backgroundColor: colors.highlight,
       border: 'transparent',
       borderRadius: '20%',
       height: '45px',

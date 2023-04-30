@@ -7,10 +7,13 @@ import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
 import UpdateTasksModal from '../UpdateTasksModal/UpdateTasksModal'
 import {kill, amazon} from '../../helpers/ScriptRunner'
 
-import play from '../../assets/play.png'
-import bin from '../../assets/bin.png'
-import stop from '../../assets/stop.png'
-import info from '../../assets/info.png'
+
+import colors from "../../colors/colors";
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import { Button, IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
 
 function ActiveTasks({taskGroupId, setTaskGroupId}) {
 
@@ -87,6 +90,13 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
       context.updateData({database: updatedDatabase });
     }
   
+    function MouseOver(event) {
+      event.target.parentElement.style.background = colors.highlightMini;
+    }
+  
+    function MouseOut(event){
+      event.target.parentElement.style.background="";
+    }
 
     return (
       <div style={styles.containerMain}>
@@ -98,19 +108,31 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
         <EditTaskGroup setOpen={setEditTaskGroupModal} isOpen={editTaskGroupModal} taskGroupId={taskGroupId} setTaskGroupId={setTaskGroupId}/>
 
         <div style={styles.containerMain2}>
-            {taskGroupId != false && <>
+            {taskGroupId != false ? <>
             <div style={styles.actions}>
-                <button style={styles.button} onClick={() => setEditTaskGroupModal(!editTaskGroupModal)}>Edit Task Group</button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setEditTaskGroupModal(!editTaskGroupModal)}>
+                        Edit Task Group
+                </Button>
                 <p>Tasks: {Object.keys(context.data.database.taskGroups[taskGroupId].tasks).length}</p>
-                <button style={styles.button} onClick={() => addTask()}>Add Task</button>
-                <button style={styles.button} onClick={() => startAll()}>Start All</button>
-                <button style={styles.button} onClick={() => stopAll()}>Stop All</button>
-                <button style={styles.button} onClick={() => updateAll()}>Update All</button>
-                <button style={styles.button} onClick={() => deleteAll()}>Delete All</button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => addTask()}>
+                        Add Task
+                </Button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => startAll()}>
+                        Start All
+                </Button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => stopAll()}>
+                        Stop All
+                </Button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => updateAll()}>
+                        Update All
+                </Button>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => deleteAll()}>
+                        Delete All
+                </Button>
             </div>
             <table style={styles.table}>
             <thead>
-              <tr>
+              <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>Profile</th>
                 <th style={styles.tableHeader}>Proxy</th>
                 <th style={styles.tableHeader}>Status</th>
@@ -120,31 +142,42 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
             <tbody>
              {Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
               return (
-                <tr style={styles.tableRow} key={key}>
-                  <td>{value.email}</td>
-                  <td>{value.proxy ? value.proxy : 'false'}</td>
-                  <td>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
-                  <td>
+                <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
+                  <td style={styles.tableItem}>{value.email}</td>
+                  <td style={styles.tableItem}>{value.proxy ? value.proxy : 'false'}</td>
+                  <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
+                  <td style={styles.tableItem}>
                     {value.pythonPID !== false ?
-                     <img src={stop} style={styles.image} onClick={() => stopTask(key, value)}/> 
+                     <IconButton aria-label="Edit" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>
+                       <StopRoundedIcon />
+                    </IconButton>
                     :
                     <>  
-                    <img src={play} style={styles.image} onClick={() => startTask(key, value)}/> 
-                    <img src={info} style={styles.image}  onClick={() => {
+                    <IconButton aria-label="Edit" size="small" style={{color: colors.green}} onClick={() => {startTask(key, value)}}>
+                      <PlayArrowRoundedIcon />
+                    </IconButton>
+                    <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
                       setUpdateTasksModal(true)
                       setTaskId(key)
-                    } }/> 
+                      }}>
+                      <EditIcon />
+                    </IconButton>
                     </>
                   }
-                     <img src={bin} style={styles.image} onClick={() => deleteTask(key, value)}/> 
-                     
+                  <IconButton aria-label="Edit" size="small" style={{color: colors.red}} onClick={() => deleteTask(key, value)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </td>
                 </tr>
               );
              })}          
             </tbody>
           </table>
-              </>}
+              </> :
+              <div style={{width: '100%', height: '100%', display: 'flex',alignItems: 'center', justifyContent: 'center'}}>  
+                <p>Select a Task Group</p>
+              </div>
+              }
         </div>
       </div>
     );

@@ -1,3 +1,4 @@
+import colors from "../../colors/colors"
 
 const styles = {
     containerMain: {
@@ -15,10 +16,13 @@ const styles = {
       mainArea: {
         height: '90%',
         width: '100%',
-        backgroundColor: 'lightblue',
+        backgroundColor: colors.primary,
         display: 'flex',
         flexDirection: 'column',
-        alignItems:'center'
+        alignItems:'center',
+        color: colors.text,
+        borderRadius: '5px',
+        border: `1px solid ${colors.highlight}`
       }
   }
   

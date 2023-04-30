@@ -3,7 +3,9 @@ import React, {useContext, useEffect, useState} from "react";
 import styles from './styles'
 import { Context } from "../../App";
 import Slider from '@mui/material/Slider';
-import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core';
+import {FormControlLabel, Checkbox, Button } from '@mui/material';
+
+import colors from '../../colors/colors';
 
   function Settings() {
 
@@ -11,15 +13,17 @@ import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core
 
     const [typingSpeed, setTypingSpeed] = useState([0.1, 0.2]);
     const [waitSpeed, setWaitSpeed] = useState([0.1, 0.2]);
+    const [refreshRate, setRefreshRate] = useState([10, 15]);
     const [taskCompleteOpen, setTaskCompleteOpen] = useState(false);
     const [taskErrorOpen, setTaskErrorOpen] = useState(false);
 
     useEffect(() => {
       let settings = context.data.database.settings
       if(settings.typingSpeed) setTypingSpeed(settings.typingSpeed)
-      if(settings.waitSpeed) setTypingSpeed(settings.waitSpeed)
-      if(settings.taskCompleteOpen) setTypingSpeed(settings.taskCompleteOpen)
-      if(settings.taskErrorOpen) setTypingSpeed(settings.taskErrorOpen)
+      if(settings.waitSpeed) setWaitSpeed(settings.waitSpeed)
+      if(settings.refreshRate) setRefreshRate(settings.refreshRate)
+      if(settings.taskCompleteOpen) setTaskCompleteOpen(settings.taskCompleteOpen)
+      if(settings.taskErrorOpen) setTaskErrorOpen(settings.taskErrorOpen)
     }, [])
 
     useEffect(() => {
@@ -27,7 +31,8 @@ import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core
         typingSpeed: typingSpeed,
         waitSpeed: waitSpeed,
         taskCompleteOpen: taskCompleteOpen,
-        taskErrorOpen: taskErrorOpen
+        taskErrorOpen: taskErrorOpen,
+        refreshRate: refreshRate
       }
       const updatedDatabase = { ...context.data.database, settings: settings };
       context.updateData({database: updatedDatabase });
@@ -38,14 +43,37 @@ import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core
         <Navbar/>
           <div style={styles.area}>
             <div style={styles.mainArea}>
-              <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large">
-                LogOut
-              </Button>   
-                <FormControlLabel control={<Checkbox checked={taskCompleteOpen} onChange={(e) => setTaskCompleteOpen(e.target.checked)}/>} label="Open on task Completion" />
-                <FormControlLabel control={<Checkbox checked={taskErrorOpen} onChange={(e) => setTaskErrorOpen(e.target.checked)}/>} label="Open on task Error" />
-                <div style={styles.advancedSettings}>Advanced settings</div>
+                <FormControlLabel control={<Checkbox checked={taskCompleteOpen} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setTaskCompleteOpen(e.target.checked)}/>} label="Open on task Completion" />
+                <FormControlLabel control={<Checkbox checked={taskErrorOpen} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setTaskErrorOpen(e.target.checked)}/>} label="Open on task Error" />
                 <div style={styles.sliderContainer}>
-                <FormLabel>Wait Speed</FormLabel>
+                <p>Refresh Rate</p>
+                  <Slider
+                    getAriaLabel={() => 'Refresh Rate'}
+                    value={refreshRate}
+                    onChange={(e) => setRefreshRate(e.target.value)}
+                    min={0}
+                    max={30}
+                    step={0.5}
+                    marks
+                    valueLabelFormat={(value) => value + ' Seconds'}
+                    valueLabelDisplay="auto"
+                    sx={{
+                      color: colors.highlight,
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: colors.text, 
+                      },
+                      '& .MuiSlider-mark': {
+                        '&.MuiSlider-markActive': {
+                          backgroundColor: colors.text,
+                        },
+                      },
+                    }}     
+                   />  
+                </div>
+                <div style={styles.advancedSettings}>Advanced settings</div>
+
+                <div style={styles.sliderContainer}>
+                <p>Wait Speed</p>
                   <Slider
                     getAriaLabel={() => 'Wait speed'}
                     value={waitSpeed}
@@ -56,10 +84,21 @@ import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core
                     marks
                     valueLabelFormat={(value) => value + ' Seconds'}
                     valueLabelDisplay="auto"
-                  />  
+                    sx={{
+                      color: colors.highlight,
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: colors.text,
+                      },
+                      '& .MuiSlider-mark': {
+                        '&.MuiSlider-markActive': {
+                          backgroundColor: colors.text,
+                        },
+                      },
+                    }}     
+                   />  
                 </div>
                 <div style={styles.sliderContainer}>
-                <FormLabel>Typing Speed</FormLabel>
+                <p>Typing Speed</p>
                   <Slider
                     getAriaLabel={() => 'Typing speed'}
                     value={typingSpeed}
@@ -70,9 +109,22 @@ import { FormLabel, FormControlLabel, Checkbox, Button } from '@material-ui/core
                     marks
                     valueLabelFormat={(value) => value + ' Letters per second'}
                     valueLabelDisplay="auto"
+                    sx={{
+                      color: colors.highlight,
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: colors.text,
+                      },
+                      '& .MuiSlider-mark': {
+                        '&.MuiSlider-markActive': {
+                          backgroundColor: colors.text,
+                        },
+                      },
+                    }}  
                   />  
                 </div>
-
+                <Button variant="contained" size="medium" style={styles.logoutButton}  disableElevation>
+                  Log Out
+                </Button> 
             </div>
         </div>  
       </div>

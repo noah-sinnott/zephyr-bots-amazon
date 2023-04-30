@@ -3,9 +3,7 @@ import styles from './styles'
 
 import {Context} from '../../App'
 
-import FormLabel from '@mui/material/FormLabel';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
+import { Input, Modal, Button } from "@mui/material";
 
 import {kill} from '../../helpers/ScriptRunner'
 
@@ -52,34 +50,40 @@ import {kill} from '../../helpers/ScriptRunner'
     }
 
     return (
-      <>
-      {isOpen &&
-      <div style={styles.background}>
-        <div style={styles.mainContainer}>
-        <div style={styles.form}>
+      <Modal
+        open={isOpen}
+        onClose={() => exit()}
+        aria-labelledby="Add Account"
+        aria-describedby="Add Account"
+      >
+        <div style={styles.content}>
 
-        <FormLabel id="NameLabel">Name</FormLabel>
+        <div style={styles.title}>
+          <h1>Add Account</h1>
+        </div>
 
-        <TextField style={styles.wide} value={name} onChange={(event) => setName(event.target.value)} id="name" label="Task Group Name" variant="outlined" />
+        <div style={styles.inputContainer}>
+        <p>Task Group Name:</p>
+        <Input value={name} disableUnderline={true} onChange={(event) => setName(event.target.value)} id="name" sx={styles.textInput} placeholder="Enter Task Group Name"/>
+        </div>
 
         <div style={styles.submitButtons}>
 
-        <Button variant="contained" size="large" onClick={() => saveChanges()}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => saveChanges()}>
           Save Task Group
         </Button>
 
-        <Button variant="contained" size="large" onClick={() => deleteTaskGroup()}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => deleteTaskGroup()}>
           Delete Task Group
         </Button> 
-        <Button variant="outlined"  style={{ color: 'red', borderColor: 'red' }} size="large" onClick={() => exit()}>
+
+        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel
-        </Button>         
+        </Button>
+                 
         </div>
         </div>
-        </div>
-      </div> 
-      }
-      </>
+        </Modal>
     );
   }
   
