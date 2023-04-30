@@ -18,7 +18,7 @@ import { Input, Modal, Button } from "@mui/material";
       setName(context.data.database.accounts[accountId].name)
       setUsername(context.data.database.accounts[accountId].username)
       setPassword(context.data.database.accounts[accountId].password)
-    },[accountId])
+    },[isOpen])
 
     async function update(){
       

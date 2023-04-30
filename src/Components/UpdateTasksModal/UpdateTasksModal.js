@@ -18,7 +18,10 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
-
+    const [accounts, setAccounts] = useState([]);
+    const [account, setAccount] = useState([]);
+    const [billing, setBilling] = useState([]);
+    const [billings, setBillings] = useState([]);
     
    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
    { value: 'Login Page', label: 'Login Page' },
@@ -27,18 +30,32 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
    { value: 'Success Page', label: 'Success Page' },
  ]
 
- const proxys = [{ value: 'None', label: 'None' }]
+ const proxys = [{ value: false, label: 'None' }]
 
- useEffect(()=>{
+ 
+ useEffect(() => {
   if(!taskId) return
-  console.log(context.data.database.taskGroups[taskGroupId].tasks[taskId].endpoint)
   setEndpoint(context.data.database.taskGroups[taskGroupId].tasks[taskId].endpoint)
   setProxy(context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy)
   setQuantity(context.data.database.taskGroups[taskGroupId].tasks[taskId].quantity)
   setRefreshRate(context.data.database.taskGroups[taskGroupId].tasks[taskId].refreshRate)
   setMaxPrice(context.data.database.taskGroups[taskGroupId].tasks[taskId].maxPrice)
   setURL(context.data.database.taskGroups[taskGroupId].tasks[taskId].url)
-},[taskId])
+  setAccount(context.data.database.taskGroups[taskGroupId].tasks[taskId].account)
+  setBilling(context.data.database.taskGroups[taskGroupId].tasks[taskId].billing)
+
+  let accountsTemp = []
+  let billingsTemp = []
+  Object.entries(context.data.database.accounts).map(([key, value]) => {
+    accountsTemp.push({value: key, label: value.name})
+  })
+  Object.entries(context.data.database.billing).map(([key, value]) => {
+    billingsTemp.push({value: key, label: value.name})
+  })
+  setAccounts(accountsTemp)
+  setBillings(billingsTemp)
+}, [isOpen])
+
 
     async function update(start){
       
@@ -85,8 +102,30 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
         <div style={styles.content}>
 
         <div style={styles.title}>
-          <h1>Add Task</h1>
+          <h1>Update Task</h1>
         </div>
+
+        <div style={styles.inputContainer}>
+            <p>Accounts</p>
+            <Select
+              name="Accounts"
+              options={accounts}
+              onChange={(e) => setAccount(e)}
+              styles={styles.dropDown}
+              value={account}
+            />
+        </div>
+          
+          <div style={styles.inputContainer}>
+          <p>Billing Profile</p>
+          <Select
+              name="Billing Profile"
+              options={billings}
+              onChange={(e) => setBilling(e)}
+              styles={styles.dropDown}
+              value={billing}
+            />
+          </div>
 
         <div style={styles.inputContainer}>
           <p>Item url:</p>

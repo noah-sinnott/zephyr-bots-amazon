@@ -133,7 +133,8 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
             <table style={styles.table}>
             <thead>
               <tr style={styles.tableHeaderBackground}>
-                <th style={styles.tableHeader}>Profile</th>
+                <th style={styles.tableHeader}>Account</th>
+                <th style={styles.tableHeader}>Billing Profile</th>
                 <th style={styles.tableHeader}>Proxy</th>
                 <th style={styles.tableHeader}>Status</th>
                 <th style={styles.tableHeader}>Actions</th>
@@ -143,8 +144,9 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
              {Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
-                  <td style={styles.tableItem}>{value.email}</td>
-                  <td style={styles.tableItem}>{value.proxy.value}</td>
+                  <td style={styles.tableItem}>{value.account.label}</td>
+                  <td style={styles.tableItem}>{value.billing.label}</td>
+                  <td style={styles.tableItem}>{value.proxy.label}</td>
                   <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.pythonPID !== false ?

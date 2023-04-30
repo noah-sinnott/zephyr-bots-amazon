@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -20,6 +20,10 @@ import Select from "react-select";
     const [url, setURL] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [accounts, setAccounts] = useState([]);
+    const [account, setAccount] = useState([]);
+    const [billing, setBilling] = useState([]);
+    const [billings, setBillings] = useState([]);
 
    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
     { value: 'Login Page', label: 'Login Page' },
@@ -28,7 +32,20 @@ import Select from "react-select";
     { value: 'Success Page', label: 'Success Page' },
   ]
 
-  const proxys = [{ value: 'None', label: 'None' }]
+  const proxys = [{ value: false, label: 'None' }]
+
+  useEffect(() => {
+    let accountsTemp = []
+    let billingsTemp = []
+    Object.entries(context.data.database.accounts).map(([key, value]) => {
+      accountsTemp.push({value: key, label: value.name})
+    })
+    Object.entries(context.data.database.billing).map(([key, value]) => {
+      billingsTemp.push({value: key, label: value.name})
+    })
+    setAccounts(accountsTemp)
+    setBillings(billingsTemp)
+  }, [isOpen])
 
     async function AddTask(start){
     
@@ -45,6 +62,8 @@ import Select from "react-select";
         maxPrice: maxPrice,
         notifications: [],
         pythonPID: false,
+        account: account,
+        billing: billing
       }
 
       if(start){
@@ -84,6 +103,26 @@ import Select from "react-select";
         <div style={styles.title}>
           <h1>Add Task</h1>
         </div>
+
+        <div  style={styles.inputContainer}>
+            <p>Account</p>
+            <Select
+              name="Accounts"
+              options={accounts}
+              onChange={(e) => setAccount(e)}
+              styles={styles.dropDown}
+            />
+        </div>
+          
+          <div style={styles.inputContainer}>
+          <p>Billing Profile</p>
+          <Select
+              name="Billing Profiles"
+              options={billings}
+              onChange={(e) => setBilling(e)}
+              styles={styles.dropDown}
+            />
+          </div>
 
         <div style={styles.inputContainer}>
           <p>Item url:</p>

@@ -43,7 +43,7 @@ import colors from "../../colors/colors";
       setCVC(context.data.database.billing[billingId].CVC)
       setExpiresAt(context.data.database.billing[billingId].expiresAt)
       setBillingSameAs(context.data.database.billing[billingId].billingSameAs)
-    },[billingId])
+    },[isOpen])
 
     function handlePage (forward){
       if(forward){
@@ -110,7 +110,7 @@ import colors from "../../colors/colors";
         <div style={styles.content}>
 
         <div style={styles.title}>
-          <h1>Add Billing Profile</h1>
+          <h1>Update Billing Profile</h1>
         </div>
 
 {page === 1 ? <>
