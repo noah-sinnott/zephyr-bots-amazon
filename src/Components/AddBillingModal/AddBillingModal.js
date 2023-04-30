@@ -56,14 +56,15 @@ function AddBillingModal({setOpen, isOpen}) {
        name : name,
        shippingAddressLine1: shippingAddressLine1,
        shippingAddressLine2: shippingAddressLine2,
-      shippingPostCode: shippingPostCode,
-       billingAddressLine1: billingAddressLine1,
-       billingAddressLine2: billingAddressLine2,
-      billingPostCode: billingPostCode,
+       shippingPostCode: shippingPostCode,
+       billingAddressLine1: billingSameAs ? shippingAddressLine1 : billingAddressLine1,
+       billingAddressLine2: billingSameAs ? shippingAddressLine2 : billingAddressLine2,
+      billingPostCode: billingSameAs ? shippingPostCode : billingPostCode,
        cardNumber: cardNumber,
        sortCode: sortCode,
         CVC: CVC,
-      expiresAt: expiresAt
+      expiresAt: expiresAt,
+      billingSameAs: billingSameAs
       }
 
       billing[id] = newBillingProfile

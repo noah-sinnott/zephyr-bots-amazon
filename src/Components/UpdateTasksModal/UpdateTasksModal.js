@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -29,48 +29,35 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
  const proxys = [{ value: 'None', label: 'None' }]
 
+ useEffect(()=>{
+  if(!taskId) return
+  console.log(context.data.database.taskGroups[taskGroupId].tasks[taskId].endpoint)
+  setEndpoint(context.data.database.taskGroups[taskGroupId].tasks[taskId].endpoint)
+  setProxy(context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy)
+  setQuantity(context.data.database.taskGroups[taskGroupId].tasks[taskId].quantity)
+  setRefreshRate(context.data.database.taskGroups[taskGroupId].tasks[taskId].refreshRate)
+  setMaxPrice(context.data.database.taskGroups[taskGroupId].tasks[taskId].maxPrice)
+  setURL(context.data.database.taskGroups[taskGroupId].tasks[taskId].url)
+},[taskId])
+
     async function update(start){
       
       let taskGroups = context.data.database.taskGroups
 
-      if(taskId){
-        if(taskGroups[taskGroupId].tasks[taskId].pythonPID !== false){
+      if(taskGroups[taskGroupId].tasks[taskId].pythonPID !== false){
           kill(taskGroups[taskGroupId].tasks[taskId].pythonPID)
-        }
-        if(url != '') taskGroups[taskGroupId].tasks[taskId].url = url
-        if(endpoint != '') taskGroups[taskGroupId].tasks[taskId].endpoint = endpoint
-        if(proxy != '') taskGroups[taskGroupId].tasks[taskId].proxy = proxy
-        if(quantity != '') taskGroups[taskGroupId].tasks[taskId].quantity = quantity
-        if(refreshRate != '') taskGroups[taskGroupId].tasks[taskId].refreshRate = refreshRate
-        if(maxPrice != '') taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
-      } else {
-        Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
-        if(value.pythonPID !== false){
-          kill(value.pythonPID)
-        }
-      });
-     await Object.entries(taskGroups[taskGroupId].tasks).map(([key, value]) => {
-        if(url != '') value.url = url
-        if(endpoint != '') value.endpoint = endpoint
-        if(proxy != '') value.proxy = proxy
-        if(quantity != '') value.quantity = quantity
-        if(refreshRate != '') value.refreshRate = refreshRate
-        if(maxPrice != '') value.maxPrice = maxPrice
-      })
       }
+
+      taskGroups[taskGroupId].tasks[taskId].url = url
+      taskGroups[taskGroupId].tasks[taskId].endpoint = endpoint
+      taskGroups[taskGroupId].tasks[taskId].proxy = proxy
+      taskGroups[taskGroupId].tasks[taskId].quantity = quantity
+      taskGroups[taskGroupId].tasks[taskId].refreshRate = refreshRate
+      taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
       
-
       if(start){
-
-        if(taskId){
           const pythonPID = await amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
           taskGroups[taskGroupId].tasks[taskId].pythonPID = pythonPID;
-        } else {
-          for (const [key, value] of Object.entries(taskGroups[taskGroupId].tasks)) {
-          const pythonPID = await amazon(key, value, context, taskGroupId);
-          taskGroups[taskGroupId].tasks[key].pythonPID = pythonPID;
-           }  
-        }
       }             
       
       const updatedDatabase = { ...context.data.database, taskGroups: taskGroups };
@@ -121,9 +108,9 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
             <Select
               name="Ends At"
               options={endpoints}
-              onChange={(e) => setEndpoint(e.value)}
+              onChange={(e) => setEndpoint(e)}
               styles={styles.dropDown}
-              defaultValue={{ label: "Item Page", value: 'Item Page' }}
+              value={endpoint}
             />
         </div>
           
@@ -132,9 +119,9 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
           <Select
               name="Proxy"
               options={proxys}
-              onChange={(e) => setProxy(e.value)}
+              onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
-              defaultValue={{ label: "None", value: 'None'}}
+              value={proxy}
             />
           </div>
 

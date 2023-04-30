@@ -41,7 +41,7 @@ import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillin
     return (
       <div style={styles.containerMain}>
         <AddBillingModal isOpen={addBillingModal} setOpen={setAddBillingModal}/>
-        <UpdateBillingModal isOpen={updateBillingModal} setOpen={setUpdateBillingModal} accountId={updateBillingId}/>
+        <UpdateBillingModal isOpen={updateBillingModal} setOpen={setUpdateBillingModal} billingId={updateBillingId}/>
         <Navbar/>
           <div style={styles.TableAreaHolder}>
             <div style={styles.TableArea}>

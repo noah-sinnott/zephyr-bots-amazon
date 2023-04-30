@@ -13,8 +13,8 @@ import Select from "react-select";
 
     const context = useContext(Context)
 
-    const [endpoint, setEndpoint] = useState('Item Page');
-    const [proxy, setProxy] = useState('None');
+    const [endpoint, setEndpoint] = useState({ label: "Item Page", value: 'Item Page' });
+    const [proxy, setProxy] = useState({ label: "None", value: 'None'});
     const [quantity, setQuantity] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
@@ -39,8 +39,7 @@ import Select from "react-select";
         email: email,
         password: password,
         url: url,
-        proxy: false,
-        accountPool :false,
+        proxy: proxy,
         endpoint: endpoint,
         quantity: quantity,
         maxPrice: maxPrice,
@@ -106,7 +105,7 @@ import Select from "react-select";
             <Select
               name="Ends At"
               options={endpoints}
-              onChange={(e) => setEndpoint(e.value)}
+              onChange={(e) => setEndpoint(e)}
               styles={styles.dropDown}
               defaultValue={{ label: "Item Page", value: 'Item Page' }}
             />
@@ -117,7 +116,7 @@ import Select from "react-select";
           <Select
               name="Proxy"
               options={proxys}
-              onChange={(e) => setProxy(e.value)}
+              onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
               defaultValue={{ label: "None", value: 'None'}}
             />

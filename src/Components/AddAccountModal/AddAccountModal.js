@@ -20,11 +20,13 @@ import { generateId } from "../../helpers/generateId";
       if(!password) return
 
       let id = generateId()
+
       let newAccount = {
-        Name: name,
-        Username: username,
-        Password: password,
+        name: name,
+        username: username,
+        password: password,
       }
+      
       let database = context.data.database
       database.accounts[id] = newAccount
       context.updateData({database: database });

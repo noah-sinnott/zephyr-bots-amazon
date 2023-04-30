@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -14,7 +14,7 @@ import colors from "../../colors/colors";
     const [name, setName] = useState('');
 
     const [shippingPostCode, setShippingPostCode] = useState('');
-    const [shippingAddressLine1, setShippingAddressLine] = useState('');
+    const [shippingAddressLine1, setShippingAddressLine1] = useState('');
     const [shippingAddressLine2, setShippingAddressLine2] = useState('');
     
     const [billingPostCode, setBillingPostCode] = useState('');
@@ -28,6 +28,22 @@ import colors from "../../colors/colors";
     
     const [page, setPage] = useState(1);
     const [billingSameAs, setBillingSameAs] = useState(false);
+
+    useEffect(()=>{
+      if(!billingId) return
+      setName(context.data.database.billing[billingId].name)
+      setShippingPostCode(context.data.database.billing[billingId].shippingPostCode)
+      setShippingAddressLine1(context.data.database.billing[billingId].shippingAddressLine1)
+      setShippingAddressLine2(context.data.database.billing[billingId].shippingAddressLine2)
+      setBillingPostCode(context.data.database.billing[billingId].billingPostCode)
+      setBillingAddressLine1(context.data.database.billing[billingId].billingAddressLine1)  
+      setBillingAddressLine2(context.data.database.billing[billingId].billingAddressLine2)
+      setCardNumber(context.data.database.billing[billingId].cardNumber)
+      setSortCode(context.data.database.billing[billingId].sortCode)
+      setCVC(context.data.database.billing[billingId].CVC)
+      setExpiresAt(context.data.database.billing[billingId].expiresAt)
+      setBillingSameAs(context.data.database.billing[billingId].billingSameAs)
+    },[billingId])
 
     function handlePage (forward){
       if(forward){
@@ -49,33 +65,19 @@ import colors from "../../colors/colors";
       
     let billing = context.data.database.billing
 
-    if(billingId){
-      if(name != '') billing[billingId].name = name
-      if(shippingAddressLine1 != '') billing[billingId].shippingAddressLine1 = shippingAddressLine1
-      if(shippingAddressLine2 != '') billing[billingId].shippingAddressLine2 = shippingAddressLine2
-      if(shippingPostCode != '') billing[billingId].shippingPostCode = shippingPostCode
-      if(billingAddressLine1 != '') billing[billingId].billingAddressLine1 = billingAddressLine1
-      if(billingAddressLine2 != '') billing[billingId].billingAddressLine2 = billingAddressLine2
-      if(billingPostCode != '') billing[billingId].billingPostCode = billingPostCode
-      if(cardNumber != '') billing[billingId].cardNumber = cardNumber
-      if(sortCode != '') billing[billingId].sortCode = sortCode
-      if(CVC != '') billing[billingId].CVC = CVC
-      if(expiresAt != '') billing[billingId].expiresAt = expiresAt
-    } else {
-      await Object.entries(billing).map(([key, value]) => {
-        if(name != '') value.name = name
-        if(shippingAddressLine1 != '') value.shippingAddressLine1 = shippingAddressLine1
-        if(shippingAddressLine2 != '') value.shippingAddressLine2 = shippingAddressLine2
-        if(shippingPostCode != '') value.shippingPostCode = shippingPostCode
-        if(billingAddressLine1 != '') value.billingAddressLine1 = billingAddressLine1
-        if(billingAddressLine2 != '') value.billingAddressLine2 = billingAddressLine2
-        if(billingPostCode != '') value.billingPostCode = billingPostCode
-        if(cardNumber != '') value.cardNumber = cardNumber
-        if(sortCode != '') value.sortCode = sortCode
-        if(CVC != '') value.CVC = CVC
-        if(expiresAt != '') value.expiresAt = expiresAt
-      })
-    }
+    billing[billingId].name = name
+    billing[billingId].shippingAddressLine1 = shippingAddressLine1
+    billing[billingId].shippingAddressLine2 = shippingAddressLine2
+    billing[billingId].shippingPostCode = shippingPostCode
+    billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1
+    billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2
+    billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode
+    billing[billingId].cardNumber = cardNumber
+    billing[billingId].sortCode = sortCode
+    billing[billingId].CVC = CVC
+    billing[billingId].expiresAt = expiresAt
+    billing[billingId].billingSameAs = billingSameAs
+
       const updatedDatabase = { ...context.data.database, billing: billing };
       context.updateData({database: updatedDatabase });
       exit()
@@ -84,7 +86,7 @@ import colors from "../../colors/colors";
     function exit(){
       setOpen(false)
       setName('')
-      setShippingAddressLine('')
+      setShippingAddressLine1('')
       setShippingAddressLine2('');
       setShippingPostCode('');
       setBillingAddressLine1('')
@@ -128,7 +130,7 @@ import colors from "../../colors/colors";
   <Input
     value={shippingAddressLine1}
     disableUnderline={true}
-    onChange={(event) => setShippingAddressLine(event.target.value)}
+    onChange={(event) => setShippingAddressLine1(event.target.value)}
     id="shippingAddressLine1"
     sx={styles.textInput}
     placeholder="Enter Shipping Address Line 1"

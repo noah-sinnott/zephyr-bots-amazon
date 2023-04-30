@@ -144,7 +144,7 @@ function ActiveTasks({taskGroupId, setTaskGroupId}) {
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
                   <td style={styles.tableItem}>{value.email}</td>
-                  <td style={styles.tableItem}>{value.proxy ? value.proxy : 'false'}</td>
+                  <td style={styles.tableItem}>{value.proxy.value}</td>
                   <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.pythonPID !== false ?

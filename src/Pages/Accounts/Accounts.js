@@ -71,9 +71,9 @@ import EditIcon from '@mui/icons-material/Edit';
             {Object.entries(context.data.database.accounts).map(([key, value]) => {
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
-                  <td  style={styles.tableItem}>{value.Name}</td>
-                  <td  style={styles.tableItem}>{value.Username}</td>
-                  <td  style={styles.tableItem}>{value.Password}</td>
+                  <td  style={styles.tableItem}>{value.name}</td>
+                  <td  style={styles.tableItem}>{value.username}</td>
+                  <td  style={styles.tableItem}>{value.password}</td>
                   <td  style={styles.tableItem}>
                   <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => deleteAccount(key)}>
                       <DeleteIcon />

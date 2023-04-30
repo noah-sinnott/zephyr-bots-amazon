@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -13,23 +13,24 @@ import { Input, Modal, Button } from "@mui/material";
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    useEffect(()=>{
+      if(!accountId) return
+      setName(context.data.database.accounts[accountId].name)
+      setUsername(context.data.database.accounts[accountId].username)
+      setPassword(context.data.database.accounts[accountId].password)
+    },[accountId])
+
     async function update(){
       
     let accounts = context.data.database.accounts
 
-    if(accountId){
-      if(name != '') accounts[accountId].Name = name
-      if(username != '') accounts[accountId].Username = username
-      if(password != '') accounts[accountId].Password = password
-    } else {
-      await Object.entries(accounts).map(([key, value]) => {
-        if(username != '') value.Username = username
-        if(password != '') value.Password = password
-      })
-    }
-      const updatedDatabase = { ...context.data.database, accounts: accounts };
-      context.updateData({database: updatedDatabase });
-      exit()
+    accounts[accountId].name = name
+    accounts[accountId].username = username
+    accounts[accountId].password = password
+
+    const updatedDatabase = { ...context.data.database, accounts: accounts };
+    context.updateData({database: updatedDatabase });
+    exit()
     }
 
     function exit(){
