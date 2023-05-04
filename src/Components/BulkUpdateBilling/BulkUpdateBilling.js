@@ -1,9 +1,7 @@
 import React, {useContext, useState} from "react";
 import styles from './styles'
-
 import {Context} from '../../App'
-
-import { Input, Modal, Button, } from "@mui/material";
+import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
 
   function BulkUpdateBilling({setOpen, isOpen}) {
@@ -24,32 +22,42 @@ import Select from "react-select";
     const [sortCode, setSortCode] = useState('');
     const [CVC, setCVC] = useState('');
     const [expiresAt, setExpiresAt] = useState('');
+    const [page, setPage] = useState(1);
 
+    const [activeFields1, setActiveFields1] = useState([]);
+    const [activeFields2, setActiveFields2] = useState([]);
+    const [activeFields3, setActiveFields3] = useState([]);
+    const [activeFields1Unfiltered, setActiveFields1Unfiltered] = useState([]);
+    const [activeFields2Unfiltered, setActiveFields2Unfiltered] = useState([]);
+    const [activeFields3Unfiltered, setActiveFields3Unfiltered] = useState([]);
+const fields1 = [  
+{value: 'name', label: 'Name'},
+{value: 'shippingPostCode', label: 'Shipping Post Code'},
+{value: 'shippingAddressLine1', label: 'Shipping Address Line1'},
+{value: 'shippingAddressLine2', label: 'Shipping Address Line2'},
+];
 
-    const [activeFields, setActiveFields] = useState([]);
+const fields2 = [  
+{value: 'billingPostCode', label: 'Billing Post Code'},
+{value: 'billingAddressLine1', label: 'Billing Address Line1'},
+{value: 'billingAddressLine2', label: 'Billing Address Line2'},
+];
 
-    const fields = [  {value: 'name', label: 'Name'},
-      {value: 'shippingPostCode', label: 'Shipping Post Code'},
-        {value: 'shippingAddressLine1', label: 'Shipping Address Line1'},
-          {value: 'shippingAddressLine2', label: 'Shipping Address Line2'},
-            {value: 'billingPostCode', label: 'Billing Post Code'},
-              {value: 'billingAddressLine1', label: 'Billing Address Line1'},
-                {value: 'billingAddressLine2', label: 'Billing Address Line2'},
-                  {value: 'cardNumber', label: 'Card Number'},
-                    {value: 'sortCode', label: 'Sort Code'},
-                      {value: 'CVC', label: 'CVC'},
-                        {value: 'expiresAt', label: 'Expires At'}
-                      ];
-
-
+const fields3 = [ 
+{value: 'cardNumber', label: 'Card Number'},
+{value: 'sortCode', label: 'Sort Code'},
+{value: 'CVC', label: 'CVC'},
+{value: 'expiresAt', label: 'Expires At'}
+];
     function formatFields(inputedFields){
       let arr = []
-  
+      
       inputedFields.forEach((field) => {
           arr.push(field.value)
       })
-  
-      activeFields.forEach((currentField) => {
+   
+      if(page == 1){
+        activeFields1.forEach((currentField) => {
         if (!arr.includes(currentField)) {
           if (currentField === 'name') {
             setName('');
@@ -59,65 +67,84 @@ import Select from "react-select";
             setShippingAddressLine1('');
           } else if (currentField === 'shippingAddressLine2') {
             setShippingAddressLine2('');
-          } else if (currentField === 'billingPostCode') {
+          } 
+        }
+      });
+      setActiveFields1Unfiltered(inputedFields)    
+      setActiveFields1(arr)
+      } else if(page == 2){
+        activeFields2.forEach((currentField) => {
+        if (!arr.includes(currentField)) {
+          if (currentField === 'billingPostCode') {
             setBillingPostCode('');
           } else if (currentField === 'billingAddressLine1') {
             setBillingAddressLine1('');
           } else if (currentField === 'billingAddressLine2') {
             setBillingAddressLine2('');
-          } else if (currentField === 'cardNumber') {
-            setCardNumber('');
-          } else if (currentField === 'sortCode') {
-            setSortCode('');
-          } else if (currentField === 'CVC') {
-            setCVC('');
-          } else if (currentField === 'expiresAt') {
-            setExpiresAt('');
           }
         }
-      });      
-      setActiveFields(arr)
+      });
+      setActiveFields2Unfiltered(inputedFields)
+      setActiveFields2(arr)      
+      } else {
+          activeFields3.forEach((currentField) => {
+          if (!arr.includes(currentField)) {
+            if (currentField === 'cardNumber') {
+              setCardNumber('');
+            } else if (currentField === 'sortCode') {
+              setSortCode('');
+            } else if (currentField === 'CVC') {
+              setCVC('');
+            } else if (currentField === 'expiresAt') {
+              setExpiresAt('');
+            }
+          }
+        });  
+        setActiveFields3Unfiltered(inputedFields)
+        setActiveFields3(arr)    
+      }
       }
 
     async function update(){     
     let billing = context.data.database.billing
+    console.log(billing)
     Object.entries(billing).forEach(([key, value], index) => {
-      if (activeFields.includes('name')) {
+      if (activeFields1.includes('name')) {
         value.name = name;
       }
-      if (activeFields.includes('shippingPostCode')) {
-        value.postCode = shippingPostCode;
+      if (activeFields1.includes('shippingPostCode')) {
+        value.shippingPostCode = shippingPostCode;
       }
-      if (activeFields.includes('shippingAddressLine1')) {
-        value.addressLine1 = shippingAddressLine1;
+      if (activeFields1.includes('shippingAddressLine1')) {
+        value.shippingAddressLine1 = shippingAddressLine1;
       }
-      if (activeFields.includes('shippingAddressLine2')) {
-        value.addressLine2 = shippingAddressLine2;
+      if (activeFields1.includes('shippingAddressLine2')) {
+        value.shippingAddressLine2 = shippingAddressLine2;
       }
-      if (activeFields.includes('billingPostCode')) {
+      if (activeFields2.includes('billingPostCode')) {
         value.billingPostCode = billingPostCode;
       }
-      if (activeFields.includes('billingAddressLine1')) {
+      if (activeFields2.includes('billingAddressLine1')) {
         value.billingAddressLine1 = billingAddressLine1;
       }
-      if (activeFields.includes('billingAddressLine2')) {
+      if (activeFields2.includes('billingAddressLine2')) {
         value.billingAddressLine2 = billingAddressLine2;
       }
-      if (activeFields.includes('cardNumber')) {
+      if (activeFields3.includes('cardNumber')) {
         value.cardNumber = cardNumber;
       }
-      if (activeFields.includes('sortCode')) {
+      if (activeFields3.includes('sortCode')) {
         value.sortCode = sortCode;
       }
-      if (activeFields.includes('CVC')) {
+      if (activeFields3.includes('CVC')) {
         value.CVC = CVC;
       }
-      if (activeFields.includes('expiresAt')) {
+      if (activeFields3.includes('expiresAt')) {
         value.expiresAt = expiresAt;
       }
-      if(activeFields.length > 0) value.billingSameAs = false
+      if(activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0) value.billingSameAs = false
     });    
-
+    console.log(billing)
       const updatedDatabase = { ...context.data.database, billing: billing };
       context.updateData({database: updatedDatabase });
       exit()
@@ -136,7 +163,9 @@ import Select from "react-select";
       setSortCode('');
       setExpiresAt('');
       setCVC('');
-      setActiveFields([])
+      setActiveFields1([])
+      setActiveFields2([])
+      setActiveFields3([])
     }
 
     return (
@@ -145,28 +174,29 @@ import Select from "react-select";
       onClose={() => exit()}
       aria-labelledby="Update Billing Profiles"
       aria-describedby="Update Billing Profiles"
-    >
-        <div style={styles.content}>
+    >            
+      <div style={styles.content}>
 
         <div style={styles.title}>
           <h1>Update Billing Profiles</h1>
         </div>
 
-
+{page === 1 ? <>
         <div style={styles.dropDownContainer}>
-            <p>Fields</p>
+            <p>Section 1 Fields</p>
             <Select
               name="Fields"
-              options={fields}
+              options={fields1}
               isMulti
               isClearable={true}
               onChange={(e) => formatFields(e)}
               styles={styles.dropDown}
+              value={activeFields1Unfiltered}
             />
         </div>
 
 
-        {activeFields.includes('name') && 
+{activeFields1.includes('name') && 
   <div style={styles.inputContainer}>
     <p>Billing Profile Name:</p>
     <Input
@@ -180,7 +210,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('shippingAddressLine1') && 
+{activeFields1.includes('shippingAddressLine1') && 
   <div style={styles.inputContainer}>
     <p>Shipping Address Line 1:</p>
     <Input
@@ -194,7 +224,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('shippingAddressLine2') && 
+{activeFields1.includes('shippingAddressLine2') && 
   <div style={styles.inputContainer}>
     <p>Shipping Address Line 2:</p>
     <Input
@@ -208,7 +238,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('shippingPostCode') && 
+{activeFields1.includes('shippingPostCode') && 
   <div style={styles.inputContainer}>
     <p>Shipping Post Code:</p>
     <Input
@@ -221,8 +251,22 @@ import Select from "react-select";
     />
   </div>
 }
+</>: page === 2 ? <>
 
-{activeFields.includes('billingAddressLine1') && 
+<div style={styles.dropDownContainer}>
+<p>Section 2 Fields</p>
+<Select
+  name="Fields"
+  options={fields2}
+  isMulti
+  isClearable={true}
+  onChange={(e) => formatFields(e)}
+  styles={styles.dropDown}
+  value={activeFields2Unfiltered}
+/>
+</div>
+
+{activeFields2.includes('billingAddressLine1') && 
   <div style={styles.inputContainer}>
     <p>Billing Address Line 1:</p>
     <Input
@@ -236,7 +280,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('billingAddressLine2') && 
+{activeFields2.includes('billingAddressLine2') && 
   <div style={styles.inputContainer}>
     <p>Billing Address Line 2:</p>
     <Input
@@ -250,7 +294,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('billingPostCode') && 
+{activeFields2.includes('billingPostCode') && 
   <div style={styles.inputContainer}>
     <p>Billing Post Code:</p>
     <Input
@@ -263,8 +307,22 @@ import Select from "react-select";
     />
   </div>
 }
+</>:<>
 
-{activeFields.includes('cardNumber') && 
+<div style={styles.dropDownContainer}>
+<p>Section 3 Fields</p>
+<Select
+  name="Fields"
+  options={fields3}
+  isMulti
+  isClearable={true}
+  onChange={(e) => formatFields(e)}
+  styles={styles.dropDown}
+  value={activeFields3Unfiltered}
+/>
+</div>
+
+{activeFields3.includes('cardNumber') && 
   <div style={styles.inputContainer}>
     <p>Card Number:</p>
     <Input
@@ -278,7 +336,7 @@ import Select from "react-select";
   </div>
 }
 
-{activeFields.includes('sortCode') &&
+{activeFields3.includes('sortCode') &&
 
 <div style={styles.inputContainer}>
   <p>Sort Code:</p>
@@ -292,7 +350,7 @@ import Select from "react-select";
   />
 </div>}
 
-{activeFields.includes('expiresAt') &&
+{activeFields3.includes('expiresAt') &&
 <div style={styles.inputContainer}>
   <p>Expires At:</p>
   <Input
@@ -305,7 +363,7 @@ import Select from "react-select";
   />
 </div>}
 
-{activeFields.includes('CVC') &&
+{activeFields3.includes('CVC') && 
 <div style={styles.inputContainer}>
   <p>CVC:</p>
   <Input
@@ -317,18 +375,41 @@ import Select from "react-select";
     placeholder="Enter CVC"
   />
 </div>}
+</>
+  }
 
-        <div style={styles.submitButtons}>
-          
+      <div style={styles.submitButtons}>
+        {page == 1 ? 
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() =>  setPage((prev) => prev + 1)}>
+          Next
+        </Button> 
+        : page === 2 ? 
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() =>  setPage((prev) => prev - 1)}>
+          Back
+        </Button>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() =>  setPage((prev) => prev + 1)}>
+         Next
+        </Button>
+        </>
+        : 
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setPage((prev) => prev - 1)}>
+          Back
+        </Button>
           <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update()}>
           Update Billing Profiles
         </Button>
+        </>
+        }
 
-        <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
-          Cancel
-        </Button>      
+          <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
+            Cancel
+          </Button>      
         </div>
+
         </div>
+
         </Modal>
     );
   }

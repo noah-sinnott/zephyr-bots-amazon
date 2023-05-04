@@ -9,6 +9,7 @@ const styles = {
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: '50%',
+      maxHeight: '90%',
       backgroundColor: colors.primary,
       border: `1px solid ${colors.highlight}`,
       borderRadius: '10px',

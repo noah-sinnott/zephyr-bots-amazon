@@ -101,6 +101,14 @@ html, body {
   background-color: #03273c;
 }
 
+body::-webkit-scrollbar-track {
+    background: #ff1010; 
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
   </style>
   </head>
   <body>
@@ -123,7 +131,7 @@ const win = nw.Window.get();
 
 // Maximize the window
 win.maximize();
-
+win.setMinimumSize(1080, 600);
 // Get references to the frame buttons
 const minimizeButton = document.querySelector('.minimize');
 const maximizeButton = document.querySelector('.maximize');

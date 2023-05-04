@@ -3,6 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import styles from './styles'
 import { Context } from "../../App";
 import Slider from '@mui/material/Slider';
+import Select from 'react-select';
 import {FormControlLabel, Checkbox, Button } from '@mui/material';
 
 import colors from '../../colors/colors';
@@ -16,6 +17,14 @@ import colors from '../../colors/colors';
     const [refreshRate, setRefreshRate] = useState([10, 15]);
     const [taskCompleteOpen, setTaskCompleteOpen] = useState(false);
     const [taskErrorOpen, setTaskErrorOpen] = useState(false);
+    const [endpoint, setEndpoint] = useState({});
+
+    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
+    { value: 'Login Page', label: 'Login Page' },
+    { value: 'Shipping Page', label: 'Shipping Page' },
+    { value: 'Checkout Page', label: 'Checkout Page' },
+    { value: 'Success Page', label: 'Success Page' },
+  ]
 
     useEffect(() => {
       let settings = context.data.database.settings
@@ -24,6 +33,7 @@ import colors from '../../colors/colors';
       if(settings.refreshRate) setRefreshRate(settings.refreshRate)
       if(settings.taskCompleteOpen) setTaskCompleteOpen(settings.taskCompleteOpen)
       if(settings.taskErrorOpen) setTaskErrorOpen(settings.taskErrorOpen)
+      if(settings.endpoint) setEndpoint(settings.endpoint)
     }, [])
 
     useEffect(() => {
@@ -32,11 +42,12 @@ import colors from '../../colors/colors';
         waitSpeed: waitSpeed,
         taskCompleteOpen: taskCompleteOpen,
         taskErrorOpen: taskErrorOpen,
-        refreshRate: refreshRate
+        refreshRate: refreshRate,
+        endpoint: endpoint
       }
       const updatedDatabase = { ...context.data.database, settings: settings };
       context.updateData({database: updatedDatabase });
-    }, [typingSpeed, waitSpeed, taskCompleteOpen, taskErrorOpen])
+    }, [typingSpeed, waitSpeed, taskCompleteOpen, taskErrorOpen, refreshRate, endpoint])
 
     return (
       <div style={styles.containerMain}>
@@ -121,6 +132,16 @@ import colors from '../../colors/colors';
                       },
                     }}  
                   />  
+                </div>
+                <div style={styles.sliderContainer}>
+                <p>End At</p>
+                    <Select
+                      name="Ends At"
+                      options={endpoints}
+                      onChange={(e) => setEndpoint(e)}
+                      styles={styles.dropDown}
+                      value={endpoint}
+                    />
                 </div>
                 <Button variant="contained" size="medium" style={styles.logoutButton}  disableElevation>
                   Log Out

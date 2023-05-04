@@ -12,10 +12,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
     const context = useContext(Context)
 
-    const [endpoint, setEndpoint] = useState('');
     const [proxy, setProxy] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
     const [accounts, setAccounts] = useState([]);
@@ -24,19 +21,10 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [billings, setBillings] = useState([]);
     const [proxies, setProxies] = useState([]);
 
-   const endpoints = [{ value: 'Item Page', label: 'Item Page' },
-   { value: 'Login Page', label: 'Login Page' },
-   { value: 'Shipping Page', label: 'Shipping Page' },
-   { value: 'Checkout Page', label: 'Checkout Page' },
-   { value: 'Success Page', label: 'Success Page' },
- ]
  
  useEffect(() => {
   if(!taskId) return
-  setEndpoint(context.data.database.taskGroups[taskGroupId].tasks[taskId].endpoint)
   setProxy(context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy)
-  setQuantity(context.data.database.taskGroups[taskGroupId].tasks[taskId].quantity)
-  setRefreshRate(context.data.database.taskGroups[taskGroupId].tasks[taskId].refreshRate)
   setMaxPrice(context.data.database.taskGroups[taskGroupId].tasks[taskId].maxPrice)
   setURL(context.data.database.taskGroups[taskGroupId].tasks[taskId].url)
   setAccount(context.data.database.taskGroups[taskGroupId].tasks[taskId].account)
@@ -69,11 +57,10 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       }
 
       taskGroups[taskGroupId].tasks[taskId].url = url
-      taskGroups[taskGroupId].tasks[taskId].endpoint = endpoint
       taskGroups[taskGroupId].tasks[taskId].proxy = proxy
-      taskGroups[taskGroupId].tasks[taskId].quantity = quantity
-      taskGroups[taskGroupId].tasks[taskId].refreshRate = refreshRate
       taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
+      taskGroups[taskGroupId].tasks[taskId].billing = billing
+      taskGroups[taskGroupId].tasks[taskId].account = account
       
       if(start){
           const pythonPID = await amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
@@ -87,22 +74,19 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
     function exit(){
       setOpen(false)
-      setQuantity('');
-      setRefreshRate('');
       setMaxPrice('');
       setURL('');
       setAccount([])
       setProxy([])
       setBilling([])
-      setEndpoint([])
     }
 
     return (
       <Modal
       open={isOpen}
       onClose={() => exit()}
-      aria-labelledby="Add Task"
-      aria-describedby="Add Task"
+      aria-labelledby="Update Task"
+      aria-describedby="Update Task"
     >
         <div style={styles.content}>
 
@@ -132,37 +116,6 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
             />
           </div>
 
-        <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Max overall price including shipping and tax:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Quantity:</p>
-          <Input value={quantity} disableUnderline={true} onChange={(event) => setQuantity(event.target.value)} id="quantity" style={styles.textInput} placeholder="Enter quantity"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Refresh Rate:</p>
-          <Input value={refreshRate} disableUnderline={true} onChange={(event) => setRefreshRate(event.target.value)} id="refreshRate" style={styles.textInput} placeholder="Enter Refresh Rate"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-            <p>End At</p>
-            <Select
-              name="Ends At"
-              options={endpoints}
-              onChange={(e) => setEndpoint(e)}
-              styles={styles.dropDown}
-              value={endpoint}
-            />
-        </div>
-          
           <div style={styles.inputContainer}>
           <p>Proxy</p>
           <Select
@@ -173,6 +126,16 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
               value={proxy}
             />
           </div>
+
+        <div style={styles.inputContainer}>
+          <p>Item url:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Max overall:</p>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+        </div>
 
         <div style={styles.submitButtons}>
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(false)}>

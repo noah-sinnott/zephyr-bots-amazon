@@ -54,7 +54,7 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
                         Add Billing Profile
                       </Button>
                       <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => {
-                                    setUpdateBillings(!updateBillings)
+                          setUpdateBillings(!updateBillings)
                       }}>
                         Update All
                       </Button>

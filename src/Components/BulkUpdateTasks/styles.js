@@ -9,13 +9,14 @@ const styles = {
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: '70%',
+      maxHeight: '90%',
       backgroundColor: colors.primary,
       border: `1px solid ${colors.highlight}`,
       borderRadius: '10px',
       padding: '20px',
       color: colors.text,
       display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateColumns: 'repeat(3, 1fr)',
       gridGap: '20px'
     },
     inputContainer:{
@@ -24,13 +25,13 @@ const styles = {
     },
     title: {
       borderBottom: `1px solid ${colors.seperator}`,
-      gridColumn: 'span 2'
+      gridColumn: 'span 3'
     },
     submitButtons: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
-      gridColumn: 'span 2',
+      gridColumn: 'span 3',
       paddingTop: '15px',
       borderTop: `1px solid ${colors.seperator}`,
     },
@@ -89,7 +90,7 @@ const styles = {
         },
         multiContainer: {
           width: '100%',
-          gridColumn: 'span 2'
+          gridColumn: 'span 3'
         },
         multi: {
           control: (provided) => ({

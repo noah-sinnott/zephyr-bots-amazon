@@ -61,8 +61,8 @@ import Select from "react-select";
       <Modal
         open={isOpen}
         onClose={() => exit()}
-        aria-labelledby="Add Account"
-        aria-describedby="Add Account"
+        aria-labelledby="Update Accounts"
+        aria-describedby="Update Accounts"
       >
       <div style={styles.content}>
 

@@ -56,7 +56,7 @@ import { generateId } from '../../helpers/generateId'
       <Modal
       open={isOpen}
       onClose={() => exit()}
-      aria-labelledby="Add Add Proxies"
+      aria-labelledby="Add Proxies"
       aria-describedby="Add Proxies"
     >
         <div style={styles.content}>

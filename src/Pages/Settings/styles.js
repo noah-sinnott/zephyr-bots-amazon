@@ -41,7 +41,40 @@ const styles = {
     sliderContainer: {
       width: '30%'
     },
-
+    dropDown: {
+      control: (provided) => ({
+          ...provided,
+          backgroundColor: colors.field,  
+          border: `1px solid ${colors.highlight}`, 
+          color: colors.text2, 
+          borderColor: colors.highlight,
+          borderRadius: '5px',
+          padding: '8px'
+      }), 
+      menu: (provided) => ({
+          ...provided,
+          backgroundColor: colors.field ,
+          border: `1px solid ${colors.highlight}`,
+          color: colors.text2, 
+      }), 
+      menuList: (provided) => ({
+          ...provided,
+          backgroundColor: colors.field, 
+          border: `1px solid ${colors.highlight}`,
+          color: colors.text2,  
+      }), 
+      option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+          return {
+            ...styles,
+            backgroundColor: isFocused ? colors.highlight : null,
+            color: colors.text2,
+          };
+        }, 
+      singleValue: provided => ({
+          ...provided,
+          color: colors.text2
+        })
+      }
   }
 
 export default styles

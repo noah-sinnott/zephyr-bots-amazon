@@ -44,8 +44,8 @@ import { Input, Modal, Button } from "@mui/material";
       <Modal
         open={isOpen}
         onClose={() => exit()}
-        aria-labelledby="Add Account"
-        aria-describedby="Add Account"
+        aria-labelledby="Update Account"
+        aria-describedby="Update Account"
       >
       <div style={styles.content}>
 

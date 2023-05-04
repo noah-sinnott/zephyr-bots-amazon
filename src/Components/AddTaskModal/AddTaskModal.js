@@ -13,24 +13,15 @@ import Select from "react-select";
 
     const context = useContext(Context)
 
-    const [endpoint, setEndpoint] = useState({ label: "Item Page", value: 'Item Page' });
     const [proxy, setProxy] = useState({ label: "None", value: false});
-    const [quantity, setQuantity] = useState('');
+    const [quantity, setQuantity] = useState(1);
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
-    const [refreshRate, setRefreshRate] = useState('');
     const [accounts, setAccounts] = useState([]);
     const [account, setAccount] = useState([]);
     const [billing, setBilling] = useState([]);
     const [billings, setBillings] = useState([]);
     const [proxies, setProxies] = useState([]);
-
-   const endpoints = [{ value: 'Item Page', label: 'Item Page' },
-    { value: 'Login Page', label: 'Login Page' },
-    { value: 'Shipping Page', label: 'Shipping Page' },
-    { value: 'Checkout Page', label: 'Checkout Page' },
-    { value: 'Success Page', label: 'Success Page' },
-  ]
 
   useEffect(() => {
     let accountsTemp = []
@@ -50,48 +41,51 @@ import Select from "react-select";
     setProxies(proxiesTemp)
   }, [isOpen])
 
-    async function AddTask(start){
-    
-      let id = generateId()
-
+  
+  async function AddTask(start) {
+    let taskgroups = context.data.database.taskGroups;
+    let promises = [];
+  
+    for (let i = 0; i < quantity; i++) {
+      let id = generateId();
       let newTask = {
-        type: 'amazon',
+        type: "amazon",
         url: url,
         proxy: proxy,
-        endpoint: endpoint,
-        quantity: quantity,
         maxPrice: maxPrice,
-        refreshRate: refreshRate,
         notifications: [],
         pythonPID: false,
         account: account,
-        billing: billing
+        billing: billing,
+      };
+      if (start) {
+        promises.push(
+          amazon(newTask, context, taskGroupId).then((pythonPID) => {
+            newTask.pythonPID = pythonPID;
+            taskgroups[taskGroupId].tasks[id] = newTask;
+          })
+        );
+      } else {
+        taskgroups[taskGroupId].tasks[id] = newTask;
       }
-
-      if(start){
-        const pythonPID = await amazon(newTask, context, taskGroupId);     
-        newTask.pythonPID = pythonPID
-      } 
-
-        let taskgroups = context.data.database.taskGroups
-        taskgroups[taskGroupId].tasks[id] = newTask
-  
-        const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
-        context.updateData({database: updatedDatabase });
-      
-      exit()
     }
+  
+    await Promise.all(promises);
+  
+    const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+    context.updateData({ database: updatedDatabase });
+  
+    exit();
+  }
 
     function exit(){
       setOpen(false)
-      setQuantity('');
-      setRefreshRate('');
+      setQuantity(1);
       setMaxPrice('');
       setURL('');
       setAccount([])
       setProxy({ label: "None", value: false})
       setBilling([])
-      setEndpoint({ label: "Item Page", value: 'Item Page' })
     }
 
     return (
@@ -127,37 +121,6 @@ import Select from "react-select";
             />
           </div>
 
-        <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Max overall price including shipping and tax:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Quantity:</p>
-          <Input value={quantity} disableUnderline={true} onChange={(event) => setQuantity(event.target.value)} id="quantity" style={styles.textInput} placeholder="Enter quantity"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-          <p>Refresh Rate:</p>
-          <Input value={refreshRate} disableUnderline={true} onChange={(event) => setRefreshRate(event.target.value)} id="refreshRate" style={styles.textInput} placeholder="Enter Refresh Rate"/>
-        </div>
-
-        <div  style={styles.inputContainer}>
-            <p>End At</p>
-            <Select
-              name="Ends At"
-              options={endpoints}
-              onChange={(e) => setEndpoint(e)}
-              styles={styles.dropDown}
-              value={{ label: "Item Page", value: 'Item Page' }}
-            />
-        </div>
-          
           <div style={styles.inputContainer}>
           <p>Proxy</p>
           <Select
@@ -169,12 +132,38 @@ import Select from "react-select";
             />
           </div>
 
+        <div style={styles.inputContainer}>
+          <p>Item url:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Max overall price:</p>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+        </div>
+
+        <div  style={styles.inputContainer}>
+          <p>Task Quantity:</p>
+          <Input value={quantity} 
+          disableUnderline={true}   
+          onChange={(event) => {
+              const value = parseInt(event.target.value);
+              if (value >= 1) {  
+                setQuantity(value);
+              }
+            }} 
+         id="quantity" style={styles.textInput} 
+         placeholder="Enter Task Quantity"/>
+      </div>
+ 
+
+
         <div style={styles.submitButtons}>
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => AddTask(false)}>
-          Add Task
+          Add {quantity > 1 ? 'Tasks' : 'Task'}
         </Button>
           <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => AddTask(true)}>
-          Add Task And Start
+          Add {quantity > 1 ? 'Tasks' : 'Task'} And Start
         </Button>
         <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel

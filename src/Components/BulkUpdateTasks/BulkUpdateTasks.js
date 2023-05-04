@@ -12,10 +12,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
     const context = useContext(Context)
 
-    const [endpoint, setEndpoint] = useState('');
     const [proxy, setProxy] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [refreshRate, setRefreshRate] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [url, setURL] = useState('');
     const [accounts, setAccounts] = useState([]);
@@ -25,21 +22,12 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [proxies, setProxies] = useState([]);
     const [activeFields, setActiveFields] = useState([]);
 
-   const endpoints = [{ value: 'Item Page', label: 'Item Page' },
-   { value: 'Login Page', label: 'Login Page' },
-   { value: 'Shipping Page', label: 'Shipping Page' },
-   { value: 'Checkout Page', label: 'Checkout Page' },
-   { value: 'Success Page', label: 'Success Page' },
- ]
- 
+    
  const fields = [{value: 'account', label: 'Account'},
  {value: 'billingProfile', label: 'Billing Profile'},
  {value: 'proxies', label: 'Proxies'},
-  {value: 'endpoint', label: 'Endpoint'},
-  {value: 'refreshRate', label: 'Refresh Rate'},
   {value: 'maxPrice', label: 'Max Price'},
   {value: 'url', label: 'URL'},
-  {value: 'quantity', label: 'Quantity'}
 ]
 
  useEffect(() => {
@@ -72,12 +60,8 @@ function formatFields(inputedFields){
           if(currentField == 'account') setAccount([])
           if(currentField == 'billingProfile') setBilling([])
           if(currentField == 'proxies') setProxy([])
-          if(currentField == 'endpoint') setEndpoint([])
-          if(currentField == 'refreshRate') setRefreshRate('')
           if(currentField == 'maxPrice') setMaxPrice('')
           if(currentField == 'url') setURL('')
-          if(currentField == 'quantity') setQuantity('')
-
       }
   })
   setActiveFields(arr)
@@ -91,14 +75,11 @@ function formatFields(inputedFields){
       Object.entries(taskGroups[taskGroupId].tasks).map(
         async ([key, value], index) => {
           if (value.pythonPID !== false) kill(value.pythonPID);
-          if (activeFields.includes('endpoint')) value.endpoint = endpoint;
           if (activeFields.includes('account')) value.account = account;
           if (activeFields.includes('billingProfile'))value.billingProfile = billing;
           if (activeFields.includes('proxies')) value.proxies = proxies;
-          if (activeFields.includes('refreshRate'))value.refreshRate = refreshRate;
           if (activeFields.includes('url')) value.url = url;
           if (activeFields.includes('maxPrice')) value.maxPrice = maxPrice;
-          if (activeFields.includes('quantity')) value.quantity = quantity;
           if (start) {
             const pythonPID = await amazon(
               key,
@@ -123,27 +104,25 @@ function formatFields(inputedFields){
 
     function exit(){
       setOpen(false)
-      setQuantity('');
-      setRefreshRate('');
       setMaxPrice('');
       setURL('');
       setAccount([])
       setProxy([])
       setBilling([])
-      setEndpoint([])
+      setActiveFields([])
     }
 
     return (
       <Modal
       open={isOpen}
       onClose={() => exit()}
-      aria-labelledby="Add Task"
-      aria-describedby="Add Task"
+      aria-labelledby="Update Tasks"
+      aria-describedby="Update Tasks"
     >
         <div style={styles.content}>
 
         <div style={styles.title}>
-          <h1>Update Task</h1>
+          <h1>Update Tasks</h1>
         </div>
 
         <div style={styles.multiContainer}>
@@ -182,43 +161,7 @@ function formatFields(inputedFields){
             />
           </div>}
 
-      {activeFields.includes('url') && 
-        <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
-        </div>}
-
-        {activeFields.includes('maxPrice') && 
-        <div  style={styles.inputContainer}>
-          <p>Max overall price including shipping and tax:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
-        </div>}
-
-        {activeFields.includes('quantity') && 
-        <div  style={styles.inputContainer}>
-          <p>Quantity:</p>
-          <Input value={quantity} disableUnderline={true} onChange={(event) => setQuantity(event.target.value)} id="quantity" style={styles.textInput} placeholder="Enter quantity"/>
-        </div>}
-
-        {activeFields.includes('refreshRate') && 
-        <div  style={styles.inputContainer}>
-          <p>Refresh Rate:</p>
-          <Input value={refreshRate} disableUnderline={true} onChange={(event) => setRefreshRate(event.target.value)} id="refreshRate" style={styles.textInput} placeholder="Enter Refresh Rate"/>
-        </div>}
-
-        {activeFields.includes('endpoint') && 
-        <div  style={styles.inputContainer}>
-            <p>End At</p>
-            <Select
-              name="Ends At"
-              options={endpoints}
-              onChange={(e) => setEndpoint(e)}
-              styles={styles.dropDown}
-              value={endpoint}
-            />
-        </div>}
-          
-        {activeFields.includes('proxies') && 
+          {activeFields.includes('proxies') && 
           <div style={styles.inputContainer}>
           <p>Proxy</p>
           <Select
@@ -230,6 +173,18 @@ function formatFields(inputedFields){
             />
           </div>}
 
+      {activeFields.includes('url') && 
+        <div style={styles.inputContainer}>
+          <p>Item url:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+        </div>}
+
+        {activeFields.includes('maxPrice') && 
+        <div  style={styles.inputContainer}>
+          <p>Max overall price:</p>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+        </div>}
+          
         <div style={styles.submitButtons}>
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(false)}>
           Update Tasks
