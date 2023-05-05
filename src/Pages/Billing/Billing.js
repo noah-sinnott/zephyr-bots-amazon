@@ -10,7 +10,7 @@ import AddBillingModal from '../../Components/AddBillingModal/AddBillingModal';
 import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillingModal.js'
 import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBilling';
 import ConfirmationDialog from '../../Components/ConfirmationDialog/ConfirmationDialog';
-
+import { kill } from '../../helpers/ScriptRunner';
   function Billing() {
 
     const context = useContext(Context)
@@ -22,14 +22,35 @@ import ConfirmationDialog from '../../Components/ConfirmationDialog/Confirmation
     const [deleteBillingDialog, setDeleteBillingDialog] = useState(false)
 
     function deleteAll () {
-      const updatedDatabase = { ...context.data.database, billing: {} };
+      let taskGroups = context.data.database.taskgroups
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+          }
+        })
+        taskGroup.tasks = {}
+      })
+      const updatedDatabase = { ...context.data.database, billing: {}, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
     }
 
     function deleteBilling(id){
+      let taskGroups = context.data.database.taskgroups
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+          if(task.billing.value === id){
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+          }
+          delete taskGroup.tasks[key]
+          }
+        })
+      })
+
         let billing = context.data.database.billing
         delete billing[id]
-        const updatedDatabase = { ...context.data.database, billing: billing };
+        const updatedDatabase = { ...context.data.database, billing: billing, taskGroups: taskGroups };
         context.updateData({database: updatedDatabase });
     }
 

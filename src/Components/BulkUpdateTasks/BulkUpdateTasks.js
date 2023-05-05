@@ -72,28 +72,42 @@ function formatFields(inputedFields){
 
   let taskGroups = context.data.database.taskGroups;
   
-    await Promise.all(
       Object.entries(taskGroups[taskGroupId].tasks).map(
         async ([key, value], index) => {
-          if (value.pythonPID !== false) kill(value.pythonPID);
-          if (activeFields.includes('account')) value.account = account;
-          if (activeFields.includes('billingProfile'))value.billingProfile = billing;
-          if (activeFields.includes('proxies')) value.proxies = proxies;
-          if (activeFields.includes('url')) value.url = url;
-          if (activeFields.includes('maxPrice')) value.maxPrice = maxPrice;
+
+          let updatedValue = {
+            ...value,
+            account: activeFields.includes('account') ? account : value.account,
+            billingProfile: activeFields.includes('billingProfile') ? billing : value.billingProfile,
+            proxies: activeFields.includes('proxies') ? proxies : value.proxies,
+            url: activeFields.includes('url') ? url : value.url,
+            maxPrice: activeFields.includes('maxPrice') ? maxPrice : value.maxPrice,
+          };
+
+          if(JSON.stringify(value) !== JSON.stringify(updatedValue)){
+            if (updatedValue.pythonPID !== false) {
+              kill(updatedValue.pythonPID)
+              updatedValue.notifications = []
+              updatedValue.pythonPID = false
+            };
+          }
           if (start) {
+            if (updatedValue.pythonPID !== false) {
+              kill(updatedValue.pythonPID)
+            };
             const pythonPID = await amazon(
               key,
-              value,
+              updatedValue,
               context,
               taskGroupId
             );
-            value.pythonPID = pythonPID;
+            updatedValue.pythonPID = pythonPID;
           }
+          taskGroups[taskGroupId].tasks[key] = updatedValue;
         }
       )
-    );
-  
+
+        
     const updatedDatabase = {
       ...context.data.database,
       taskGroups: taskGroups,

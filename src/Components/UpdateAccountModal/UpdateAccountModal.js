@@ -4,7 +4,7 @@ import styles from './styles'
 import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
-
+import { kill } from "../../helpers/ScriptRunner";
   function UpdateAccountModal({setOpen, isOpen, accountId}) {
 
     const context = useContext(Context)
@@ -23,13 +23,27 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
     async function update(){
       
+      let taskGroups = context.data.database.taskGroups
+
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+          if(task.account.value === accountId){
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+              task.pythonPID = false
+              task.notifications = []
+          }
+          }
+        })
+      })
+      
     let accounts = context.data.database.accounts
 
     accounts[accountId].name = name
     accounts[accountId].username = username
     accounts[accountId].password = password
 
-    const updatedDatabase = { ...context.data.database, accounts: accounts };
+    const updatedDatabase = { ...context.data.database, accounts: accounts, taskGroups, taskGroups };
     context.updateData({database: updatedDatabase });
     exit()
     }

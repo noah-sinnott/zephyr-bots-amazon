@@ -5,6 +5,7 @@ import {Context} from '../../App'
 
 import { Input, Modal, Button } from "@mui/material";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
+import { kill } from "../../helpers/ScriptRunner";
 
   function EditProxyGroup({setOpen, isOpen, proxyGroupId, setProxyGroupId}) {
 
@@ -29,13 +30,26 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       exit()
     }
 
-    function deleteProxyGroup() { 
+   async function deleteProxyGroup() { 
       setProxyGroupId(false) 
+
+      let taskGroups = context.data.database.taskGroups
+
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+          if(task.proxy.value === proxyGroupId){
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+          }
+          delete taskGroup.tasks[key]
+          }
+        })
+      })
 
       let proxyGroups = context.data.database.proxyGroups
       delete proxyGroups[proxyGroupId]
 
-      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups };
+      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups, taskGroups, taskGroups };
       context.updateData({database: updatedDatabase });
       exit();
     }
@@ -45,7 +59,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     }
 
     return (<>
-      <ConfirmationDialog isOpen={deleteProxyGroupDialog} setOpen={setDeleteProxyGroupDialog} submit={() => deleteProxyGroup()} mainText2={'This will delete all the proxies within this group'} submitText={'Delete Proxy group'} mainText={'Confirm you want to delete this proxy group'}/>
+      <ConfirmationDialog isOpen={deleteProxyGroupDialog} setOpen={setDeleteProxyGroupDialog} submit={() => deleteProxyGroup()} mainText2={'This will also delete all tasks using this proxy group'} submitText={'Delete Proxy group'} mainText={'Confirm you want to delete this proxy group'}/>
       <Modal
         open={isOpen}
         onClose={() => exit()}

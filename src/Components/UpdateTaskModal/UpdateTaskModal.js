@@ -61,7 +61,9 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
       taskGroups[taskGroupId].tasks[taskId].billing = billing
       taskGroups[taskGroupId].tasks[taskId].account = account
-      
+      taskGroups[taskGroupId].tasks[taskId].pythonPID = false
+      taskGroups[taskGroupId].tasks[taskId].notifications = []
+
       if(start){
           const pythonPID = await amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
           taskGroups[taskGroupId].tasks[taskId].pythonPID = pythonPID;

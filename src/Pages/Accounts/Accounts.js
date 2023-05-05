@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts'
 import ConfirmationDialog from '../../Components/ConfirmationDialog/ConfirmationDialog';
-
+import { kill } from '../../helpers/ScriptRunner';
   function Accounts() {
 
     const context = useContext(Context)
@@ -22,14 +22,34 @@ import ConfirmationDialog from '../../Components/ConfirmationDialog/Confirmation
     const [deleteAccountDialog, setDeleteAccountDialog] = useState(false)
 
     function deleteAll () {
-      const updatedDatabase = { ...context.data.database, accounts: {} };
+      let taskGroups = context.data.database.taskgroups
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+          }
+        })
+        taskGroup.tasks = {}
+      })
+      const updatedDatabase = { ...context.data.database, accounts: {}, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
     }
 
     function deleteAccount(id){
+      let taskGroups = context.data.database.taskgroups
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+          if(task.accounts.value === id){
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+          }
+          delete taskGroup.tasks[key]
+          }
+        })
+      })
       let accounts = context.data.database.accounts
       delete accounts[id]
-      const updatedDatabase = { ...context.data.database, accounts: accounts };
+      const updatedDatabase = { ...context.data.database, accounts: accounts, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
     }
 

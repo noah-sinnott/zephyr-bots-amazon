@@ -4,7 +4,7 @@ import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
-
+import { kill } from "../../helpers/ScriptRunner";
   function BulkUpdateBilling({setOpen, isOpen}) {
 
     const context = useContext(Context)
@@ -110,45 +110,40 @@ const fields3 = [
 
     async function update(){     
     let billing = context.data.database.billing
-    console.log(billing)
+    let taskGroups = context.data.database.taskGroups
+
+    if(activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0){
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+      Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+        if(task.pythonPID !== false){
+            kill(task.pythonPID)
+            task.pythonPID = false
+            task.notifications = []
+        }
+      })
+    })
+  }
+
     Object.entries(billing).forEach(([key, value], index) => {
-      if (activeFields1.includes('name')) {
-        value.name = name;
-      }
-      if (activeFields1.includes('shippingPostCode')) {
-        value.shippingPostCode = shippingPostCode;
-      }
-      if (activeFields1.includes('shippingAddressLine1')) {
-        value.shippingAddressLine1 = shippingAddressLine1;
-      }
-      if (activeFields1.includes('shippingAddressLine2')) {
-        value.shippingAddressLine2 = shippingAddressLine2;
-      }
-      if (activeFields2.includes('billingPostCode')) {
-        value.billingPostCode = billingPostCode;
-      }
-      if (activeFields2.includes('billingAddressLine1')) {
-        value.billingAddressLine1 = billingAddressLine1;
-      }
-      if (activeFields2.includes('billingAddressLine2')) {
-        value.billingAddressLine2 = billingAddressLine2;
-      }
-      if (activeFields3.includes('cardNumber')) {
-        value.cardNumber = cardNumber;
-      }
-      if (activeFields3.includes('sortCode')) {
-        value.sortCode = sortCode;
-      }
-      if (activeFields3.includes('CVC')) {
-        value.CVC = CVC;
-      }
-      if (activeFields3.includes('expiresAt')) {
-        value.expiresAt = expiresAt;
-      }
-      if(activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0) value.billingSameAs = false
-    });    
-    console.log(billing)
-      const updatedDatabase = { ...context.data.database, billing: billing };
+      let updatedValue = {
+        ...value,
+        name: activeFields1.includes('name') ? name : value.name,
+        shippingPostCode: activeFields1.includes('shippingPostCode') ? shippingPostCode : value.shippingPostCode,
+        shippingAddressLine1: activeFields1.includes('shippingAddressLine1') ? shippingAddressLine1 : value.shippingAddressLine1,
+        shippingAddressLine2: activeFields1.includes('shippingAddressLine2') ? shippingAddressLine2 : value.shippingAddressLine2,
+        billingPostCode: activeFields2.includes('billingPostCode') ? billingPostCode : value.billingPostCode,
+        billingAddressLine1: activeFields2.includes('billingAddressLine1') ? billingAddressLine1 : value.billingAddressLine1,
+        billingAddressLine2: activeFields2.includes('billingAddressLine2') ? billingAddressLine2 : value.billingAddressLine2,
+        cardNumber: activeFields3.includes('cardNumber') ? cardNumber : value.cardNumber,
+        sortCode: activeFields3.includes('sortCode') ? sortCode : value.sortCode,
+        CVC: activeFields3.includes('CVC') ? CVC : value.CVC,
+        expiresAt: activeFields3.includes('expiresAt') ? expiresAt : value.expiresAt,
+        billingSameAs: activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0 ? false : value.billingSameAs,
+      };
+      billing[key] = updatedValue
+    })
+
+      const updatedDatabase = { ...context.data.database, billing: billing, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
       exit()
     }

@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
-
+import { kill } from "../../helpers/ScriptRunner";
 import { Input, Modal, Button, FormControlLabel, Checkbox, } from "@mui/material";
 import colors from "../../colors/colors";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
@@ -66,22 +66,36 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
     async function update(){
       
-    let billing = context.data.database.billing
+      let taskGroups = context.data.database.taskGroups
 
-    billing[billingId].name = name
-    billing[billingId].shippingAddressLine1 = shippingAddressLine1
-    billing[billingId].shippingAddressLine2 = shippingAddressLine2
-    billing[billingId].shippingPostCode = shippingPostCode
-    billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1
-    billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2
-    billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode
-    billing[billingId].cardNumber = cardNumber
-    billing[billingId].sortCode = sortCode
-    billing[billingId].CVC = CVC
-    billing[billingId].expiresAt = expiresAt
-    billing[billingId].billingSameAs = billingSameAs
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+        Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+          if(task.billing.value === billingId){
+            if(task.pythonPID !== false){
+              kill(task.pythonPID)
+              task.pythonPID = false
+              task.notifications = []
+          }
+          }
+        })
+      })
+      
+      let billing = context.data.database.billing
 
-      const updatedDatabase = { ...context.data.database, billing: billing };
+      billing[billingId].name = name
+      billing[billingId].shippingAddressLine1 = shippingAddressLine1
+      billing[billingId].shippingAddressLine2 = shippingAddressLine2
+      billing[billingId].shippingPostCode = shippingPostCode
+      billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1
+      billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2
+      billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode
+      billing[billingId].cardNumber = cardNumber
+      billing[billingId].sortCode = sortCode
+      billing[billingId].CVC = CVC
+      billing[billingId].expiresAt = expiresAt
+      billing[billingId].billingSameAs = billingSameAs
+
+      const updatedDatabase = { ...context.data.database, billing: billing, taskGroups, taskGroups };
       context.updateData({database: updatedDatabase });
       exit()
     }

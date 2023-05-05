@@ -5,7 +5,7 @@ import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
-
+import { kill } from "../../helpers/ScriptRunner";
 function UpdateAccountModal({setOpen, isOpen}) {
 
     const context = useContext(Context)
@@ -40,13 +40,31 @@ function UpdateAccountModal({setOpen, isOpen}) {
       
     let accounts = context.data.database.accounts
 
+    let taskGroups = context.data.database.taskGroups
+
+  if(activeFields.length > 0){
+      Object.entries(taskGroups).forEach(([key, taskGroup]) => {
+      Object.entries(taskGroup.tasks).forEach(([key, task]) => {
+        if(task.pythonPID !== false){
+            kill(task.pythonPID)
+            task.pythonPID = false
+            task.notifications = []
+        }
+      })
+    })
+  }
+
     Object.entries(accounts).forEach(([key, value], index) => {
-        if(activeFields.includes('name')) value.name = name
-        if(activeFields.includes('username')) value.username = username;
-        if(activeFields.includes('password')) value.password = password;
+        let updatedValue = {
+          ...value,
+          name: activeFields.includes('name') ? name : value.name,
+          name: activeFields.includes('username') ? username : value.username,
+          name: activeFields.includes('password') ? password : value.password,
+        };
+        accounts[key] = updatedValue
       });
       
-    const updatedDatabase = { ...context.data.database, accounts: accounts };
+    const updatedDatabase = { ...context.data.database, accounts: accounts, taskGroups: taskGroups };
     context.updateData({database: updatedDatabase });
     exit()
     }

@@ -44,7 +44,6 @@ import Select from "react-select";
   
   async function AddTask(start) {
     let taskgroups = context.data.database.taskGroups;
-    let promises = [];
   
     for (let i = 0; i < quantity; i++) {
       let id = generateId();
@@ -59,19 +58,14 @@ import Select from "react-select";
         billing: billing,
       };
       if (start) {
-        promises.push(
-          amazon(newTask, context, taskGroupId).then((pythonPID) => {
-            newTask.pythonPID = pythonPID;
-            taskgroups[taskGroupId].tasks[id] = newTask;
-          })
-        );
+        let pythonPID = await amazon(newTask, context, taskGroupId)
+        newTask.pythonPID = pythonPID;
+        taskgroups[taskGroupId].tasks[id] = newTask;       
       } else {
         taskgroups[taskGroupId].tasks[id] = newTask;
       }
     }
-  
-    await Promise.all(promises);
-  
+    
     const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
     context.updateData({ database: updatedDatabase });
   
@@ -128,7 +122,7 @@ import Select from "react-select";
               options={proxies}
               onChange={(e) => setProxy(e)}
               styles={styles.dropDown}
-              value={{ label: "None", value: false}}
+              defaultValue={{ label: "None", value: false}}
             />
           </div>
 
