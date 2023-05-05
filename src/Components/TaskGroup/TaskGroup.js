@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 import { Context } from "../../App";
 
@@ -7,7 +7,7 @@ import EditTaskGroup from "../EditTaskGroup/EditTaskGroup";
 import UpdateTaskModal from '../UpdateTaskModal/UpdateTaskModal'
 import {kill, amazon} from '../../helpers/ScriptRunner'
 import BulkUpdateTasks from "../BulkUpdateTasks/BulkUpdateTasks";
-
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 import colors from "../../colors/colors";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { Button, IconButton } from "@mui/material";
@@ -22,6 +22,8 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   const [updateTaskModal, setUpdateTaskModal] = useState(false)
   const [updateTasksModal, setUpdateTasksModal] = useState(false)
   const [taskId, setTaskId] = useState(false)
+  const [deleteTaskDialog, setDeleteTaskDialog] = useState(false)
+  const [deleteTasksDialog, setDeleteTasksDialog] = useState(false)
 
   const context = useContext(Context)
 
@@ -57,9 +59,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
     })
   }
   
-  function deleteTask(key, task){
-    if(task.pythonPID !== false){
-      kill(task.pythonPID)
+  function deleteTask(key){
+    if(context.data.database.taskGroups[taskGroupId].tasks[key].pythonPID !== false){
+      kill(context.data.database.taskGroups[taskGroupId].tasks[key].pythonPID)
     }
 
     let taskgroups = context.data.database.taskGroups
@@ -110,6 +112,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
 
         <BulkUpdateTasks setOpen={setUpdateTasksModal} isOpen={updateTasksModal} taskGroupId={taskGroupId}/>
         
+        <ConfirmationDialog isOpen={deleteTasksDialog} setOpen={setDeleteTasksDialog} submit={() => deleteAll()} submitText={'Delete All'} mainText={'Confirm You want to delete all tasks'}/>
+        <ConfirmationDialog isOpen={deleteTaskDialog} setOpen={setDeleteTaskDialog} submit={() => deleteTask(taskId)} submitText={'Delete Task'} mainText={'Confirm you want to delete this task'}/>
+
         <div style={styles.containerMain2}>
             {taskGroupId != false ? <>
             <div style={styles.actions}>
@@ -129,7 +134,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                 <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => updateAll()}>
                         Update All
                 </Button>
-                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => deleteAll()}>
+                <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setDeleteTasksDialog(true)}>
                         Delete All
                 </Button>
             </div>
@@ -169,7 +174,10 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                     </IconButton>
                     </>
                   }
-                  <IconButton aria-label="Edit" size="small" style={{color: colors.red}} onClick={() => deleteTask(key, value)}>
+                  <IconButton aria-label="Edit" size="small" style={{color: colors.red}} onClick={() => {
+                    setTaskId(key)
+                    setDeleteTaskDialog(true)
+                  }}>
                       <DeleteIcon />
                     </IconButton>
                   </td>

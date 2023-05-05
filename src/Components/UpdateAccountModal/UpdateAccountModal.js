@@ -3,7 +3,7 @@ import styles from './styles'
 
 import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
-
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function UpdateAccountModal({setOpen, isOpen, accountId}) {
 
@@ -12,6 +12,7 @@ import { Input, Modal, Button } from "@mui/material";
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [editAccountDialog, setEditAccountDialog] = useState(false)
 
     useEffect(()=>{
       if(!accountId) return
@@ -41,6 +42,9 @@ import { Input, Modal, Button } from "@mui/material";
     }
 
     return (
+      <>
+            <ConfirmationDialog isOpen={editAccountDialog} setOpen={setEditAccountDialog} submit={() => update()} mainText2={'This will stop any running tasks with this account'} submitText={'Update Account'} mainText={'Confirm you want to update this account'}/>
+
       <Modal
         open={isOpen}
         onClose={() => exit()}
@@ -71,7 +75,7 @@ import { Input, Modal, Button } from "@mui/material";
 
         <div style={styles.submitButtons}>
 
-        <Button variant="contained" size="large" style={styles.updateButton}  disableElevation onClick={() => update()}>
+        <Button variant="contained" size="large" style={styles.updateButton}  disableElevation onClick={() => setEditAccountDialog(true)}>
           Update Account
         </Button>
 
@@ -82,6 +86,7 @@ import { Input, Modal, Button } from "@mui/material";
         </div>
         </div>
         </Modal>
+        </>
     );
   }
   

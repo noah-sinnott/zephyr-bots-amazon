@@ -6,12 +6,14 @@ import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 
 import {kill} from '../../helpers/ScriptRunner'
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function EditTaskGroup({setOpen, isOpen, taskGroupId, setTaskGroupId}) {
 
     const context = useContext(Context)
     
     const [name, setName] = useState('')
+    const [deleteTaskGroupDialog, setDeleteTaskGroupDialog] = useState(false)
 
     useEffect(() => {
       if(taskGroupId == false) return
@@ -49,7 +51,8 @@ import {kill} from '../../helpers/ScriptRunner'
       setOpen(false)
     }
 
-    return (
+    return (<>
+      <ConfirmationDialog isOpen={deleteTaskGroupDialog} setOpen={setDeleteTaskGroupDialog} submit={() => deleteTaskGroup()} mainText2={'This will delete all the tasks within this group'} submitText={'Delete Task group'} mainText={'Confirm you want to delete this task group'}/>
       <Modal
         open={isOpen}
         onClose={() => exit()}
@@ -73,7 +76,7 @@ import {kill} from '../../helpers/ScriptRunner'
           Save Task Group
         </Button>
 
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => deleteTaskGroup()}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setDeleteTaskGroupDialog(true)}>
           Delete Task Group
         </Button> 
 
@@ -84,6 +87,7 @@ import {kill} from '../../helpers/ScriptRunner'
         </div>
         </div>
         </Modal>
+        </>
     );
   }
   

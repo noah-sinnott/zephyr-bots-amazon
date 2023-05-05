@@ -4,8 +4,9 @@ import styles from './styles'
 import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
-  function UpdateAccountModal({setOpen, isOpen}) {
+function UpdateAccountModal({setOpen, isOpen}) {
 
     const context = useContext(Context)
 
@@ -13,6 +14,7 @@ import Select from "react-select";
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [activeFields, setActiveFields] = useState([]);
+    const [editAccountsDialog, setEditAccountsDialog] = useState(false);
 
     const fields = [{value: 'name', label: 'Name'}, {value: 'username', label: 'Username'}, {value: 'password', label: 'Password'}]
 
@@ -58,6 +60,8 @@ import Select from "react-select";
     }
 
     return (
+      <>
+      <ConfirmationDialog isOpen={editAccountsDialog} setOpen={setEditAccountsDialog} submit={() => update()} mainText2={'This will stop any running tasks with these accounts'} submitText={'Update Accounts'} mainText={'Confirm you want to update these accounts'}/>
       <Modal
         open={isOpen}
         onClose={() => exit()}
@@ -104,7 +108,7 @@ import Select from "react-select";
 
         <div style={styles.submitButtons}>
 
-        <Button variant="contained" size="large" style={styles.updateButton}  disableElevation onClick={() => update()}>
+        <Button variant="contained" size="large" style={styles.updateButton}  disableElevation onClick={() => setEditAccountsDialog(true)}>
           Update Accounts
         </Button>
 
@@ -115,6 +119,7 @@ import Select from "react-select";
         </div>
         </div>
         </Modal>
+        </>
     );
   }
   

@@ -9,6 +9,7 @@ import { Button, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts'
+import ConfirmationDialog from '../../Components/ConfirmationDialog/ConfirmationDialog';
 
   function Accounts() {
 
@@ -16,7 +17,9 @@ import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts
     const [addAccountModal, setAddAccountModal] = useState(false)
     const [updateAccount, setUpdateAccount] = useState(false)
     const [updateAccounts, setUpdateAccounts] = useState(false)
-    const [updateAccountId, setUpdateAccountId] = useState(false)
+    const [accountId, setAccountId] = useState(false)
+    const [deleteAccountsDialog, setDeleteAccountsDialog] = useState(false)
+    const [deleteAccountDialog, setDeleteAccountDialog] = useState(false)
 
     function deleteAll () {
       const updatedDatabase = { ...context.data.database, accounts: {} };
@@ -41,8 +44,10 @@ import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts
 
     return (
       <div style={styles.containerMain}>
+        <ConfirmationDialog isOpen={deleteAccountsDialog} setOpen={setDeleteAccountsDialog} submit={() => deleteAll()} mainText2={'This will delete all the tasks with these accounts'} submitText={'Delete All'} mainText={'Confirm You want to delete all accounts'}/>
+        <ConfirmationDialog isOpen={deleteAccountDialog} setOpen={setDeleteAccountDialog} submit={() => deleteAccount(accountId)} mainText2={'This will delete all the tasks with this account'} submitText={'Delete Account'} mainText={'Confirm you want to delete this account'}/>
         <AddAccountModal isOpen={addAccountModal} setOpen={setAddAccountModal}/>
-        <UpdateAccountsModal isOpen={updateAccount} setOpen={setUpdateAccount} accountId={updateAccountId}/>
+        <UpdateAccountsModal isOpen={updateAccount} setOpen={setUpdateAccount} accountId={accountId}/>
         <BulkEditAccounts isOpen={updateAccounts} setOpen={setUpdateAccounts}/>
         <Navbar/>
           <div style={styles.TableAreaHolder}>
@@ -57,7 +62,7 @@ import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts
                       }}>
                         Update All
                       </Button>
-                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => deleteAll()}>
+                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setDeleteAccountsDialog(true)}>
                         Delete All
                       </Button>
                 </div>
@@ -78,12 +83,15 @@ import BulkEditAccounts from '../../Components/BulkEditAccounts/BulkEditAccounts
                   <td  style={styles.tableItem}>{value.username}</td>
                   <td  style={styles.tableItem}>{value.password}</td>
                   <td  style={styles.tableItem}>
-                  <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => deleteAccount(key)}>
+                  <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => {
+                    setDeleteAccountDialog(true)
+                    setAccountId(key)
+                    }}>
                       <DeleteIcon />
                     </IconButton>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
                       setUpdateAccount(!updateAccount)
-                      setUpdateAccountId(key)
+                      setAccountId(key)
                       }}>
                       <EditIcon />
                     </IconButton>

@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddBillingModal from '../../Components/AddBillingModal/AddBillingModal';
 import UpdateBillingModal from '../../Components/UpdateBillingModal/UpdateBillingModal.js'
 import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBilling';
+import ConfirmationDialog from '../../Components/ConfirmationDialog/ConfirmationDialog';
 
   function Billing() {
 
@@ -16,7 +17,9 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
     const [addBillingModal, setAddBillingModal] = useState(false)
     const [updateBillingModal, setUpdateBillingModal] = useState(false)
     const [updateBillings, setUpdateBillings] = useState(false)
-    const [updateBillingId, setUpdateBillingId] = useState(false)
+    const [billingId, setBillingId] = useState(false)
+    const [deleteBillingsDialog, setDeleteBillingsDialog] = useState(false)
+    const [deleteBillingDialog, setDeleteBillingDialog] = useState(false)
 
     function deleteAll () {
       const updatedDatabase = { ...context.data.database, billing: {} };
@@ -24,12 +27,11 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
     }
 
     function deleteBilling(id){
-      let billing = context.data.database.billing
-      delete billing[id]
-      const updatedDatabase = { ...context.data.database, billing: billing };
-      context.updateData({database: updatedDatabase });
+        let billing = context.data.database.billing
+        delete billing[id]
+        const updatedDatabase = { ...context.data.database, billing: billing };
+        context.updateData({database: updatedDatabase });
     }
-
 
     function MouseOver(event) {
       event.target.closest('tr').style.background = colors.highlightMini;
@@ -41,9 +43,11 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
      }
 
     return (
-      <div style={styles.containerMain}>
+      <div style={styles.containerMain}>        
+        <ConfirmationDialog isOpen={deleteBillingsDialog} setOpen={setDeleteBillingsDialog} submit={() => deleteAll()} mainText2={'This will delete all the tasks with these billing profiles'} submitText={'Delete All'} mainText={'Confirm You want to delete all billing profiles'}/>
+        <ConfirmationDialog isOpen={deleteBillingDialog} setOpen={setDeleteBillingDialog} submit={() => deleteBilling(billingId)} mainText2={'This will delete all tasks with this billing profile'} submitText={'Delete Billing Profile'} mainText={'Confirm you want to delete this billing profile'}/>
         <AddBillingModal isOpen={addBillingModal} setOpen={setAddBillingModal}/>
-        <UpdateBillingModal isOpen={updateBillingModal} setOpen={setUpdateBillingModal} billingId={updateBillingId}/>
+        <UpdateBillingModal isOpen={updateBillingModal} setOpen={setUpdateBillingModal} billingId={billingId}/>
         <BulkUpdateBilling isOpen={updateBillings} setOpen={setUpdateBillings}/>
         <Navbar/>
           <div style={styles.TableAreaHolder}>
@@ -58,7 +62,7 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
                       }}>
                         Update All
                       </Button>
-                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => deleteAll()}>
+                      <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setDeleteBillingsDialog(true)}>
                         Delete All
                       </Button>
                 </div>
@@ -77,12 +81,15 @@ import BulkUpdateBilling from '../../Components/BulkUpdateBilling/BulkUpdateBill
                   <td  style={styles.tableItem}>{value.name}</td>
                   <td  style={styles.tableItem}>{value.shippingPostCode}</td>
                   <td  style={styles.tableItem}>
-                  <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => deleteBilling(key)}>
+                  <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => {
+                    setDeleteBillingDialog(true)
+                    setBillingId(key)
+                    }}>
                       <DeleteIcon />
                     </IconButton>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
                      setUpdateBillingModal(!updateBillingModal)
-                     setUpdateBillingId(key)
+                     setBillingId(key)
                       }}>
                       <EditIcon />
                     </IconButton>

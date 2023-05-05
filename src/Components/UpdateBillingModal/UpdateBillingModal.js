@@ -5,7 +5,7 @@ import {Context} from '../../App'
 
 import { Input, Modal, Button, FormControlLabel, Checkbox, } from "@mui/material";
 import colors from "../../colors/colors";
-  
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function UpdateBillingModal({setOpen, isOpen, billingId}) {
 
@@ -28,6 +28,9 @@ import colors from "../../colors/colors";
     
     const [page, setPage] = useState(1);
     const [billingSameAs, setBillingSameAs] = useState(false);
+
+    const [editBillingDialog, setEditBillingDialog] = useState(false)
+
 
     useEffect(()=>{
       if(!billingId) return
@@ -100,13 +103,15 @@ import colors from "../../colors/colors";
       setBillingSameAs(false);
     }
 
-    return (
+    return (<>
+      <ConfirmationDialog isOpen={editBillingDialog} setOpen={setEditBillingDialog} submit={() => update()} mainText2={'This will stop any running tasks with this billing profile'} submitText={'Update Billing Profile'} mainText={'Confirm you want to update this billing profile'}/>
+
       <Modal
-      open={isOpen}
-      onClose={() => exit()}
-      aria-labelledby="Add Task"
-      aria-describedby="Add Task"
-    >
+        open={isOpen}
+        onClose={() => exit()}
+        aria-labelledby="Add Task"
+        aria-describedby="Add Task"
+      >
         <div style={styles.content}>
 
         <div style={styles.title}>
@@ -261,7 +266,7 @@ import colors from "../../colors/colors";
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
           Back
         </Button>
-          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update()}>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditBillingDialog(true)}>
           Update Billing Profile
         </Button>
         </>
@@ -272,6 +277,7 @@ import colors from "../../colors/colors";
         </div>
         </div>
         </Modal>
+        </>
     );
   }
 

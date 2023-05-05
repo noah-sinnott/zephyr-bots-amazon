@@ -4,12 +4,14 @@ import styles from './styles'
 import {Context} from '../../App'
 
 import { Input, Modal, Button } from "@mui/material";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function EditProxyGroup({setOpen, isOpen, proxyGroupId, setProxyGroupId}) {
 
     const context = useContext(Context)
     
     const [name, setName] = useState('')
+    const [deleteProxyGroupDialog, setDeleteProxyGroupDialog] = useState(false)
 
     useEffect(() => {
       if(!proxyGroupId) return
@@ -42,13 +44,15 @@ import { Input, Modal, Button } from "@mui/material";
       setOpen(false)
     }
 
-    return (
+    return (<>
+      <ConfirmationDialog isOpen={deleteProxyGroupDialog} setOpen={setDeleteProxyGroupDialog} submit={() => deleteProxyGroup()} mainText2={'This will delete all the proxies within this group'} submitText={'Delete Proxy group'} mainText={'Confirm you want to delete this proxy group'}/>
       <Modal
         open={isOpen}
         onClose={() => exit()}
         aria-labelledby="Edit Proxy Group"
         aria-describedby="Edit Proxy Group"
       >
+
         <div style={styles.content}>
 
         <div style={styles.title}>
@@ -66,7 +70,7 @@ import { Input, Modal, Button } from "@mui/material";
           Save Proxy Group
         </Button>
 
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => deleteProxyGroup()}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setDeleteProxyGroupDialog(true)}>
           Delete Proxy Group
         </Button> 
 
@@ -77,6 +81,7 @@ import { Input, Modal, Button } from "@mui/material";
         </div>
         </div>
         </Modal>
+        </>
     );
   }
   

@@ -3,10 +3,13 @@ import styles from './styles'
 import {Context} from '../../App'
 import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function BulkUpdateBilling({setOpen, isOpen}) {
 
     const context = useContext(Context)
+
+    const [editBillingProfilesDialog, setEditBillingProfilesDialog] = useState(false);
 
     const [name, setName] = useState('');
 
@@ -169,6 +172,9 @@ const fields3 = [
     }
 
     return (
+      <>
+      <ConfirmationDialog isOpen={editBillingProfilesDialog} setOpen={setEditBillingProfilesDialog} submit={() => update()} mainText2={'This will stop any running tasks with these billing profiles'} submitText={'Update Billing Profiles'} mainText={'Confirm you want to update these billing profiles'}/>
+      
       <Modal
       open={isOpen}
       onClose={() => exit()}
@@ -397,7 +403,7 @@ const fields3 = [
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setPage((prev) => prev - 1)}>
           Back
         </Button>
-          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update()}>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditBillingProfilesDialog(true)}>
           Update Billing Profiles
         </Button>
         </>
@@ -410,7 +416,7 @@ const fields3 = [
 
         </div>
 
-        </Modal>
+        </Modal></>
     );
   }
 

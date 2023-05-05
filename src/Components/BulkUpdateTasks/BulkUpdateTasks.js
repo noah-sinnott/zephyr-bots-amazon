@@ -7,6 +7,7 @@ import { Input, Modal, Button  } from "@mui/material";
 import Select from "react-select";
 
 import { amazon, kill } from "../../helpers/ScriptRunner";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
   function BulkUpdateTasks({setOpen, isOpen, taskGroupId}) {
 
@@ -21,8 +22,8 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
     const [billings, setBillings] = useState([]);
     const [proxies, setProxies] = useState([]);
     const [activeFields, setActiveFields] = useState([]);
+    const [editTasksDialog, setEditTasksDialog] = useState(false)
 
-    
  const fields = [{value: 'account', label: 'Account'},
  {value: 'billingProfile', label: 'Billing Profile'},
  {value: 'proxies', label: 'Proxies'},
@@ -113,6 +114,8 @@ function formatFields(inputedFields){
     }
 
     return (
+      <>
+      <ConfirmationDialog isOpen={editTasksDialog} setOpen={setEditTasksDialog} submit={() => update(false)} mainText2={'This will stop any tasks that are affected'} submitText={'Update Tasks'} mainText={'Confirm you want to update these tasks'}/>
       <Modal
       open={isOpen}
       onClose={() => exit()}
@@ -186,7 +189,7 @@ function formatFields(inputedFields){
         </div>}
           
         <div style={styles.submitButtons}>
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(false)}>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditTasksDialog(true)}>
           Update Tasks
         </Button>
           <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update(true)}>
@@ -198,6 +201,7 @@ function formatFields(inputedFields){
         </div>
         </div>
     </Modal>
+    </>
     );
   }
   
