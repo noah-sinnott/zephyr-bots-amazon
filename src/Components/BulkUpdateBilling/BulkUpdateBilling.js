@@ -164,6 +164,9 @@ const fields3 = [
       setActiveFields1([])
       setActiveFields2([])
       setActiveFields3([])
+      setActiveFields1Unfiltered([])
+      setActiveFields2Unfiltered([])
+      setActiveFields3Unfiltered([])
     }
 
     return (

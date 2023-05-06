@@ -36,7 +36,7 @@ import { kill } from '../../helpers/ScriptRunner';
     }
 
     function deleteBilling(id){
-      let taskGroups = context.data.database.taskgroups
+      let taskGroups = context.data.database.taskGroups
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.billing === id){

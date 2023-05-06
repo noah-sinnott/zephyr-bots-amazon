@@ -77,9 +77,9 @@ function formatFields(inputedFields){
 
           let updatedValue = {
             ...value,
-            account: activeFields.includes('account') ? account : value.account,
-            billingProfile: activeFields.includes('billingProfile') ? billing : value.billingProfile,
-            proxies: activeFields.includes('proxies') ? proxies : value.proxies,
+            account: activeFields.includes('account') ? account.value : value.account,
+            billingProfile: activeFields.includes('billingProfile') ? billing.value : value.billingProfile,
+            proxies: activeFields.includes('proxies') ? proxy.value : value.proxies,
             url: activeFields.includes('url') ? url : value.url,
             maxPrice: activeFields.includes('maxPrice') ? maxPrice : value.maxPrice,
           };
