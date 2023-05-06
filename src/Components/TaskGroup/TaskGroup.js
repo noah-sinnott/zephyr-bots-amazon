@@ -36,7 +36,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   }
 
   function deleteAll(){
-    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
       if(value.pythonPID !== false){
         kill(value.pythonPID)
       }
@@ -48,13 +48,13 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   }  
 
   function startAll(){
-    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
       stopTask(key, value)
     })
   }  
   
   function stopAll(){
-    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+    Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
       stopTask(key, value)
     })
   }
@@ -116,7 +116,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
         <ConfirmationDialog isOpen={deleteTaskDialog} setOpen={setDeleteTaskDialog} submit={() => deleteTask(taskId)} submitText={'Delete Task'} mainText={'Confirm you want to delete this task'}/>
 
         <div style={styles.containerMain2}>
-            {taskGroupId != false ? <>
+            {taskGroupId !== false ? <>
             <div style={styles.actions}>
                 <Button variant="contained" size="medium" style={styles.button}  disableElevation onClick={() => setEditTaskGroupModal(!editTaskGroupModal)}>
                         Edit Task Group
@@ -163,7 +163,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                   <td style={styles.tableItem}>{context.data.database.accounts[value.account]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.billing[value.billing]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy]?.name || ''}</td>
-                  <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
+                  <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.pythonPID !== false ?
                      <IconButton aria-label="Stop" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>

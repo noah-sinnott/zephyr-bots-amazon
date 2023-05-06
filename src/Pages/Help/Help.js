@@ -1,12 +1,8 @@
 import Navbar from '../../Components/Navbar/Navbar'
-import React, {useContext, useState} from "react";
+import React from "react";
 import styles from './styles'
-import { Context } from "../../App";
-
 
   function Help() {
-
-    const context = useContext(Context)
 
     return (
       <div style={styles.containerMain}>

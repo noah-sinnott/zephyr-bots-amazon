@@ -43,7 +43,7 @@ import { kill } from "../../helpers/ScriptRunner";
     accounts[accountId].username = username
     accounts[accountId].password = password
 
-    const updatedDatabase = { ...context.data.database, accounts: accounts, taskGroups, taskGroups };
+    const updatedDatabase = { ...context.data.database, accounts: accounts, taskGroups: taskGroups };
     context.updateData({database: updatedDatabase });
     exit()
     }

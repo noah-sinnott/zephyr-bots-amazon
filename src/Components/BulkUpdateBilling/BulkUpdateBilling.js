@@ -59,7 +59,7 @@ const fields3 = [
           arr.push(field.value)
       })
    
-      if(page == 1){
+      if(page === 1){
         activeFields1.forEach((currentField) => {
         if (!arr.includes(currentField)) {
           if (currentField === 'name') {
@@ -75,7 +75,7 @@ const fields3 = [
       });
       setActiveFields1Unfiltered(inputedFields)    
       setActiveFields1(arr)
-      } else if(page == 2){
+      } else if(page === 2){
         activeFields2.forEach((currentField) => {
         if (!arr.includes(currentField)) {
           if (currentField === 'billingPostCode') {
@@ -383,7 +383,7 @@ const fields3 = [
   }
 
       <div style={styles.submitButtons}>
-        {page == 1 ? 
+        {page === 1 ? 
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() =>  setPage((prev) => prev + 1)}>
           Next
         </Button> 

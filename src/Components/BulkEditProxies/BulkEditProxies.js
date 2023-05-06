@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -26,10 +26,10 @@ import Select from 'react-select'
   
       activeFields.forEach((currentField) =>{
           if(!arr.includes(currentField)){
-              if(currentField == 'username') setUsername('')
-              if(currentField == 'password') setPassword('')
-              if(currentField == 'port') setPort('')
-              if(currentField == 'ip') setIp('')
+              if(currentField === 'username') setUsername('')
+              if(currentField === 'password') setPassword('')
+              if(currentField === 'port') setPort('')
+              if(currentField === 'ip') setIp('')
           }
       })
   
@@ -65,8 +65,8 @@ import Select from 'react-select'
       <Modal
         open={isOpen}
         onClose={() => exit()}
-        aria-labelledby="Update Proxy"
-        aria-describedby="Update Proxy"
+        aria-labelledby="Update Proxies"
+        aria-describedby="Update Proxies"
       >
       <div style={styles.content}>
 

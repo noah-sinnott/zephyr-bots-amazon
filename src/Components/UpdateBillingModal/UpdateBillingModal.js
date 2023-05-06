@@ -95,7 +95,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       billing[billingId].expiresAt = expiresAt
       billing[billingId].billingSameAs = billingSameAs
 
-      const updatedDatabase = { ...context.data.database, billing: billing, taskGroups, taskGroups };
+      const updatedDatabase = { ...context.data.database, billing: billing, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
       exit()
     }
@@ -123,8 +123,8 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       <Modal
         open={isOpen}
         onClose={() => exit()}
-        aria-labelledby="Add Task"
-        aria-describedby="Add Task"
+        aria-labelledby="Update Billing"
+        aria-describedby="Update Billing"
       >
         <div style={styles.content}>
 
@@ -262,7 +262,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 </>
   }
         <div style={styles.submitButtons}>
-          {page == 1 ? 
+          {page === 1 ? 
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
           Next
         </Button> 

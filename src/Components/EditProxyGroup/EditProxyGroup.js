@@ -52,7 +52,7 @@ import { kill } from "../../helpers/ScriptRunner";
       let proxyGroups = context.data.database.proxyGroups
       delete proxyGroups[proxyGroupId]
 
-      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups, taskGroups, taskGroups, userInfo: userInfo };
+      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups, taskGroup: taskGroups, userInfo: userInfo };
       context.updateData({database: updatedDatabase });
       exit();
     }

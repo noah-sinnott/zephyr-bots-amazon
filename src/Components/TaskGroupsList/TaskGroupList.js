@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import styles from './styles'
 import { Context } from "../../App";
 import { generateId } from "../../helpers/generateId";

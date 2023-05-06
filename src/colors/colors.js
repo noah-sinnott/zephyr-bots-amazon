@@ -1,4 +1,4 @@
-export default {
+const colors = {
     primary: '#032D46',
     seconday: '#03273c',
     text: '#7e93a0',
@@ -13,3 +13,5 @@ export default {
     blue: '#00008B',
     orange: '#FFA500'
 }
+
+export default colors

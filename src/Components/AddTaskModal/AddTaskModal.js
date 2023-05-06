@@ -27,13 +27,13 @@ import Select from "react-select";
     let accountsTemp = []
     let billingsTemp = []
     let proxiesTemp = [{ value: false, label: 'None' }]
-    Object.entries(context.data.database.accounts).map(([key, value]) => {
+    Object.entries(context.data.database.accounts).forEach(([key, value]) => {
       accountsTemp.push({value: key, label: value.name})
     })
-    Object.entries(context.data.database.billing).map(([key, value]) => {
+    Object.entries(context.data.database.billing).forEach(([key, value]) => {
       billingsTemp.push({value: key, label: value.name})
     })
-    Object.entries(context.data.database.proxyGroups).map(([key, value]) => {
+    Object.entries(context.data.database.proxyGroups).forEach(([key, value]) => {
       proxiesTemp.push({value: key, label: value.name})
     })
     setAccounts(accountsTemp)

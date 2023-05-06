@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -27,9 +27,9 @@ function UpdateAccountModal({setOpen, isOpen}) {
 
     activeFields.forEach((currentField) =>{
         if(!arr.includes(currentField)){
-            if(currentField == 'username') setUsername('')
-            if(currentField == 'password') setPassword('')
-            if(currentField == 'name') setName('')
+            if(currentField === 'username') setUsername('')
+            if(currentField === 'password') setPassword('')
+            if(currentField === 'name') setName('')
         }
     })
 

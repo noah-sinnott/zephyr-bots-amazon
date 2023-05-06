@@ -16,7 +16,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     const [deleteTaskGroupDialog, setDeleteTaskGroupDialog] = useState(false)
 
     useEffect(() => {
-      if(taskGroupId == false) return
+      if(taskGroupId === false) return
       setName(context.data.database.taskGroups[taskGroupId].name)
     }, [taskGroupId])
 
@@ -33,7 +33,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
     function deleteTaskGroup() { 
       
-      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
+      Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
         if (value.pythonPID !== false) {
           kill(value.pythonPID);
         }

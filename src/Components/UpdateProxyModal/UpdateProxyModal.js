@@ -18,8 +18,16 @@ import { Input, Modal, Button } from "@mui/material";
       if(!proxyId) return
       setIp(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].ip)
       setPort(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].port)
-      setUsername(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].username)
-      setPassword(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].password)
+      if(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].username !== false) {
+        setUsername(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].username)
+      } else {
+        setUsername('')
+      }
+      if(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].password !== false) {
+        setPassword(context.data.database.proxyGroups[proxyGroupId].proxies[proxyId].password)
+      } else {
+        setPassword('')
+      }
     },[isOpen])
 
     
@@ -30,8 +38,8 @@ import { Input, Modal, Button } from "@mui/material";
 
     proxyGroups[proxyGroupId].proxies[proxyId].ip = ip
     proxyGroups[proxyGroupId].proxies[proxyId].port = port
-    proxyGroups[proxyGroupId].proxies[proxyId].username = username
-    proxyGroups[proxyGroupId].proxies[proxyId].password = password
+    proxyGroups[proxyGroupId].proxies[proxyId].username = username === '' ?  false : username
+    proxyGroups[proxyGroupId].proxies[proxyId].password = password === '' ? false : password
 
     const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups };
     context.updateData({database: updatedDatabase });

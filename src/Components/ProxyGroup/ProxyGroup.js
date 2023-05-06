@@ -58,7 +58,7 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
       <div style={styles.containerMain}>
 
         <div style={styles.containerMain2}>
-            {proxyGroupId != false ? <>
+            {proxyGroupId !== false ? <>
             
             <AddProxiesModal setOpen={setAddProxiesModal} isOpen={addProxiesModal} proxyGroupId={proxyGroupId}/>
 
@@ -115,7 +115,7 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
                       }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton aria-label="Edit" size="small" style={{color: colors.red}} onClick={() => deleteProxy(key)}>
+                    <IconButton aria-label="delete" size="small" style={{color: colors.red}} onClick={() => deleteProxy(key)}>
                         <DeleteIcon />
                     </IconButton>
                   </td>

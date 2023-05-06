@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import styles from './styles'
 
 import {Context} from '../../App'
@@ -94,8 +94,8 @@ function AddBillingModal({setOpen, isOpen}) {
       <Modal
       open={isOpen}
       onClose={() => exit()}
-      aria-labelledby="Add Task"
-      aria-describedby="Add Task"
+      aria-labelledby="Add Billing"
+      aria-describedby="Add Billing"
     >
         <div style={styles.content}>
 
@@ -233,7 +233,7 @@ function AddBillingModal({setOpen, isOpen}) {
 </>
   }
         <div style={styles.submitButtons}>
-          {page == 1 ? 
+          {page === 1 ? 
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
           Next
         </Button> 

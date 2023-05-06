@@ -29,15 +29,15 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
   let accountsTemp = []
   let billingsTemp = []
   let proxiesTemp = [{ value: false, label: 'None' }]
-  Object.entries(context.data.database.accounts).map(([key, value]) => {
+  Object.entries(context.data.database.accounts).forEach(([key, value]) => {
     if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].account) setAccount({value: key, label: value.name})
     accountsTemp.push({value: key, label: value.name})
   })
-  Object.entries(context.data.database.billing).map(([key, value]) => {
+  Object.entries(context.data.database.billing).forEach(([key, value]) => {
     if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].billing) setBilling({value: key, label: value.name})
     billingsTemp.push({value: key, label: value.name})
   })
-  Object.entries(context.data.database.proxyGroups).map(([key, value]) => {
+  Object.entries(context.data.database.proxyGroups).forEach(([key, value]) => {
     if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy) setProxy({value: key, label: value.name})
     proxiesTemp.push({value: key, label: value.name})
   })
