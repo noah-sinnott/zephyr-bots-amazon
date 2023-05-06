@@ -19,14 +19,23 @@ export const Context = createContext({
     updateData: () => {}
   });
 
+  const defaultSettings = { 
+    typingSpeed: [0.1, 0.3],
+    waitSpeed: [1, 1.5],
+    refreshRate: [10, 15],
+    taskCompleteOpen: true,
+    taskErrorOpen: false,
+    endpoint: {value: 'Success Page', label: 'Success Page'}
+  }
+
 function App() {
 
-  const [data, setData] = useState({database: {taskGroups: {}, settings: {}, accounts: {}, billing: {}, proxyGroups: {}}});
+  const [data, setData] = useState({database: {taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
     if (storedDatabase) {
-      const initialDatabase = {database: {taskGroups: {}, settings: {}, accounts: {}, billing: {}, proxyGroups: {}}};
+      const initialDatabase = {database: {taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
     } else {
       const parsedDatabase = JSON.parse(storedDatabase);

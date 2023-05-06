@@ -12,12 +12,12 @@ import colors from '../../colors/colors';
 
     const context = useContext(Context)
 
-    const [typingSpeed, setTypingSpeed] = useState([0.1, 0.2]);
-    const [waitSpeed, setWaitSpeed] = useState([0.1, 0.2]);
-    const [refreshRate, setRefreshRate] = useState([10, 15]);
-    const [taskCompleteOpen, setTaskCompleteOpen] = useState(false);
-    const [taskErrorOpen, setTaskErrorOpen] = useState(false);
-    const [endpoint, setEndpoint] = useState({});
+    const [typingSpeed, setTypingSpeed] = useState(context.data.database.settings.typingSpeed);
+    const [waitSpeed, setWaitSpeed] = useState(context.data.database.settings.waitSpeed);
+    const [refreshRate, setRefreshRate] = useState(context.data.database.settings.refreshRate);
+    const [taskCompleteOpen, setTaskCompleteOpen] = useState(context.data.database.settings.taskCompleteOpen);
+    const [taskErrorOpen, setTaskErrorOpen] = useState(context.data.database.settings.taskErrorOpen);
+    const [endpoint, setEndpoint] = useState(context.data.database.settings.endpoint);
 
     const endpoints = [{ value: 'Item Page', label: 'Item Page' },
     { value: 'Login Page', label: 'Login Page' },
@@ -25,16 +25,6 @@ import colors from '../../colors/colors';
     { value: 'Checkout Page', label: 'Checkout Page' },
     { value: 'Success Page', label: 'Success Page' },
   ]
-
-    useEffect(() => {
-      let settings = context.data.database.settings
-      if(settings.typingSpeed) setTypingSpeed(settings.typingSpeed)
-      if(settings.waitSpeed) setWaitSpeed(settings.waitSpeed)
-      if(settings.refreshRate) setRefreshRate(settings.refreshRate)
-      if(settings.taskCompleteOpen) setTaskCompleteOpen(settings.taskCompleteOpen)
-      if(settings.taskErrorOpen) setTaskErrorOpen(settings.taskErrorOpen)
-      if(settings.endpoint) setEndpoint(settings.endpoint)
-    }, [])
 
     useEffect(() => {
       let settings = {
@@ -115,8 +105,8 @@ import colors from '../../colors/colors';
                     value={typingSpeed}
                     onChange={(e) => setTypingSpeed(e.target.value)}
                     min={0}
-                    max={1}
-                    step={0.1}
+                    max={0.5}
+                    step={0.05}
                     marks
                     valueLabelFormat={(value) => value + ' Letters per second'}
                     valueLabelDisplay="auto"
