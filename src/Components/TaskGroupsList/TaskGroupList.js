@@ -30,7 +30,7 @@ function handleClick(key) {
             </button>
             {context.data.database.taskGroups && <>
                 {Object.entries(context.data.database.taskGroups).map(([key, value]) => (
-                  <button style={styles.task} onClick={() => handleClick(key)} key={key}>
+                  <button style={context.data.database.userInfo.taskGroup === key ? styles.selectedTask :styles.task} onClick={() => handleClick(key)} key={key}>
                     <p>{value.name}</p>
                   </button>
                 ))}

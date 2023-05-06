@@ -30,7 +30,7 @@ function handleClick(key) {
             </button>
             {context.data.database.proxyGroups && <>
                 {Object.entries(context.data.database.proxyGroups).map(([key, value]) => (
-                  <button style={styles.proxy} onClick={() => handleClick(key)} key={key}>
+                  <button style={context.data.database.userInfo.proxyGroup === key ? styles.selectedProxy : styles.proxy} onClick={() => handleClick(key)} key={key}>
                     <p>{value.name}</p>
                   </button>
                 ))}

@@ -19,13 +19,24 @@ const styles = {
       border: `1px solid ${colors.highlight}`
     },
     proxy:{ 
-        width: '80%',
-        height: '10%',
-        backgroundColor: colors.highlight,
-        border: 'none',
-        marginTop: 20,
-        color: colors.text,
-        borderRadius: '5px'
+      width: '80%',
+      paddingTop: '15px',
+      paddingBottom: '15px',
+      backgroundColor: colors.highlight,
+      marginTop: 20,
+      color: colors.text,
+      borderRadius: '5px',
+      border: `1px solid ${colors.highlight}`
+    },
+    selectedProxy: {
+      width: '80%',
+      paddingTop: '15px',
+      paddingBottom: '15px',
+      backgroundColor: colors.highlight,
+      marginTop: 20,
+      color: colors.text,
+      borderRadius: '5px',
+      border: `1px solid ${colors.text}`
     }
   };
   

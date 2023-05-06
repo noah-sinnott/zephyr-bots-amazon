@@ -20,12 +20,23 @@ const styles = {
     },
     task:{ 
         width: '80%',
-        height: '10%',
         backgroundColor: colors.highlight,
-        border: 'none',
+        border: `1px solid ${colors.highlight}`,
         marginTop: 20,
         color: colors.text,
-        borderRadius: '5px'
+        borderRadius: '5px',
+        paddingTop: '15px',
+        paddingBottom: '15px'
+    },
+    selectedTask: {
+      width: '80%',
+      paddingTop: '15px',
+      paddingBottom: '15px',
+      backgroundColor: colors.highlight,
+      marginTop: 20,
+      color: colors.text,
+      borderRadius: '5px',
+      border: `1px solid ${colors.text}`
     }
   };
   
