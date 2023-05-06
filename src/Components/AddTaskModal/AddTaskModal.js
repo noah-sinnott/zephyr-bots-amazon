@@ -50,12 +50,12 @@ import Select from "react-select";
       let newTask = {
         type: "amazon",
         url: url,
-        proxy: proxy,
+        proxy: proxy.value,
         maxPrice: maxPrice,
         notifications: [],
         pythonPID: false,
-        account: account,
-        billing: billing,
+        account: account.value,
+        billing: billing.value,
       };
       if (start) {
         let pythonPID = await amazon(newTask, context, taskGroupId)

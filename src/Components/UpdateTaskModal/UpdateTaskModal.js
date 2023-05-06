@@ -24,27 +24,28 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
  
  useEffect(() => {
   if(!taskId) return
-  setProxy(context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy)
   setMaxPrice(context.data.database.taskGroups[taskGroupId].tasks[taskId].maxPrice)
   setURL(context.data.database.taskGroups[taskGroupId].tasks[taskId].url)
-  setAccount(context.data.database.taskGroups[taskGroupId].tasks[taskId].account)
-  setBilling(context.data.database.taskGroups[taskGroupId].tasks[taskId].billing)
-
   let accountsTemp = []
   let billingsTemp = []
   let proxiesTemp = [{ value: false, label: 'None' }]
   Object.entries(context.data.database.accounts).map(([key, value]) => {
+    if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].account) setAccount({value: key, label: value.name})
     accountsTemp.push({value: key, label: value.name})
   })
   Object.entries(context.data.database.billing).map(([key, value]) => {
+    if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].billing) setBilling({value: key, label: value.name})
     billingsTemp.push({value: key, label: value.name})
   })
   Object.entries(context.data.database.proxyGroups).map(([key, value]) => {
+    if(key === context.data.database.taskGroups[taskGroupId].tasks[taskId].proxy) setProxy({value: key, label: value.name})
     proxiesTemp.push({value: key, label: value.name})
   })
   setAccounts(accountsTemp)
   setProxies(proxiesTemp)
   setBillings(billingsTemp)
+
+  
 }, [isOpen])
 
 
@@ -57,10 +58,10 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       }
 
       taskGroups[taskGroupId].tasks[taskId].url = url
-      taskGroups[taskGroupId].tasks[taskId].proxy = proxy
+      taskGroups[taskGroupId].tasks[taskId].proxy = proxy.value
       taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
-      taskGroups[taskGroupId].tasks[taskId].billing = billing
-      taskGroups[taskGroupId].tasks[taskId].account = account
+      taskGroups[taskGroupId].tasks[taskId].billing = billing.value
+      taskGroups[taskGroupId].tasks[taskId].account = account.value
       taskGroups[taskGroupId].tasks[taskId].pythonPID = false
       taskGroups[taskGroupId].tasks[taskId].notifications = []
 

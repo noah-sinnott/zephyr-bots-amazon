@@ -39,7 +39,7 @@ import { kill } from '../../helpers/ScriptRunner';
       let taskGroups = context.data.database.taskgroups
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
-          if(task.billing.value === id){
+          if(task.billing === id){
             if(task.pythonPID !== false){
               kill(task.pythonPID)
           }

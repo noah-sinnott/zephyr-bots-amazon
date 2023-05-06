@@ -58,8 +58,8 @@ function UpdateAccountModal({setOpen, isOpen}) {
         let updatedValue = {
           ...value,
           name: activeFields.includes('name') ? name : value.name,
-          name: activeFields.includes('username') ? username : value.username,
-          name: activeFields.includes('password') ? password : value.password,
+          username: activeFields.includes('username') ? username : value.username,
+          password: activeFields.includes('password') ? password : value.password,
         };
         accounts[key] = updatedValue
       });

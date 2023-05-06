@@ -152,9 +152,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
              {Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
-                  <td style={styles.tableItem}>{value.account.label}</td>
-                  <td style={styles.tableItem}>{value.billing.label}</td>
-                  <td style={styles.tableItem}>{value.proxy.label}</td>
+                  <td style={styles.tableItem}>{context.data.database.accounts[value.account].name}</td>
+                  <td style={styles.tableItem}>{context.data.database.billing[value.billing].name}</td>
+                  <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy].name}</td>
                   <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.pythonPID !== false ?

@@ -70,7 +70,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
-          if(task.billing.value === billingId){
+          if(task.billing === billingId){
             if(task.pythonPID !== false){
               kill(task.pythonPID)
               task.pythonPID = false
