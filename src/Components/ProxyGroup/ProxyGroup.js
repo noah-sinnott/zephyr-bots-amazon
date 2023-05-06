@@ -89,7 +89,7 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
                 <col style={{ width: 'auto' }} />
                 <col style={{ width: 'auto' }} />
                 <col style={{ width: 'auto' }} />
-                <col style={{ width: '100px' }} />
+                <col style={{ width: '150px' }} />
             </colgroup>
             <thead>
               <tr style={styles.tableHeaderBackground}>
