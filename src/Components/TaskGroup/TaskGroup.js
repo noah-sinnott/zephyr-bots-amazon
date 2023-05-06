@@ -138,7 +138,15 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                         Delete All
                 </Button>
             </div>
+            <div style={styles.tableContainer}>
             <table style={styles.table}>
+            <colgroup>
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: '150px' }} />
+            </colgroup>
             <thead>
               <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>Account</th>
@@ -152,18 +160,18 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
              {Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
-                  <td style={styles.tableItem}>{context.data.database.accounts[value.account].name}</td>
-                  <td style={styles.tableItem}>{context.data.database.billing[value.billing].name}</td>
-                  <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy].name}</td>
+                  <td style={styles.tableItem}>{context.data.database.accounts[value.account]?.name || ''}</td>
+                  <td style={styles.tableItem}>{context.data.database.billing[value.billing]?.name || ''}</td>
+                  <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy]?.name || ''}</td>
                   <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length != 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.pythonPID !== false ?
-                     <IconButton aria-label="Edit" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>
+                     <IconButton aria-label="Stop" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>
                        <StopRoundedIcon />
                     </IconButton>
                     :
                     <>  
-                    <IconButton aria-label="Edit" size="small" style={{color: colors.green}} onClick={() => {startTask(key, value)}}>
+                    <IconButton aria-label="Play" size="small" style={{color: colors.green}} onClick={() => {startTask(key, value)}}>
                       <PlayArrowRoundedIcon />
                     </IconButton>
                     <IconButton aria-label="Edit" size="small" style={{color: colors.white}} onClick={() => {
@@ -174,7 +182,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                     </IconButton>
                     </>
                   }
-                  <IconButton aria-label="Edit" size="small" style={{color: colors.red}} onClick={() => {
+                  <IconButton aria-label="Delete" size="small" style={{color: colors.red}} onClick={() => {
                     setTaskId(key)
                     setDeleteTaskDialog(true)
                   }}>
@@ -186,6 +194,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
              })}          
             </tbody>
           </table>
+          </div>
               </> :
               <div style={{width: '100%', height: '100%', display: 'flex',alignItems: 'center', justifyContent: 'center'}}>  
                 <p>Select or Create a Task Group</p>

@@ -86,7 +86,14 @@ import { kill } from '../../helpers/ScriptRunner';
                         Delete All
                       </Button>
                 </div>
+                <div style={styles.tableContainer}>
             <table style={styles.table}>
+            <colgroup>
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: '100px' }} />
+            </colgroup>
             <thead>
               <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>Name</th>
@@ -121,6 +128,7 @@ import { kill } from '../../helpers/ScriptRunner';
              })}          
             </tbody>
           </table>
+          </div>
           </div>
         </div>  
       </div>

@@ -87,11 +87,19 @@ import { kill } from '../../helpers/ScriptRunner';
                         Delete All
                       </Button>
                 </div>
+                <div style={styles.tableContainer}>
             <table style={styles.table}>
+            <colgroup>
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: '100px' }} />
+            </colgroup>
             <thead>
               <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>Name</th>
-                <th style={styles.tableHeader}>Post Code</th>
+                <th style={styles.tableHeader}>Shipping Address</th>
+                <th style={styles.tableHeader}>Card Number</th>
                 <th style={styles.tableHeader}>Actions</th>
               </tr>
             </thead>
@@ -101,6 +109,7 @@ import { kill } from '../../helpers/ScriptRunner';
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut}  style={styles.tableRow} key={key}>
                   <td  style={styles.tableItem}>{value.name}</td>
                   <td  style={styles.tableItem}>{value.shippingPostCode}</td>
+                  <td  style={styles.tableItem}>{value.cardNumber === '' ? '': value.cardNumber.length > 5 ? value.cardNumber.substring(0,5) + '...' : value.cardNumber }</td>
                   <td  style={styles.tableItem}>
                   <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => {
                     setDeleteBillingDialog(true)
@@ -120,6 +129,7 @@ import { kill } from '../../helpers/ScriptRunner';
              })}          
             </tbody>
           </table>
+          </div>
           </div>
         </div>  
       </div>

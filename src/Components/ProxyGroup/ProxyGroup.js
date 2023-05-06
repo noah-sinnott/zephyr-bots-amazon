@@ -82,7 +82,15 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
                         Delete All
                 </Button>
             </div>
+            <div style={styles.tableContainer}>
             <table style={styles.table}>
+            <colgroup>
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: '100px' }} />
+            </colgroup>
             <thead>
               <tr style={styles.tableHeaderBackground}>
                 <th style={styles.tableHeader}>IP</th>
@@ -116,6 +124,7 @@ function ProxyGroup({proxyGroupId, setProxyGroupId}) {
              })}          
             </tbody>
           </table>
+          </div>
               </> :
               <div style={{width: '100%', height: '100%', display: 'flex',alignItems: 'center', justifyContent: 'center'}}>  
                 <p>Select or Create a Proxy Group</p>

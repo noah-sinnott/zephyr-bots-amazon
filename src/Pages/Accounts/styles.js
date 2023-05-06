@@ -47,20 +47,22 @@ const styles = {
         marginRight: '2px',
       },
       table: {
-        width: 'calc(100% - 20px)',
-        marginLeft: '10px',
-        marginTop: '10px',
-        marginRight: '10px',
+        width: '100%',
         borderCollapse: 'collapse',
         backgroundColor: colors.secondary,
-        borderTopLeftRadius: '10px',
-        borderTopRightRadius: '10px',
-        overflow: 'hidden',
+        tableLayout: 'fixed'
       },
       tableHeader:{
         textAlign: 'start',
         padding: '10px',
-        border: 'none'
+        border: 'none',
+      },
+      tableContainer: {
+        width: 'calc(100% - 20px)',
+        overflowY: 'auto',
+        margin: '10px',
+        borderTopLeftRadius: '10px',
+        borderTopRightRadius: '10px',
       },
       tableHeaderBackground:   {
         backgroundColor: colors.highlight,
@@ -69,7 +71,10 @@ const styles = {
         borderBottom: `1px solid ${colors.seperator}`,
       },
       tableItem: {
-        padding: '10px'
+        padding: '10px',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
       }
   }
   
