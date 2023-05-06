@@ -15,6 +15,13 @@ function addProxyGroup(){
   context.updateData({ database: { ...context.data.database, proxyGroups: proxyGroups } });
 }
 
+function handleClick(key) {
+  setProxyGroupId(key)
+  let userInfo = context.data.database.userInfo
+  userInfo.proxyGroup = key
+  context.updateData({ database: { ...context.data.database, userInfo: userInfo } });
+}
+
     return (
       <div style={styles.containerMain}>
         <div style={styles.proxyHolder}>
@@ -23,7 +30,7 @@ function addProxyGroup(){
             </button>
             {context.data.database.proxyGroups && <>
                 {Object.entries(context.data.database.proxyGroups).map(([key, value]) => (
-                  <button style={styles.proxy} onClick={() => setProxyGroupId(key)} key={key}>
+                  <button style={styles.proxy} onClick={() => handleClick(key)} key={key}>
                     <p>{value.name}</p>
                   </button>
                 ))}

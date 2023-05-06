@@ -32,17 +32,19 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     }
 
     function deleteTaskGroup() { 
-      setTaskGroupId(false) 
+      
       Object.entries(context.data.database.taskGroups[taskGroupId].tasks).map(([key, value]) => {
         if (value.pythonPID !== false) {
           kill(value.pythonPID);
         }
       });
-
+      setTaskGroupId(false) 
+      let userInfo = context.data.database.userInfo
+      userInfo.taskGroup = false
       let taskgroups = context.data.database.taskGroups
       delete taskgroups[taskGroupId]
 
-      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
+      const updatedDatabase = { ...context.data.database, taskGroups: taskgroups, userInfo: userInfo };
       context.updateData({database: updatedDatabase });
       exit();
     }

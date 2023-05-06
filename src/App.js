@@ -28,18 +28,22 @@ export const Context = createContext({
     endpoint: {value: 'Success Page', label: 'Success Page'}
   }
 
+  const defaultUserInfo = { 
+    taskGroup: false,
+    proxyGroup: false
+  }
+
 function App() {
 
-  const [data, setData] = useState({database: {taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
+  const [data, setData] = useState({database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
     if (storedDatabase) {
-      const initialDatabase = {database: {taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
+      const initialDatabase = {database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
     } else {
       const parsedDatabase = JSON.parse(storedDatabase);
-      parsedDatabase.database.taskGroups = []
       setData(parsedDatabase);
     }
   }, []);

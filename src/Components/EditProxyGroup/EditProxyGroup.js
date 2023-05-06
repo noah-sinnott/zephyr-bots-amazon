@@ -34,7 +34,7 @@ import { kill } from "../../helpers/ScriptRunner";
       setProxyGroupId(false) 
 
       let taskGroups = context.data.database.taskGroups
-
+  
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.proxy === proxyGroupId){
@@ -46,10 +46,13 @@ import { kill } from "../../helpers/ScriptRunner";
         })
       })
 
+      let userInfo = context.data.database.userInfo
+      userInfo.proxyGroup = false
+
       let proxyGroups = context.data.database.proxyGroups
       delete proxyGroups[proxyGroupId]
 
-      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups, taskGroups, taskGroups };
+      const updatedDatabase = { ...context.data.database, proxyGroups: proxyGroups, taskGroups, taskGroups, userInfo: userInfo };
       context.updateData({database: updatedDatabase });
       exit();
     }
