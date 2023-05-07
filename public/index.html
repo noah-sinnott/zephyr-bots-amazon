@@ -131,7 +131,9 @@ const win = nw.Window.get();
 
 // Maximize the window
 win.maximize();
+let maximized = true
 win.setMinimumSize(1080, 600);
+
 // Get references to the frame buttons
 const minimizeButton = document.querySelector('.minimize');
 const maximizeButton = document.querySelector('.maximize');
@@ -144,10 +146,12 @@ minimizeButton.addEventListener('click', () => {
 
 // Maximize or restore the window when the maximize button is clicked
 maximizeButton.addEventListener('click', () => {
-  if (win.isMaximized) {
+  if (maximized) {
     win.unmaximize();
+    maximized = false
   } else {
     win.maximize();
+    maximized = true
   }
 });
 
