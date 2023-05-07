@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import Select
 import random
 import sys
 import time
+import threading
 
 # ==================================================================================================================================
 
@@ -36,8 +37,7 @@ try:
 
 except Exception as e: 
     print("Error occurred while opening page: ", e)
-    time.sleep(50)
-    driver.quit()
+
 # ==================================================================================================================================
 
 def shipping(): 
@@ -267,13 +267,15 @@ def addingtocart():
 
 def checkforcookies():
     try:
-        reject_all_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "sp-cc-rejectall-link"))
-        )
-        wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
-        time.sleep(wait_time)
-        reject_all_button.click()
-        print("Rejected all cookies")
+        if driver.find_elements(By.ID, "sp-cc-rejectall-link"):
+            reject_all_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "sp-cc-rejectall-link"))
+            )
+            wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
+            time.sleep(wait_time)
+            reject_all_button.click()
+            print("Rejected all cookies")
+
         if(sys.argv[6] != 'Item-page'):
             addingtocart()
         
@@ -283,4 +285,24 @@ def checkforcookies():
 
 # ==================================================================================================================================
 
-checkforcookies()
+def checkStatus():
+    while True:
+        line = sys.stdin.readline().strip()
+        if line == 'End':
+            driver.quit()
+            sys.exit()
+            
+# ===================================================================================================================================
+
+status_thread = threading.Thread(target=checkStatus)
+cookies_thread = threading.Thread(target=checkforcookies)
+status_thread.start()
+cookies_thread.start()
+
+status_thread.join()
+cookies_thread.join()
+
+
+
+
+
