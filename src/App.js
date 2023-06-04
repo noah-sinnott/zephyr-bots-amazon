@@ -34,7 +34,7 @@ export const Context = createContext({
   }
 
 function App() {
-
+  const [loading, setLoading] = useState(true)
   const [data, setData] = useState({database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
 
   useEffect(() => {
@@ -42,9 +42,11 @@ function App() {
     if (storedDatabase) {
       const initialDatabase = {database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
+      setLoading(false)
     } else {
       const parsedDatabase = JSON.parse(storedDatabase);
       setData(parsedDatabase);
+      setLoading(false)
     }
   }, []);
 
@@ -56,20 +58,22 @@ function App() {
     setData({...data, ...newData});
   };
 
+  if(loading) return null
+
   return (
-<Context.Provider value={{ data, updateData }}>
-  <HashRouter>
-    <Routes>
-      <Route path="/" Component={ Home } />
-      <Route path="/Settings" Component={ Settings } />
-      <Route path="/Proxies" Component={ Proxies } />
-      <Route path="/Accounts" Component={ Accounts } />
-      <Route path="/Help" Component={ Help } />
-      <Route path="/Billing" Component={ Billing } />
-    </Routes>
-  </HashRouter>    
-  </Context.Provider>
-  );
+    <Context.Provider value={{ data, updateData }}>
+      <HashRouter>
+        <Routes>
+          <Route path="/" Component={ Home } />
+          <Route path="/Settings" Component={ Settings } />
+          <Route path="/Proxies" Component={ Proxies } />
+          <Route path="/Accounts" Component={ Accounts } />
+          <Route path="/Help" Component={ Help } />
+          <Route path="/Billing" Component={ Billing } />
+        </Routes>
+      </HashRouter>    
+      </Context.Provider>
+    );
 }
 
 export default App;

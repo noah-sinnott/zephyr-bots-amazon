@@ -8,11 +8,10 @@
 # testing
 /coverage
 
-# production
+# production shit
 /build
-
-# caching
 /cache
+/out
 
 # misc
 .DS_Store
