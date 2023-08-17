@@ -58,7 +58,7 @@ import Select from "react-select";
         billing: billing.value,
       };
       if (start) {
-        let pythonPID = await amazon(newTask, context, taskGroupId)
+        let pythonPID = await amazon(id, newTask, context, taskGroupId)
         newTask.pythonPID = pythonPID;
         taskgroups[taskGroupId].tasks[id] = newTask;       
       } else {

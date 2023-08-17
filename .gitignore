@@ -8,10 +8,10 @@
 # testing
 /coverage
 
-# production shit
-/build
-/cache
-/out
+# build shit
+/build_react
+/build_python
+/build_electron
 
 # misc
 .DS_Store

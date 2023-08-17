@@ -13,6 +13,7 @@ import time
 import threading
 
 # ==================================================================================================================================
+print(sys.argv, flush=True)
 
 try: 
     chrome_options = Options()
@@ -20,7 +21,7 @@ try:
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless") # Show header
     chrome_options.add_argument("--disable-setuid-sandbox")
     chrome_options.add_argument("--disable-features=site-per-process")
     chrome_options.add_argument("--disable-site-isolation-trials")
@@ -29,14 +30,13 @@ try:
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--incognito")
-
-    service = Service(ChromeDriverManager().install())
+    service = Service(ChromeDriverManager(version="114.0.5735.90").install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(sys.argv[1])
-    print("opened page")
+    print("opened page", flush=True)
 
 except Exception as e: 
-    print("Error occurred while opening page: ", e)
+    print("Error occurred while opening page: ", e, flush=True)
 
 # ==================================================================================================================================
 
@@ -160,9 +160,9 @@ def shipping():
         # submit_button.find_element_by_css_selector('input.a-button-input').click()
 
         time.sleep(100)
-        print("Entered shipping info")
+        print("Entered shipping info", flush=True)
     except Exception as e:
-        print("Error occurred while entering shipping info: ", e)
+        print("Error occurred while entering shipping info: ", e, flush=True)
         driver.quit()
 
 # ==================================================================================================================================
@@ -190,7 +190,7 @@ def signin():
         wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
         time.sleep(wait_time)
         continue_button.click()
-        print("Entered email and pressed continue")
+        print("Entered email and pressed continue", flush=True)
 
         password_input = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.ID, "ap_password"))
@@ -223,16 +223,16 @@ def signin():
                 wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
                 time.sleep(wait_time)
                 phone_skip_link.click()
-                print("declined to enter phonenumber")
+                print("declined to enter phonenumber", flush=True)
             except Exception as e:
-                print("Error occurred while skipping phone number: ", e)
+                print("Error occurred while skipping phone number: ", e, flush=True)
 
-        print('signed in')
+        print('signed in', flush=True)
         if(sys.argv[6] != 'Shipping-page'):
             shipping()
 
     except Exception as e:
-        print("Error occurred while signing in: ", e)
+        print("Error occurred while signing in: ", e, flush=True)
         driver.quit()
 
 # ==================================================================================================================================
@@ -245,7 +245,7 @@ def addingtocart():
             wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
             time.sleep(wait_time)
             elements[0].click()
-            print("Clicked on one time purchase")
+            print("Clicked on one time purchase", flush=True)
 
 
         buy_now_button = WebDriverWait(driver, 10).until(
@@ -256,11 +256,11 @@ def addingtocart():
         time.sleep(wait_time)
 
         buy_now_button.click()
-        print("Clicked on Buy Now button")
+        print("Clicked on Buy Now button", flush=True)
         if(sys.argv[6] != 'Signin-page'):
             signin()
     except Exception as e:
-        print("Error occurred while adding to cart: ", e)
+        print("Error occurred while adding to cart: ", e, flush=True)
         driver.quit()
 
 # ==================================================================================================================================
@@ -274,13 +274,13 @@ def checkforcookies():
             wait_time = random.uniform(float(sys.argv[2]), float(sys.argv[3]))
             time.sleep(wait_time)
             reject_all_button.click()
-            print("Rejected all cookies")
+            print("Rejected all cookies", flush=True)
 
         if(sys.argv[6] != 'Item-page'):
             addingtocart()
         
     except Exception as e:
-        print("Error occurred while rejecting cookies: ", e)
+        print("Error occurred while rejecting cookies: ", e, flush=True)
         driver.quit()
 
 # ==================================================================================================================================

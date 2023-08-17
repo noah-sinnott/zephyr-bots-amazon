@@ -3,9 +3,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-
 import React, {useEffect, createContext, useState} from 'react'
-
 import Home from './Pages/Home/Home'
 import Settings from './Pages/Settings/Settings'
 import Help from './Pages/Help/Help'
@@ -39,7 +37,7 @@ function App() {
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
-    if (storedDatabase) {
+    if (!storedDatabase) {
       const initialDatabase = {database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
       setLoading(false)

@@ -1,8 +1,12 @@
 {
-  "name": "reseller-desktop",
+  "name": "resellerdesktop",
   "version": "0.1.0",
   "private": true,
+  "description": "reseller desktop",
+  "author": "Noah Sinnott",
+  "homepage": "./",
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.16",
@@ -10,26 +14,53 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "nw-react-scripts": "^5.1.1",
+    "child_process": "^1.0.2",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.10.0",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.7.2",
     "web-vitals": "^1.1.2"
   },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^25.5.0",
+    "electron-builder": "^24.6.3"
+  },
+  "main": "main.js",
   "scripts": {
-    "start": "nw-react-scripts start",
-    "build": "nw-react-scripts build",
-    "test": "nw-react-scripts test",
-    "eject": "nw-react-scripts eject"
+    "start": "concurrently \"npm run start-react\" \"npm run start-electron\"",
+    "start-react": "react-scripts start",
+    "start-electron": "cross-env NODE_ENV=development electron .",
+
+    "build-react": "(if exist build_react rmdir /S /Q build_react) && (react-scripts build) && (rename build build_react)",
+    "build-electron": "electron-builder build",
+    "build-python": "FOR %f IN (python\\*.py) DO (pyinstaller --onefile --distpath build_python %f && del %~nf.spec) && rd /s /q build",
+    "build": "npm run build-react && npm run build-python && npm run build-electron"
+  },
+  "build": {
+    "appId": "com.resellerdesktop",
+    "directories": {
+      "output": "build_electron"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "build_python/**/*"
+    ],
+    "extends": null,
+    "files": [
+      "build_react/**/*",
+      "build_python/**/*",
+      "node_modules/**/*",
+      "main.js",
+      "preload.js"
+    ]
   },
   "eslintConfig": {
-    "extends": [
-      "nw-react-app",
-      "nw-react-app/jest"
-    ]
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -42,21 +73,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "main": "index.html",
-  "nwbuilds": {
-    "//": "https://nwutils.io/nw-builder/",
-    "platforms": ["win64"],
-    "version": "latest",
-    "flavor": "normal",
-    "outDir": "./out",
-    "cacheDir": "./cache",
-    "app": {
-      "name": "reseller-desktop"
-    }
-  },
-  "window": {
-    "maximizable": true,
-    "frame": false
   }
 }

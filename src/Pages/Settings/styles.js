@@ -23,6 +23,7 @@ const styles = {
       border: `1px solid ${colors.highlight}`,
       boxSizing: 'border-box',
       padding: '30px',
+      overflowY: 'auto',
     },
     logoutButton: {
       backgroundColor: colors.highlight,

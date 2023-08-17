@@ -125,41 +125,23 @@ body::-webkit-scrollbar-track {
     <div id="root"></div>
 
     <script>
-// Get a reference to the current window
-const win = nw.Window.get();
 
+    const minimizeButton = document.querySelector('.minimize');
+    const maximizeButton = document.querySelector('.maximize');
+    const closeButton = document.querySelector('.close');
 
-// Maximize the window
-win.maximize();
-let maximized = true
-win.setMinimumSize(1080, 600);
+    minimizeButton.addEventListener('click', () => {
+      window.electronAPI.windowMinimize()
+    });
 
-// Get references to the frame buttons
-const minimizeButton = document.querySelector('.minimize');
-const maximizeButton = document.querySelector('.maximize');
-const closeButton = document.querySelector('.close');
+    maximizeButton.addEventListener('click', () => {
+      window.electronAPI.windowMaximize()
+    });
 
-// Minimize the window when the minimize button is clicked
-minimizeButton.addEventListener('click', () => {
-  win.minimize();
-});
-
-// Maximize or restore the window when the maximize button is clicked
-maximizeButton.addEventListener('click', () => {
-  if (maximized) {
-    win.unmaximize();
-    maximized = false
-  } else {
-    win.maximize();
-    maximized = true
-  }
-});
-
-// Close the window when the close button is clicked
-closeButton.addEventListener('click', () => {
-  win.close();
-});
-
+    closeButton.addEventListener('click', () => {
+      window.electronAPI.windowClose()
+    });
+    
     </script>
 
   </body>
