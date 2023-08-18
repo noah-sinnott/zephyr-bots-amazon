@@ -7,23 +7,39 @@ export function amazon(taskId, task, context, taskGroupId) {
   const id = generateId()
   window.electronAPI.amazonStart(id, [
     url2,
-    0.3,
-    2.7,
+    0.1,
+    1.7,
+    0.1, 
+    0.2, 
+    'Checkout-page',
+
     'noah.sinnott12@gmail.com',
     '123456',
-    'Checkout-page',
-    'GB',
     'Noah Sinnott',
     '07484783803',
+
     'ln44hn',
     'st michaels house',
     'church street',
-    'billinghay'
+    'billinghay',
+    'Lincolnshire',
+
+    'ln44hn',
+    'st michaels house',
+    'church street',
+    'billinghay',
+    'Lincolnshire',
+
+    "4921819986286533",
+    "Noah Sinnott",
+    "06/26",
+    "205",
+    "07484783803"
   ])
 
   window.electronAPI.amazonDataGood((event, pidId, data) => {
     if(pidId !== id) return
-    console.log(`stdout: ${data}`, context, taskId, taskGroupId);
+    console.log(`stdout: ${data}`);
     const cleanStr = data.toString().replace(/[\r\n]+/gm, '');
     let notifs = context.data.database.taskGroups[taskGroupId].tasks[taskId].notifications;
     let newNotifs = [...notifs, cleanStr];
