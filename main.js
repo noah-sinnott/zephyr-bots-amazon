@@ -106,6 +106,8 @@ ipcMain.on('amazon', (event, id, params) => {
 
   pythonProcess.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
+    pythonProcess.stdin.write('End\n');
+    pythonProcess.stdin.end();
     pythonProcesses.delete(id); 
     win.webContents.send(`amazonDataClose`,id, code)
   });
