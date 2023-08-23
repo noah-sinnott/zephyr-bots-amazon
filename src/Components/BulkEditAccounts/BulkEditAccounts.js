@@ -6,6 +6,7 @@ import { Input, Modal, Button } from "@mui/material";
 import Select from "react-select";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 import { kill } from "../../helpers/ScriptRunner";
+
 function UpdateAccountModal({setOpen, isOpen}) {
 
     const context = useContext(Context)
@@ -45,9 +46,9 @@ function UpdateAccountModal({setOpen, isOpen}) {
   if(activeFields.length > 0){
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
       Object.entries(taskGroup.tasks).forEach(([key, task]) => {
-        if(task.pythonPID !== false){
-            kill(task.pythonPID)
-            task.pythonPID = false
+        if(task.scriptRunning !== false){
+            kill(key)
+            task.scriptRunning = false
             task.notifications = []
         }
       })

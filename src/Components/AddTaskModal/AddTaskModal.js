@@ -53,13 +53,13 @@ import Select from "react-select";
         proxy: proxy.value,
         maxPrice: maxPrice,
         notifications: [],
-        pythonPID: false,
+        scriptRunning: false,
         account: account.value,
         billing: billing.value,
       };
       if (start) {
-        let pythonPID = await amazon(id, newTask, context, taskGroupId)
-        newTask.pythonPID = pythonPID;
+        amazon(id, newTask, context, taskGroupId)
+        newTask.scriptRunning = true;
         taskgroups[taskGroupId].tasks[id] = newTask;       
       } else {
         taskgroups[taskGroupId].tasks[id] = newTask;
@@ -132,7 +132,7 @@ import Select from "react-select";
         </div>
 
         <div  style={styles.inputContainer}>
-          <p>Max overall price:</p>
+          <p>Max Price Including Shipping:</p>
           <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
         </div>
 

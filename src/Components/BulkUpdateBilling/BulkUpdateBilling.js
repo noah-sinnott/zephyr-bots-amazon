@@ -12,19 +12,26 @@ import { kill } from "../../helpers/ScriptRunner";
     const [editBillingProfilesDialog, setEditBillingProfilesDialog] = useState(false);
 
     const [name, setName] = useState('');
+    const [cardHolderName, setCardHolderName] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [CVC, setCVC] = useState('');
+    const [expiresAt, setExpiresAt] = useState('');
+    const [cardHolderNumber, setCardHolderNumber] = useState('');
 
+    const [shippingFullName, setShippingFullName] = useState('');
+    const [shippingNumber, setShippingNumber] = useState('');
     const [shippingPostCode, setShippingPostCode] = useState('');
     const [shippingAddressLine1, setShippingAddressLine1] = useState('');
     const [shippingAddressLine2, setShippingAddressLine2] = useState('');
-    
+    const [shippingRegion, setShippingRegion] = useState('');
+    const [shippingCity, setShippingCity] = useState('');
+
     const [billingPostCode, setBillingPostCode] = useState('');
     const [billingAddressLine1, setBillingAddressLine1] = useState('');
     const [billingAddressLine2, setBillingAddressLine2] = useState('');
+    const [billingRegion, setBillingRegion] = useState('');
+    const [billingCity, setBillingCity] = useState('');
 
-    const [cardNumber, setCardNumber] = useState('');
-    const [sortCode, setSortCode] = useState('');
-    const [CVC, setCVC] = useState('');
-    const [expiresAt, setExpiresAt] = useState('');
     const [page, setPage] = useState(1);
 
     const [activeFields1, setActiveFields1] = useState([]);
@@ -33,25 +40,34 @@ import { kill } from "../../helpers/ScriptRunner";
     const [activeFields1Unfiltered, setActiveFields1Unfiltered] = useState([]);
     const [activeFields2Unfiltered, setActiveFields2Unfiltered] = useState([]);
     const [activeFields3Unfiltered, setActiveFields3Unfiltered] = useState([]);
+
 const fields1 = [  
 {value: 'name', label: 'Name'},
-{value: 'shippingPostCode', label: 'Shipping Post Code'},
-{value: 'shippingAddressLine1', label: 'Shipping Address Line1'},
-{value: 'shippingAddressLine2', label: 'Shipping Address Line2'},
+{value: 'cardNumber', label: 'Card Number'},
+{value: 'CVC', label: 'CVC'},
+{value: 'expiresAt', label: 'Expires At'},
+{value: 'cardHoldersName', label: "Card Holder's Name"},
+{value: 'cardHoldersNumber', label: "Card Holder's Number"}
 ];
 
 const fields2 = [  
-{value: 'billingPostCode', label: 'Billing Post Code'},
+  {value: 'shippingFullName', label: 'Shipping Recipents Name'},
+  {value: 'shippingNumber', label: 'Shipping Recipents Number'},
+  {value: 'shippingAddressLine1', label: 'Shipping Address Line1'},
+  {value: 'shippingAddressLine2', label: 'Shipping Address Line2'},
+  {value: 'shippingPostCode', label: 'Shipping Post Code'},
+  {value: 'shippingCity', label: 'Shipping City'},
+  {value: 'shippingRegion', label: 'Shipping Region'},
+  ];
+
+const fields3 = [  
 {value: 'billingAddressLine1', label: 'Billing Address Line1'},
 {value: 'billingAddressLine2', label: 'Billing Address Line2'},
+{value: 'billingPostCode', label: 'Billing Post Code'},
+{value: 'billingCity', label: 'Billing City'},
+{value: 'billingRegion', label: 'Billing Region'},
 ];
 
-const fields3 = [ 
-{value: 'cardNumber', label: 'Card Number'},
-{value: 'sortCode', label: 'Sort Code'},
-{value: 'CVC', label: 'CVC'},
-{value: 'expiresAt', label: 'Expires At'}
-];
     function formatFields(inputedFields){
       let arr = []
       
@@ -64,12 +80,16 @@ const fields3 = [
         if (!arr.includes(currentField)) {
           if (currentField === 'name') {
             setName('');
-          } else if (currentField === 'shippingPostCode') {
-            setShippingPostCode('');
-          } else if (currentField === 'shippingAddressLine1') {
-            setShippingAddressLine1('');
-          } else if (currentField === 'shippingAddressLine2') {
-            setShippingAddressLine2('');
+          } else if (currentField === 'cardNumber') {
+            setCardNumber('');
+          } else if (currentField === 'CVC') {
+            setCVC('');
+          } else if (currentField === 'expiresAt') {
+            setExpiresAt('');
+          } else if (currentField === 'cardHoldersName') {
+            setCardHolderName('');
+          } else if (currentField === 'cardHoldersNumber') {
+            setCardHolderNumber('');
           } 
         }
       });
@@ -78,12 +98,20 @@ const fields3 = [
       } else if(page === 2){
         activeFields2.forEach((currentField) => {
         if (!arr.includes(currentField)) {
-          if (currentField === 'billingPostCode') {
-            setBillingPostCode('');
-          } else if (currentField === 'billingAddressLine1') {
-            setBillingAddressLine1('');
-          } else if (currentField === 'billingAddressLine2') {
-            setBillingAddressLine2('');
+          if (currentField === 'shippingFullName') {
+            setShippingFullName('');
+          } else if (currentField === 'shippingNumber') {
+            setShippingNumber('');
+          } else if (currentField === 'shippingAddressLine1') {
+            setShippingAddressLine1('');
+          } else if (currentField === 'shippingAddressLine2') {
+            setShippingAddressLine2('');
+          } else if (currentField === 'shippingPostCode') {
+            setShippingPostCode('');
+          } else if (currentField === 'shippingCity') {
+            setShippingCity('');
+          } else if (currentField === 'shippingRegion') {
+            setShippingRegion('');
           }
         }
       });
@@ -92,14 +120,16 @@ const fields3 = [
       } else {
           activeFields3.forEach((currentField) => {
           if (!arr.includes(currentField)) {
-            if (currentField === 'cardNumber') {
-              setCardNumber('');
-            } else if (currentField === 'sortCode') {
-              setSortCode('');
-            } else if (currentField === 'CVC') {
-              setCVC('');
-            } else if (currentField === 'expiresAt') {
-              setExpiresAt('');
+            if (currentField === 'billingAddressLine1') {
+              setBillingAddressLine1('');
+            } else if (currentField === 'billingAddressLine2') {
+              setBillingAddressLine2('');
+            } else if (currentField === 'billingPostCode') {
+              setBillingPostCode('');
+            } else if (currentField === 'billingCity') {
+              setBillingCity('');
+            } else if (currentField === 'billingRegion') {
+              setBillingRegion('');
             }
           }
         });  
@@ -115,9 +145,9 @@ const fields3 = [
     if(activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0){
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
       Object.entries(taskGroup.tasks).forEach(([key, task]) => {
-        if(task.pythonPID !== false){
-            kill(task.pythonPID)
-            task.pythonPID = false
+        if(task.scriptRunning !== false){
+            kill(key)
+            task.scriptRunning = false
             task.notifications = []
         }
       })
@@ -128,16 +158,26 @@ const fields3 = [
       let updatedValue = {
         ...value,
         name: activeFields1.includes('name') ? name : value.name,
-        shippingPostCode: activeFields1.includes('shippingPostCode') ? shippingPostCode : value.shippingPostCode,
-        shippingAddressLine1: activeFields1.includes('shippingAddressLine1') ? shippingAddressLine1 : value.shippingAddressLine1,
-        shippingAddressLine2: activeFields1.includes('shippingAddressLine2') ? shippingAddressLine2 : value.shippingAddressLine2,
-        billingPostCode: activeFields2.includes('billingPostCode') ? billingPostCode : value.billingPostCode,
-        billingAddressLine1: activeFields2.includes('billingAddressLine1') ? billingAddressLine1 : value.billingAddressLine1,
-        billingAddressLine2: activeFields2.includes('billingAddressLine2') ? billingAddressLine2 : value.billingAddressLine2,
-        cardNumber: activeFields3.includes('cardNumber') ? cardNumber : value.cardNumber,
-        sortCode: activeFields3.includes('sortCode') ? sortCode : value.sortCode,
-        CVC: activeFields3.includes('CVC') ? CVC : value.CVC,
-        expiresAt: activeFields3.includes('expiresAt') ? expiresAt : value.expiresAt,
+        cardNumber: activeFields1.includes('cardNumber') ? cardNumber : value.cardNumber,
+        CVC: activeFields1.includes('CVC') ? CVC : value.CVC,
+        expiresAt: activeFields1.includes('expiresAt') ? expiresAt : value.expiresAt,
+        cardHolderName: activeFields1.includes('cardHoldersName') ? cardHolderName : value.cardHoldersName,
+        cardHolderNumber: activeFields1.includes('cardHoldersNumber') ? cardHolderNumber : value.cardHoldersNumber,
+
+        shippingFullName: activeFields2.includes('shippingFullName') ? shippingFullName : value.shippingFullName,
+        shippingNumber: activeFields2.includes('shippingNumber') ? shippingNumber : value.shippingNumber,
+        shippingAddressLine1: activeFields2.includes('shippingAddressLine1') ? shippingAddressLine1 : value.shippingAddressLine1,
+        shippingAddressLine2: activeFields2.includes('shippingAddressLine2') ? shippingAddressLine2 : value.shippingAddressLine2,
+        shippingPostCode: activeFields2.includes('shippingPostCode') ? shippingPostCode : value.shippingPostCode,
+        shippingCity: activeFields2.includes('shippingCity') ? shippingCity : value.shippingCity,
+        shippingRegion: activeFields2.includes('shippingRegion') ? shippingRegion : value.shippingRegion,
+
+        billingAddressLine1: activeFields3.includes('billingAddressLine1') ? billingAddressLine1 : value.billingAddressLine1,
+        billingAddressLine2: activeFields3.includes('billingAddressLine2') ? billingAddressLine2 : value.billingAddressLine2,
+        billingPostCode: activeFields3.includes('billingPostCode') ? billingPostCode : value.billingPostCode,
+        billingCity: activeFields3.includes('billingCity') ? billingCity : value.billingCity,
+        billingRegion: activeFields3.includes('billingRegion') ? billingRegion : value.billingRegion,
+
         billingSameAs: activeFields1.length > 0 || activeFields2.length > 0 || activeFields3.length > 0 ? false : value.billingSameAs,
       };
       billing[key] = updatedValue
@@ -150,17 +190,28 @@ const fields3 = [
 
     function exit(){
       setOpen(false)
-      setName('')
-      setShippingAddressLine1('')
-      setShippingAddressLine2('');
-      setShippingPostCode('');
-      setBillingAddressLine1('')
-      setBillingAddressLine2('');
-      setBillingPostCode('');
-      setCardNumber('')
-      setSortCode('');
-      setExpiresAt('');
+      setName('');
+      setCardHolderName('');
+      setCardNumber('');
       setCVC('');
+      setExpiresAt('');
+      setCardHolderNumber('');
+    
+      setShippingFullName('');
+      setShippingNumber('');
+      setShippingPostCode('');
+      setShippingAddressLine1('');
+      setShippingAddressLine2('');
+      setShippingRegion('');
+      setShippingCity('');
+    
+      setBillingPostCode('');
+      setBillingAddressLine1('');
+      setBillingAddressLine2('');
+      setBillingRegion('');
+      setBillingCity('');
+    
+      setPage(1);
       setActiveFields1([])
       setActiveFields2([])
       setActiveFields3([])
@@ -199,7 +250,6 @@ const fields3 = [
             />
         </div>
 
-
 {activeFields1.includes('name') && 
   <div style={styles.inputContainer}>
     <p>Billing Profile Name:</p>
@@ -214,46 +264,71 @@ const fields3 = [
   </div>
 }
 
-{activeFields1.includes('shippingAddressLine1') && 
-  <div style={styles.inputContainer}>
-    <p>Shipping Address Line 1:</p>
-    <Input
-      value={shippingAddressLine1}
-      disableUnderline={true}
-      onChange={(event) => setShippingAddressLine1(event.target.value)}
-      id="shippingAddressLine1"
-      sx={styles.textInput}
-      placeholder="Enter Shipping Address Line 1"
-    />
-  </div>
+{activeFields1.includes('cardNumber') && 
+<div style={styles.inputContainer}>
+  <p>Card Number:</p>
+  <Input
+    value={cardNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardNumber(event.target.value)}
+    id="cardNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Number"
+  />
+</div>
+  }
+{activeFields1.includes('expiresAt') && 
+<div style={styles.inputContainer}>
+  <p>Expires At:</p>
+  <Input
+    value={expiresAt}
+    disableUnderline={true}
+    onChange={(event) => setExpiresAt(event.target.value)}
+    id="expiresAt"
+    sx={styles.textInput}
+    placeholder="Enter Expires At"
+  />
+</div>
 }
+{activeFields1.includes('CVC') && 
+<div style={styles.inputContainer}>
+  <p>CVC:</p>
+  <Input
+    value={CVC}
+    disableUnderline={true}
+    onChange={(event) => setCVC(event.target.value)}
+    id="CVC"        
+    sx={styles.textInput}
+    placeholder="Enter CVC"
+  />
+</div>
+  }
+  {activeFields1.includes('cardHoldersName') && 
+<div style={styles.inputContainer}>
+  <p>Card Holder's Name:</p>
+  <Input
+    value={cardHolderName}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderName(event.target.value)}
+    id="cardHolderName"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Name"
+  />
+</div>
+  }
 
-{activeFields1.includes('shippingAddressLine2') && 
-  <div style={styles.inputContainer}>
-    <p>Shipping Address Line 2:</p>
-    <Input
-      value={shippingAddressLine2}
-      disableUnderline={true}
-      onChange={(event) => setShippingAddressLine2(event.target.value)}
-      id="shippingAddressLine2"
-      sx={styles.textInput}
-      placeholder="Enter Shipping Address Line 2"
-    />
-  </div>
-}
-
-{activeFields1.includes('shippingPostCode') && 
-  <div style={styles.inputContainer}>
-    <p>Shipping Post Code:</p>
-    <Input
-      value={shippingPostCode}
-      disableUnderline={true}
-      onChange={(event) => setShippingPostCode(event.target.value)}
-      id="shippingPostCode"
-      sx={styles.textInput}
-      placeholder="Enter Shipping Post Code"
-    />
-  </div>
+{activeFields1.includes('cardHoldersNumber') && 
+<div style={styles.inputContainer}>
+  <p>Card Holder's Phone Number:</p>
+  <Input
+    value={cardHolderNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderNumber(event.target.value)}
+    id="cardHolderNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Number"
+  />
+</div> 
 }
 </>: page === 2 ? <>
 
@@ -270,47 +345,94 @@ const fields3 = [
 />
 </div>
 
-{activeFields2.includes('billingAddressLine1') && 
+{activeFields2.includes('shippingFullName') && 
   <div style={styles.inputContainer}>
-    <p>Billing Address Line 1:</p>
-    <Input
-      value={billingAddressLine1}
-      disableUnderline={true}
-      onChange={(event) => setBillingAddressLine1(event.target.value)}
-      id="billingAddressLine1"
-      sx={styles.textInput}
-      placeholder="Enter Billing Address Line 1"
-    />
-  </div>
+  <p>Address Holder's Name:</p>
+  <Input
+    value={shippingFullName}
+    disableUnderline={true}
+    onChange={(event) => setShippingFullName(event.target.value)}
+    id="shippingFullName"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Name"
+  />
+</div>
+  }
+  {activeFields2.includes('shippingNumber') && 
+<div style={styles.inputContainer}>
+  <p>Address Holder's Number:</p>
+  <Input
+    value={shippingNumber}
+    disableUnderline={true}
+    onChange={(event) => setShippingNumber(event.target.value)}
+    id="shippingNumber"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Number"
+  />
+</div>}
+{activeFields2.includes('shippingAddressLine1') && 
+<div style={styles.inputContainer}>
+  <p>Shipping Address Line 1:</p>
+  <Input
+    value={shippingAddressLine1}
+    disableUnderline={true}
+    onChange={(event) => setShippingAddressLine1(event.target.value)}
+    id="shippingAddressLine1"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address Line 1"
+  />
+</div>
 }
-
-{activeFields2.includes('billingAddressLine2') && 
-  <div style={styles.inputContainer}>
-    <p>Billing Address Line 2:</p>
-    <Input
-      value={billingAddressLine2}
-      disableUnderline={true}
-      onChange={(event) => setBillingAddressLine2(event.target.value)}
-      id="billingAddressLine2"
-      sx={styles.textInput}
-      placeholder="Enter Billing Address Line 2"
-    />
-  </div>
-}
-
-{activeFields2.includes('billingPostCode') && 
-  <div style={styles.inputContainer}>
-    <p>Billing Post Code:</p>
-    <Input
-      value={billingPostCode}
-      disableUnderline={true}
-      onChange={(event) => setBillingPostCode(event.target.value)}
-      id="billingPostCode"
-      sx={styles.textInput}
-      placeholder="Enter Billing Post Code"
-    />
-  </div>
-}
+{activeFields2.includes('shippingAddressLine2') && 
+<div style={styles.inputContainer}>
+  <p>Shipping Address Line 2:</p>
+  <Input
+    value={shippingAddressLine2}
+    disableUnderline={true}
+    onChange={(event) => setShippingAddressLine2(event.target.value)}
+    id="shippingAddressLine2"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address Line 2"
+  />
+</div>
+  }
+  {activeFields2.includes('shippingPostCode') && 
+<div style={styles.inputContainer}>
+  <p>Shipping Post Code:</p>
+  <Input
+    value={shippingPostCode}
+    disableUnderline={true}
+    onChange={(event) => setShippingPostCode(event.target.value)}
+    id="shippingPostCode"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Post Code"
+  />
+</div>}
+{activeFields2.includes('shippingCity') && 
+<div style={styles.inputContainer}>
+  <p>Shipping City:</p>
+  <Input
+    value={shippingCity}
+    disableUnderline={true}
+    onChange={(event) => setShippingCity(event.target.value)}
+    id="shippingCity"
+    sx={styles.textInput}
+    placeholder="Enter Shipping City"
+  />
+</div>}
+{activeFields2.includes('shippingRegion') && 
+<div style={styles.inputContainer}>
+  <p>Shipping Region / County:</p>
+  <Input
+    value={shippingRegion}
+    disableUnderline={true}
+    onChange={(event) => setShippingRegion(event.target.value)}
+    id="shippingRegion"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Region"
+  />
+</div>
+  }
 </>:<>
 
 <div style={styles.dropDownContainer}>
@@ -326,59 +448,71 @@ const fields3 = [
 />
 </div>
 
-{activeFields3.includes('cardNumber') && 
+{activeFields3.includes('billingAddressLine1') && 
   <div style={styles.inputContainer}>
-    <p>Card Number:</p>
-    <Input
-      value={cardNumber}
-      disableUnderline={true}
-      onChange={(event) => setCardNumber(event.target.value)}
-      id="cardNumber"
-      sx={styles.textInput}
-      placeholder="Enter Card Number"
-    />
-  </div>
+  <p>Billing Address Line 1:</p>
+  <Input
+    value={billingAddressLine1}
+    disableUnderline={true}
+    onChange={(event) => setBillingAddressLine1(event.target.value)}
+    id="billingAddressLine1"
+    sx={styles.textInput}
+    placeholder="Enter Billing Address Line 1"
+  />
+</div>
+  }
+  {activeFields3.includes('billingAddressLine2') && 
+<div style={styles.inputContainer}>
+  <p>Billing Address Line 2:</p>
+  <Input
+    value={billingAddressLine2}
+    disableUnderline={true}
+    onChange={(event) => setBillingAddressLine2(event.target.value)}
+    id="billingAddressLine2"
+    sx={styles.textInput}
+    placeholder="Enter Billing Address Line 2"
+  />
+</div>
+  }
+  {activeFields3.includes('billingPostCode') && 
+<div style={styles.inputContainer}>
+  <p>Billing Post Code:</p>
+  <Input
+    value={billingPostCode}
+    disableUnderline={true}
+    onChange={(event) => setBillingPostCode(event.target.value)}
+    id="billingPostCode"
+    sx={styles.textInput}
+    placeholder="Enter Billing Post Code"
+  />
+</div> 
+  }
+  {activeFields3.includes('billingCity') && 
+<div style={styles.inputContainer}>
+  <p>Billing City:</p>
+  <Input
+    value={billingCity}
+    disableUnderline={true}
+    onChange={(event) => setBillingCity(event.target.value)}
+    id="billingCity"
+    sx={styles.textInput}
+    placeholder="Enter Billing City"
+  />
+</div>
+  }
+  {activeFields3.includes('billingRegion') && 
+<div style={styles.inputContainer}>
+  <p>Billing Region / County:</p>
+  <Input
+    value={billingRegion}
+    disableUnderline={true}
+    onChange={(event) => setBillingRegion(event.target.value)}
+    id="billingRegion"
+    sx={styles.textInput}
+    placeholder="Enter Billing Region"
+  />
+</div>
 }
-
-{activeFields3.includes('sortCode') &&
-
-<div style={styles.inputContainer}>
-  <p>Sort Code:</p>
-  <Input
-    value={sortCode}
-    disableUnderline={true}
-    onChange={(event) => setSortCode(event.target.value)}
-    id="sortCode"
-    sx={styles.textInput}
-    placeholder="Enter Sort Code"
-  />
-</div>}
-
-{activeFields3.includes('expiresAt') &&
-<div style={styles.inputContainer}>
-  <p>Expires At:</p>
-  <Input
-    value={expiresAt}
-    disableUnderline={true}
-    onChange={(event) => setExpiresAt(event.target.value)}
-    id="expiresAt"
-    sx={styles.textInput}
-    placeholder="Enter Expires At"
-  />
-</div>}
-
-{activeFields3.includes('CVC') && 
-<div style={styles.inputContainer}>
-  <p>CVC:</p>
-  <Input
-    value={CVC}
-    disableUnderline={true}
-    onChange={(event) => setCVC(event.target.value)}
-    id="CVC"        
-    sx={styles.textInput}
-    placeholder="Enter CVC"
-  />
-</div>}
 </>
   }
 
@@ -401,7 +535,7 @@ const fields3 = [
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setPage((prev) => prev - 1)}>
           Back
         </Button>
-          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditBillingProfilesDialog(true)}>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => update()}>
           Update Billing Profiles
         </Button>
         </>

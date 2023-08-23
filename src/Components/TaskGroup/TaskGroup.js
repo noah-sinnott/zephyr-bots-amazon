@@ -37,8 +37,8 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
 
   function deleteAll(){
     Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
-      if(value.pythonPID !== false){
-        kill(value.pythonPID)
+      if(value.scriptRunning !== false){
+        kill(key)
       }
     })
     let taskgroups = context.data.database.taskGroups
@@ -60,9 +60,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   }
   
   function deleteTask(key){
-    if(context.data.database.taskGroups[taskGroupId].tasks[key].pythonPID !== false){
-      kill(context.data.database.taskGroups[taskGroupId].tasks[key].pythonPID)
-    }
+    if(context.data.database.taskGroups[taskGroupId].tasks[key].scriptRunning !== false){
+      kill(key)
+  }
 
     let taskgroups = context.data.database.taskGroups
     delete taskgroups[taskGroupId].tasks[key]
@@ -72,22 +72,22 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   }
 
   async function startTask(id, task) {
-    if (task.pythonPID !== false) return;
-    const pythonPID = await amazon(id, task, context, taskGroupId);
+    if (task.scriptRunning !== false) return;
+    amazon(id, task, context, taskGroupId);
 
     let taskgroups = context.data.database.taskGroups
-    taskgroups[taskGroupId].tasks[id].pythonPID = pythonPID
+    taskgroups[taskGroupId].tasks[id].scriptRunning = true
 
     const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
     context.updateData({database: updatedDatabase });
   }
   
   function stopTask(id, task){
-    if(task.pythonPID !== false){
-      kill(task.pythonPID)
+    if(task.scriptRunning !== false){
+      kill(id)
     }
       let taskgroups = context.data.database.taskGroups
-      taskgroups[taskGroupId].tasks[id].pythonPID = false
+      taskgroups[taskGroupId].tasks[id].scriptRunning = false
       const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
       context.updateData({database: updatedDatabase });
     }
@@ -163,9 +163,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                   <td style={styles.tableItem}>{context.data.database.accounts[value.account]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.billing[value.billing]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy]?.name || ''}</td>
-                  <td style={styles.tableItem}>{value.pythonPID !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
+                  <td style={styles.tableItem}>{value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
-                    {value.pythonPID !== false ?
+                    {value.scriptRunning !== false ?
                      <IconButton aria-label="Stop" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>
                        <StopRoundedIcon />
                     </IconButton>

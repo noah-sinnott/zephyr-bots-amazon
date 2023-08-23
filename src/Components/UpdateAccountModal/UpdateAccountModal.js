@@ -28,9 +28,9 @@ import { kill } from "../../helpers/ScriptRunner";
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.account === accountId){
-            if(task.pythonPID !== false){
-              kill(task.pythonPID)
-              task.pythonPID = false
+            if(task.scriptRunning !== false){
+              kill(key)
+              task.scriptRunning = false
               task.notifications = []
           }
           }

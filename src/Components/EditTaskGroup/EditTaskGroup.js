@@ -34,8 +34,8 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     function deleteTaskGroup() { 
       
       Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
-        if (value.pythonPID !== false) {
-          kill(value.pythonPID);
+        if (value.scriptRunning !== false) {
+          kill(key);
         }
       });
       setTaskGroupId(false) 

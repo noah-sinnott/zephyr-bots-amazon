@@ -13,36 +13,34 @@ function AddBillingModal({setOpen, isOpen}) {
     const context = useContext(Context)
 
     const [name, setName] = useState('');
+    const [cardHolderName, setCardHolderName] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [CVC, setCVC] = useState('');
+    const [expiresAt, setExpiresAt] = useState('');
+    const [cardHolderNumber, setCardHolderNumber] = useState('');
 
+    const [shippingFullName, setShippingFullName] = useState('');
+    const [shippingNumber, setShippingNumber] = useState('');
     const [shippingPostCode, setShippingPostCode] = useState('');
-    const [shippingAddressLine1, setShippingAddressLine] = useState('');
+    const [shippingAddressLine1, setShippingAddressLine1] = useState('');
     const [shippingAddressLine2, setShippingAddressLine2] = useState('');
-    
+    const [shippingRegion, setShippingRegion] = useState('');
+    const [shippingCity, setShippingCity] = useState('');
+
     const [billingPostCode, setBillingPostCode] = useState('');
     const [billingAddressLine1, setBillingAddressLine1] = useState('');
     const [billingAddressLine2, setBillingAddressLine2] = useState('');
-
-    const [cardNumber, setCardNumber] = useState('');
-    const [sortCode, setSortCode] = useState('');
-    const [CVC, setCVC] = useState('');
-    const [expiresAt, setExpiresAt] = useState('');
+    const [billingRegion, setBillingRegion] = useState('');
+    const [billingCity, setBillingCity] = useState('');
 
     const [page, setPage] = useState(1);
     const [billingSameAs, setBillingSameAs] = useState(false);
 
     function handlePage (forward){
       if(forward){
-        if(billingSameAs === true){
-          setPage(3)
-        } else {
           setPage(page + 1)
-        }
       } else {
-        if(billingSameAs === true){
-          setPage(1)
-        } else {
           setPage(page - 1)    
-        }
       }
     }
 
@@ -54,17 +52,27 @@ function AddBillingModal({setOpen, isOpen}) {
 
       let newBillingProfile ={
        name : name,
+       cardNumber: cardNumber,
+       CVC: CVC,
+       expiresAt: expiresAt,
+       cardHolderName: cardHolderName,
+       cardHolderNumber: cardHolderNumber, 
+
+       shippingFullName: shippingFullName,
+       shippingNumber: shippingNumber,
        shippingAddressLine1: shippingAddressLine1,
        shippingAddressLine2: shippingAddressLine2,
        shippingPostCode: shippingPostCode,
+       shippingCity: shippingCity,
+       shippingRegion: shippingRegion,
+
        billingAddressLine1: billingSameAs ? shippingAddressLine1 : billingAddressLine1,
        billingAddressLine2: billingSameAs ? shippingAddressLine2 : billingAddressLine2,
        billingPostCode: billingSameAs ? shippingPostCode : billingPostCode,
-       cardNumber: cardNumber,
-       sortCode: sortCode,
-       CVC: CVC,
-       expiresAt: expiresAt,
-       billingSameAs: billingSameAs
+       billingCity: billingSameAs ? shippingCity : billingCity,
+       billingRegion: billingSameAs ? shippingRegion : billingRegion,
+
+       billingSameAs: billingSameAs,
       }
 
       billing[id] = newBillingProfile
@@ -73,22 +81,34 @@ function AddBillingModal({setOpen, isOpen}) {
       exit()
     }
 
-    function exit(){
-      setOpen(false)
-      setName('')
-      setShippingAddressLine('')
-      setShippingAddressLine2('');
-      setShippingPostCode('');
-      setBillingAddressLine1('')
-      setBillingAddressLine2('');
-      setBillingPostCode('');
-      setCardNumber('')
-      setSortCode('');
-      setExpiresAt('');
+    function exit() {
+      setOpen(false);
+      
+      setName('');
+      setCardHolderName('');
+      setCardNumber('');
       setCVC('');
+      setExpiresAt('');
+      setCardHolderNumber('');
+    
+      setShippingFullName('');
+      setShippingNumber('');
+      setShippingPostCode('');
+      setShippingAddressLine1('');
+      setShippingAddressLine2('');
+      setShippingRegion('');
+      setShippingCity('');
+    
+      setBillingPostCode('');
+      setBillingAddressLine1('');
+      setBillingAddressLine2('');
+      setBillingRegion('');
+      setBillingCity('');
+    
       setPage(1);
       setBillingSameAs(false);
     }
+    
 
     return (
       <Modal
@@ -102,9 +122,10 @@ function AddBillingModal({setOpen, isOpen}) {
         <div style={styles.title}>
           <h1>Add Billing Profile</h1>
         </div>
-
-{page === 1 ? <>
-  <div style={styles.inputContainer}>
+{
+  page === 1 ? 
+<>
+<div style={styles.inputContainer}>
   <p>Billing Profile Name:</p>
   <Input
     value={name}
@@ -116,11 +137,89 @@ function AddBillingModal({setOpen, isOpen}) {
   />
 </div>
 <div style={styles.inputContainer}>
+  <p>Card Number:</p>
+  <Input
+    value={cardNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardNumber(event.target.value)}
+    id="cardNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Number"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Expires At:</p>
+  <Input
+    value={expiresAt}
+    disableUnderline={true}
+    onChange={(event) => setExpiresAt(event.target.value)}
+    id="expiresAt"
+    sx={styles.textInput}
+    placeholder="Enter Expires At"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>CVC:</p>
+  <Input
+    value={CVC}
+    disableUnderline={true}
+    onChange={(event) => setCVC(event.target.value)}
+    id="CVC"        
+    sx={styles.textInput}
+    placeholder="Enter CVC"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Card Holder's Name:</p>
+  <Input
+    value={cardHolderName}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderName(event.target.value)}
+    id="cardHolderName"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Card Holder's Phone Number:</p>
+  <Input
+    value={cardHolderNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderNumber(event.target.value)}
+    id="cardHolderNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Number"
+  />
+</div> 
+</> : page === 2 ? <>
+<div style={styles.inputContainer}>
+  <p>Address Holder's Name:</p>
+  <Input
+    value={shippingFullName}
+    disableUnderline={true}
+    onChange={(event) => setShippingFullName(event.target.value)}
+    id="shippingFullName"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Address Holder's Number:</p>
+  <Input
+    value={shippingNumber}
+    disableUnderline={true}
+    onChange={(event) => setShippingNumber(event.target.value)}
+    id="shippingNumber"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Number"
+  />
+</div>
+<div style={styles.inputContainer}>
   <p>Shipping Address Line 1:</p>
   <Input
     value={shippingAddressLine1}
     disableUnderline={true}
-    onChange={(event) => setShippingAddressLine(event.target.value)}
+    onChange={(event) => setShippingAddressLine1(event.target.value)}
     id="shippingAddressLine1"
     sx={styles.textInput}
     placeholder="Enter Shipping Address Line 1"
@@ -148,11 +247,32 @@ function AddBillingModal({setOpen, isOpen}) {
     placeholder="Enter Shipping Post Code"
   />
 </div>
+<div style={styles.inputContainer}>
+  <p>Shipping City:</p>
+  <Input
+    value={shippingCity}
+    disableUnderline={true}
+    onChange={(event) => setShippingCity(event.target.value)}
+    id="shippingCity"
+    sx={styles.textInput}
+    placeholder="Enter Shipping City"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Shipping Region / County:</p>
+  <Input
+    value={shippingRegion}
+    disableUnderline={true}
+    onChange={(event) => setShippingRegion(event.target.value)}
+    id="shippingRegion"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Region"
+  />
+</div>
 <FormControlLabel control={<Checkbox checked={billingSameAs} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setBillingSameAs(e.target.checked)}/>} label="Billing Address Same As Shipping" />
-
 </> 
-
-: page === 2 ? <>
+: 
+ <>
 <div style={styles.inputContainer}>
   <p>Billing Address Line 1:</p>
   <Input
@@ -185,49 +305,27 @@ function AddBillingModal({setOpen, isOpen}) {
     sx={styles.textInput}
     placeholder="Enter Billing Post Code"
   />
-</div> </>: <>
+</div> 
 <div style={styles.inputContainer}>
-  <p>Card Number:</p>
+  <p>Billing City:</p>
   <Input
-    value={cardNumber}
+    value={billingCity}
     disableUnderline={true}
-    onChange={(event) => setCardNumber(event.target.value)}
-    id="cardNumber"
+    onChange={(event) => setBillingCity(event.target.value)}
+    id="billingCity"
     sx={styles.textInput}
-    placeholder="Enter Card Number"
+    placeholder="Enter Billing City"
   />
 </div>
 <div style={styles.inputContainer}>
-  <p>Sort Code:</p>
+  <p>Billing Region / County:</p>
   <Input
-    value={sortCode}
+    value={billingRegion}
     disableUnderline={true}
-    onChange={(event) => setSortCode(event.target.value)}
-    id="sortCode"
+    onChange={(event) => setBillingRegion(event.target.value)}
+    id="billingRegion"
     sx={styles.textInput}
-    placeholder="Enter Sort Code"
-  />
-</div>
-<div style={styles.inputContainer}>
-  <p>Expires At:</p>
-  <Input
-    value={expiresAt}
-    disableUnderline={true}
-    onChange={(event) => setExpiresAt(event.target.value)}
-    id="expiresAt"
-    sx={styles.textInput}
-    placeholder="Enter Expires At"
-  />
-</div>
-<div style={styles.inputContainer}>
-  <p>CVC:</p>
-  <Input
-    value={CVC}
-    disableUnderline={true}
-    onChange={(event) => setCVC(event.target.value)}
-    id="CVC"        
-    sx={styles.textInput}
-    placeholder="Enter CVC"
+    placeholder="Enter Billing Region"
   />
 </div>
 </>
@@ -237,23 +335,22 @@ function AddBillingModal({setOpen, isOpen}) {
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
           Next
         </Button> 
-        : page === 2 ? 
-        <>  
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
-          Back
-        </Button>
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
-         Next
-        </Button>
-        </>
-         
-        : 
+        : (page === 2 && billingSameAs) || (page === 3) ? 
         <>  
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
           Back
         </Button>
           <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => addBilling()}>
           Add Billing Profile
+        </Button>
+        </> 
+        :
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
+          Back
+        </Button>
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
+         Next
         </Button>
         </>
         }

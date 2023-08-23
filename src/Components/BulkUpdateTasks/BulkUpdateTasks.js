@@ -85,23 +85,24 @@ function formatFields(inputedFields){
           };
 
           if(JSON.stringify(value) !== JSON.stringify(updatedValue)){
-            if (updatedValue.pythonPID !== false) {
-              kill(updatedValue.pythonPID)
+            if (updatedValue.scriptRunning !== false) {
+              kill(key)
               updatedValue.notifications = []
-              updatedValue.pythonPID = false
+              updatedValue.scriptRunning = false
             };
           }
+
           if (start) {
-            if (updatedValue.pythonPID !== false) {
-              kill(updatedValue.pythonPID)
+            if (updatedValue.scriptRunning !== false) {
+              kill(key)
             };
-            const pythonPID = await amazon(
+            amazon(
               key,
               updatedValue,
               context,
               taskGroupId
             );
-            updatedValue.pythonPID = pythonPID;
+            updatedValue.scriptRunning = true;
           }
           taskGroups[taskGroupId].tasks[key] = updatedValue;
         }

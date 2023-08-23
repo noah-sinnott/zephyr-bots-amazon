@@ -14,28 +14,28 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   //-----------------------------------
 
-  kill: (pid) => {
-    ipcRenderer.send('kill', pid);
+  kill: (taskId) => {
+    ipcRenderer.send('kill', taskId);
   },
 
   //-----------------------------------
 
-  amazonStart: (id, params) => {
-    ipcRenderer.send('amazon', id, params);
+  amazonStart: (taskId, taskGroupId, params) => {
+    ipcRenderer.send('amazon', taskId, taskGroupId, params);
   },
   amazonDataGood: (callback) => {
-    ipcRenderer.on('amazonDataGood', (event, pidId, data) => {
-      callback(event, pidId, data);
+    ipcRenderer.on('amazonDataGood', (event, taskId, taskGroupId, data) => {
+      callback(event, taskId, taskGroupId, data);
     });
   },
   amazonDataBad: (callback) => {
-    ipcRenderer.on('amazonDataBad', (event, pidId, data) => {
-      callback(event, pidId, data);
+    ipcRenderer.on('amazonDataBad', (event, taskId,taskGroupId, data) => {
+      callback(event, taskId, taskGroupId, data);
     });
   },
   amazonDataClose: (callback) => {
-    ipcRenderer.on('amazonDataClose', (event, pidId, data) => {
-      callback(event, pidId, data);
+    ipcRenderer.on('amazonDataClose', (event, taskId, taskGroupId, data) => {
+      callback(event, taskId,taskGroupId, data);
     });
   },
 });

@@ -38,8 +38,8 @@ import { kill } from "../../helpers/ScriptRunner";
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.proxy === proxyGroupId){
-            if(task.pythonPID !== false){
-              kill(task.pythonPID)
+            if(task.scriptRunning !== false){
+              kill(key)
           }
           delete taskGroup.tasks[key]
           }

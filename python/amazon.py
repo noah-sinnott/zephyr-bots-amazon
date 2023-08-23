@@ -15,44 +15,49 @@ import threading
 # ==================================================================================================================================
 
 path = sys.argv[0]
-url = sys.argv[1]
 
+proxy = sys.argv[1]
 wait1 = sys.argv[2]
 wait2 = sys.argv[3]
 typing1 = sys.argv[4]
 typing2 = sys.argv[5]
 endAt = sys.argv[6]
 
-email = sys.argv[7]
-password = sys.argv[8]
+url = sys.argv[7]
 
-name = sys.argv[9]
-number = sys.argv[10]
+email = sys.argv[8]
+password = sys.argv[9]
 
-addressPostCode = sys.argv[11]
-addressLine1 = sys.argv[12]
-addressLine2 = sys.argv[13]
-addressCity = sys.argv[14]
-addressRegion = sys.argv[15]
+name = sys.argv[10]
+number = sys.argv[11]
 
-billingPostCode = sys.argv[16]
-billingLine1 = sys.argv[17]
-billingLine2 = sys.argv[18]
-billingCity = sys.argv[19]
-billingRegion = sys.argv[20]
+addressPostCode = sys.argv[12]
+addressLine1 = sys.argv[13]
+addressLine2 = sys.argv[14]
+addressCity = sys.argv[15]
+addressRegion = sys.argv[16]
 
-BillingCardNumber = sys.argv[21]
-billingName = sys.argv[22]
-billingExpirationDate = sys.argv[23]
-billingCVC = sys.argv[24]
-billingPhoneNumber = sys.argv[25]
+billingPostCode = sys.argv[17]
+billingLine1 = sys.argv[18]
+billingLine2 = sys.argv[19]
+billingCity = sys.argv[20]
+billingRegion = sys.argv[21]
+
+BillingCardNumber = sys.argv[22]
+billingName = sys.argv[23]
+billingExpirationDate = sys.argv[24]
+billingCVC = sys.argv[25]
+billingPhoneNumber = sys.argv[26]
 
 try: 
+    # proxy = "your_proxy_host:your_proxy_port"
     chrome_options = Options()
+    # if(proxy): chrome_options.add_argument(f"--proxy-server={proxy}")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--start-maximized")
     # chrome_options.add_argument("--headless") # Show header
     chrome_options.add_argument("--disable-setuid-sandbox")
     chrome_options.add_argument("--disable-features=site-per-process")
@@ -71,7 +76,22 @@ except Exception as e:
     print("Error occurred while opening page: ", e, flush=True)
     driver.quit()
 
+#placeYourOrder1
 
+def finishCheckout(): 
+    try: 
+
+        # add_new_address = WebDriverWait(driver, 10).until(
+        #     EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[name="placeYourOrder1"]'))
+        # )
+        # add_new_address.click()    
+
+        time.sleep(1000)
+
+    except Exception as e:
+        print("Error occurred while finalising checkout: ", e, flush=True)
+        time.sleep(1000)
+        driver.quit()
 # ==================================================================================================================================
 
 def payment(): 
@@ -295,7 +315,13 @@ def payment():
         )
         add_new_address.click()    
 
-        time.sleep(1000)
+        wait_time = random.uniform(float(wait1), float(wait2))
+        time.sleep(wait_time)
+
+        print("Entered Payment Info", flush=True)
+
+        if(endAt != 'Checkout Page'):
+            finishCheckout()
 
     except Exception as e:
         print("Error occurred while entering payment info: ", e, flush=True)
@@ -426,7 +452,9 @@ def shipping():
         submit_button.click()
 
         print("Entered shipping info", flush=True)
+
         payment()
+
     except Exception as e:
         print("Error occurred while entering shipping info: ", e, flush=True)
         driver.quit()
@@ -493,8 +521,8 @@ def signin():
                 print("Error occurred while skipping phone number: ", e, flush=True)
 
         print('signed in', flush=True)
-        if(endAt != 'Shipping-page'):
-            shipping()
+        
+        shipping()
 
     except Exception as e:
         print("Error occurred while signing in: ", e, flush=True)
@@ -522,8 +550,8 @@ def addingtocart():
 
         buy_now_button.click()
         print("Clicked on Buy Now button", flush=True)
-        if(endAt != 'Signin-page'):
-            signin()
+        
+        signin()
     except Exception as e:
         print("Error occurred while adding to cart: ", e, flush=True)
         driver.quit()
@@ -541,7 +569,7 @@ def checkforcookies():
             reject_all_button.click()
             print("Rejected all cookies", flush=True)
 
-        if(endAt != 'Item-page'):
+        if(endAt != 'Item Page'):
             addingtocart()
         
     except Exception as e:

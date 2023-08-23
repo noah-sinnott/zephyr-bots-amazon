@@ -25,8 +25,8 @@ import { kill } from '../../helpers/ScriptRunner';
       let taskGroups = context.data.database.taskgroups
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
-            if(task.pythonPID !== false){
-              kill(task.pythonPID)
+            if(task.scriptRunning !== false){
+              kill(key)
           }
         })
         taskGroup.tasks = {}
@@ -40,8 +40,8 @@ import { kill } from '../../helpers/ScriptRunner';
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.accounts === id){
-            if(task.pythonPID !== false){
-              kill(task.pythonPID)
+            if(task.scriptRunning !== false){
+              kill(key)
           }
           delete taskGroup.tasks[key]
           }

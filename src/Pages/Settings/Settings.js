@@ -20,8 +20,6 @@ import colors from '../../colors/colors';
     const [endpoint, setEndpoint] = useState(context.data.database.settings.endpoint);
 
     const endpoints = [{ value: 'Item Page', label: 'Item Page' },
-    { value: 'Login Page', label: 'Login Page' },
-    { value: 'Shipping Page', label: 'Shipping Page' },
     { value: 'Checkout Page', label: 'Checkout Page' },
     { value: 'Success Page', label: 'Success Page' },
   ]

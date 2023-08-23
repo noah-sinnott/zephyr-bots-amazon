@@ -53,8 +53,8 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       
       let taskGroups = context.data.database.taskGroups
 
-      if(taskGroups[taskGroupId].tasks[taskId].pythonPID !== false){
-          kill(taskGroups[taskGroupId].tasks[taskId].pythonPID)
+      if(taskGroups[taskGroupId].tasks[taskId].scriptRunning !== false){
+          kill(taskId)
       }
 
       taskGroups[taskGroupId].tasks[taskId].url = url
@@ -62,12 +62,12 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       taskGroups[taskGroupId].tasks[taskId].maxPrice = maxPrice
       taskGroups[taskGroupId].tasks[taskId].billing = billing.value
       taskGroups[taskGroupId].tasks[taskId].account = account.value
-      taskGroups[taskGroupId].tasks[taskId].pythonPID = false
+      taskGroups[taskGroupId].tasks[taskId].scriptRunning = false
       taskGroups[taskGroupId].tasks[taskId].notifications = []
 
       if(start){
-          const pythonPID = await amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
-          taskGroups[taskGroupId].tasks[taskId].pythonPID = pythonPID;
+          amazon(taskId, taskGroups[taskGroupId].tasks[taskId], context, taskGroupId);
+          taskGroups[taskGroupId].tasks[taskId].scriptRunning = true;
       }             
       
       const updatedDatabase = { ...context.data.database, taskGroups: taskGroups };

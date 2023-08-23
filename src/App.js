@@ -3,7 +3,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import React, {useEffect, createContext, useState} from 'react'
+import React, {useEffect, createContext, useState, useRef} from 'react'
 import Home from './Pages/Home/Home'
 import Settings from './Pages/Settings/Settings'
 import Help from './Pages/Help/Help'
@@ -34,6 +34,7 @@ export const Context = createContext({
 function App() {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState({database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
+  const dataRef = useRef(data);
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
@@ -49,12 +50,41 @@ function App() {
   }, []);
 
   useEffect(() => {
+    dataRef.current = data;
     localStorage.setItem("database", JSON.stringify(data));
   }, [data])
 
   const updateData = (newData) => {
-    setData({...data, ...newData});
+    setData({...data, ...newData})
   };
+
+  useEffect(() => { 
+    const handleAmazonDataGood = (event, taskId, taskGroupId, eventData) => {
+      const currentData = dataRef.current; 
+      const cleanStr = eventData.toString().replace(/[\r\n]+/gm, '');
+      let notifs = currentData.database.taskGroups[taskGroupId].tasks[taskId].notifications;
+      let newNotifs = [...notifs, cleanStr];
+      let newDB = currentData.database;
+      newDB.taskGroups[taskGroupId].tasks[taskId].notifications = newNotifs;
+      updateData({ database: newDB });
+    }
+
+    const handleAmazonDataBad = (event, taskId, taskGroupId, eventData) => {
+      console.error(`stderr: ${eventData}`);
+    }
+
+    const handleAmazonDataClose = (event, taskId, taskGroupId, eventData) => {
+      const currentData = dataRef.current; 
+      console.log(`child process exited with code ${eventData}`);
+      let newDB = currentData.database;
+      newDB.taskGroups[taskGroupId].tasks[taskId].scriptRunning = false;
+      updateData({ database: newDB });
+    }
+
+    window?.electronAPI?.amazonDataGood(handleAmazonDataGood);
+    window?.electronAPI?.amazonDataBad(handleAmazonDataBad);
+    window?.electronAPI?.amazonDataClose(handleAmazonDataClose);
+  }, []);
 
   if(loading) return null
 

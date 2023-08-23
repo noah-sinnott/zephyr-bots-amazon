@@ -12,55 +12,65 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     const context = useContext(Context)
 
     const [name, setName] = useState('');
+    const [cardHolderName, setCardHolderName] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [CVC, setCVC] = useState('');
+    const [expiresAt, setExpiresAt] = useState('');
+    const [cardHolderNumber, setCardHolderNumber] = useState('');
 
+    const [shippingFullName, setShippingFullName] = useState('');
+    const [shippingNumber, setShippingNumber] = useState('');
     const [shippingPostCode, setShippingPostCode] = useState('');
     const [shippingAddressLine1, setShippingAddressLine1] = useState('');
     const [shippingAddressLine2, setShippingAddressLine2] = useState('');
-    
+    const [shippingRegion, setShippingRegion] = useState('');
+    const [shippingCity, setShippingCity] = useState('');
+
     const [billingPostCode, setBillingPostCode] = useState('');
     const [billingAddressLine1, setBillingAddressLine1] = useState('');
     const [billingAddressLine2, setBillingAddressLine2] = useState('');
+    const [billingRegion, setBillingRegion] = useState('');
+    const [billingCity, setBillingCity] = useState('');
 
-    const [cardNumber, setCardNumber] = useState('');
-    const [sortCode, setSortCode] = useState('');
-    const [CVC, setCVC] = useState('');
-    const [expiresAt, setExpiresAt] = useState('');
-    
     const [page, setPage] = useState(1);
     const [billingSameAs, setBillingSameAs] = useState(false);
 
     const [editBillingDialog, setEditBillingDialog] = useState(false)
 
-
-    useEffect(()=>{
-      if(!billingId) return
-      setName(context.data.database.billing[billingId].name)
-      setShippingPostCode(context.data.database.billing[billingId].shippingPostCode)
-      setShippingAddressLine1(context.data.database.billing[billingId].shippingAddressLine1)
-      setShippingAddressLine2(context.data.database.billing[billingId].shippingAddressLine2)
-      setBillingPostCode(context.data.database.billing[billingId].billingPostCode)
-      setBillingAddressLine1(context.data.database.billing[billingId].billingAddressLine1)  
-      setBillingAddressLine2(context.data.database.billing[billingId].billingAddressLine2)
-      setCardNumber(context.data.database.billing[billingId].cardNumber)
-      setSortCode(context.data.database.billing[billingId].sortCode)
-      setCVC(context.data.database.billing[billingId].CVC)
-      setExpiresAt(context.data.database.billing[billingId].expiresAt)
-      setBillingSameAs(context.data.database.billing[billingId].billingSameAs)
-    },[isOpen])
-
+    useEffect(() => {
+      if (!billingId) return;
+    
+      const billingData = context.data.database.billing[billingId];
+    
+      setName(billingData.name);
+      setCardHolderName(billingData.cardHolderName);
+      setCardNumber(billingData.cardNumber);
+      setCVC(billingData.CVC);
+      setExpiresAt(billingData.expiresAt);
+      setCardHolderNumber(billingData.cardHolderNumber);
+    
+      setShippingFullName(billingData.shippingFullName);
+      setShippingNumber(billingData.shippingNumber);
+      setShippingPostCode(billingData.shippingPostCode);
+      setShippingAddressLine1(billingData.shippingAddressLine1);
+      setShippingAddressLine2(billingData.shippingAddressLine2);
+      setShippingRegion(billingData.shippingRegion);
+      setShippingCity(billingData.shippingCity);
+    
+      setBillingPostCode(billingData.billingPostCode);
+      setBillingAddressLine1(billingData.billingAddressLine1);
+      setBillingAddressLine2(billingData.billingAddressLine2);
+      setBillingRegion(billingData.billingRegion);
+      setBillingCity(billingData.billingCity);
+    
+      setBillingSameAs(billingData.billingSameAs);
+    }, [isOpen]);
+    
     function handlePage (forward){
       if(forward){
-        if(billingSameAs === true){
-          setPage(3)
-        } else {
           setPage(page + 1)
-        }
       } else {
-        if(billingSameAs === true){
-          setPage(1)
-        } else {
           setPage(page - 1)    
-        }
       }
     }
 
@@ -71,9 +81,9 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {
         Object.entries(taskGroup.tasks).forEach(([key, task]) => {
           if(task.billing === billingId){
-            if(task.pythonPID !== false){
-              kill(task.pythonPID)
-              task.pythonPID = false
+            if(task.scriptRunning !== false){
+              kill(key)
+              task.scriptRunning = false
               task.notifications = []
           }
           }
@@ -82,37 +92,58 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       
       let billing = context.data.database.billing
 
-      billing[billingId].name = name
-      billing[billingId].shippingAddressLine1 = shippingAddressLine1
-      billing[billingId].shippingAddressLine2 = shippingAddressLine2
-      billing[billingId].shippingPostCode = shippingPostCode
-      billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1
-      billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2
-      billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode
-      billing[billingId].cardNumber = cardNumber
-      billing[billingId].sortCode = sortCode
-      billing[billingId].CVC = CVC
-      billing[billingId].expiresAt = expiresAt
-      billing[billingId].billingSameAs = billingSameAs
+      billing[billingId].name = name;
+      billing[billingId].cardNumber = cardNumber;
+      billing[billingId].CVC = CVC;
+      billing[billingId].expiresAt = expiresAt;
+      billing[billingId].cardHolderName = cardHolderName;
+      billing[billingId].cardHolderNumber = cardHolderNumber;
+    
+      billing[billingId].shippingFullName = shippingFullName;
+      billing[billingId].shippingNumber = shippingNumber;
+      billing[billingId].shippingAddressLine1 = shippingAddressLine1;
+      billing[billingId].shippingAddressLine2 = shippingAddressLine2;
+      billing[billingId].shippingPostCode = shippingPostCode;
+      billing[billingId].shippingCity = shippingCity;
+      billing[billingId].shippingRegion = shippingRegion;
+    
+      billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1;
+      billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2;
+      billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode;
+      billing[billingId].billingCity = billingSameAs ? shippingCity : billingCity;
+      billing[billingId].billingRegion = billingSameAs ? shippingRegion : billingRegion;
+    
+      billing[billingId].billingSameAs = billingSameAs;
 
       const updatedDatabase = { ...context.data.database, billing: billing, taskGroups: taskGroups };
       context.updateData({database: updatedDatabase });
       exit()
     }
 
-    function exit(){
-      setOpen(false)
-      setName('')
-      setShippingAddressLine1('')
-      setShippingAddressLine2('');
-      setShippingPostCode('');
-      setBillingAddressLine1('')
-      setBillingAddressLine2('');
-      setBillingPostCode('');
-      setCardNumber('')
-      setSortCode('');
-      setExpiresAt('');
+    function exit() {
+      setOpen(false);
+      
+      setName('');
+      setCardHolderName('');
+      setCardNumber('');
       setCVC('');
+      setExpiresAt('');
+      setCardHolderNumber('');
+    
+      setShippingFullName('');
+      setShippingNumber('');
+      setShippingPostCode('');
+      setShippingAddressLine1('');
+      setShippingAddressLine2('');
+      setShippingRegion('');
+      setShippingCity('');
+    
+      setBillingPostCode('');
+      setBillingAddressLine1('');
+      setBillingAddressLine2('');
+      setBillingRegion('');
+      setBillingCity('');
+    
       setPage(1);
       setBillingSameAs(false);
     }
@@ -132,8 +163,10 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
           <h1>Update Billing Profile</h1>
         </div>
 
-{page === 1 ? <>
-  <div style={styles.inputContainer}>
+        {
+  page === 1 ? 
+<>
+<div style={styles.inputContainer}>
   <p>Billing Profile Name:</p>
   <Input
     value={name}
@@ -142,6 +175,84 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     id="name"
     sx={styles.textInput}
     placeholder="Enter Billing Profile Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Card Number:</p>
+  <Input
+    value={cardNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardNumber(event.target.value)}
+    id="cardNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Number"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Expires At:</p>
+  <Input
+    value={expiresAt}
+    disableUnderline={true}
+    onChange={(event) => setExpiresAt(event.target.value)}
+    id="expiresAt"
+    sx={styles.textInput}
+    placeholder="Enter Expires At"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>CVC:</p>
+  <Input
+    value={CVC}
+    disableUnderline={true}
+    onChange={(event) => setCVC(event.target.value)}
+    id="CVC"        
+    sx={styles.textInput}
+    placeholder="Enter CVC"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Card Holder's Name:</p>
+  <Input
+    value={cardHolderName}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderName(event.target.value)}
+    id="cardHolderName"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Card Holder's Phone Number:</p>
+  <Input
+    value={cardHolderNumber}
+    disableUnderline={true}
+    onChange={(event) => setCardHolderNumber(event.target.value)}
+    id="cardHolderNumber"
+    sx={styles.textInput}
+    placeholder="Enter Card Holder's Number"
+  />
+</div> 
+</> : page === 2 ? <>
+<div style={styles.inputContainer}>
+  <p>Address Holder's Name:</p>
+  <Input
+    value={shippingFullName}
+    disableUnderline={true}
+    onChange={(event) => setShippingFullName(event.target.value)}
+    id="shippingFullName"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Name"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Address Holder's Number:</p>
+  <Input
+    value={shippingNumber}
+    disableUnderline={true}
+    onChange={(event) => setShippingNumber(event.target.value)}
+    id="shippingNumber"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Address's Recipient's Number"
   />
 </div>
 <div style={styles.inputContainer}>
@@ -177,11 +288,32 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     placeholder="Enter Shipping Post Code"
   />
 </div>
+<div style={styles.inputContainer}>
+  <p>Shipping City:</p>
+  <Input
+    value={shippingCity}
+    disableUnderline={true}
+    onChange={(event) => setShippingCity(event.target.value)}
+    id="shippingCity"
+    sx={styles.textInput}
+    placeholder="Enter Shipping City"
+  />
+</div>
+<div style={styles.inputContainer}>
+  <p>Shipping Region / County:</p>
+  <Input
+    value={shippingRegion}
+    disableUnderline={true}
+    onChange={(event) => setShippingRegion(event.target.value)}
+    id="shippingRegion"
+    sx={styles.textInput}
+    placeholder="Enter Shipping Region"
+  />
+</div>
 <FormControlLabel control={<Checkbox checked={billingSameAs} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setBillingSameAs(e.target.checked)}/>} label="Billing Address Same As Shipping" />
-
 </> 
-
-: page === 2 ? <>
+: 
+ <>
 <div style={styles.inputContainer}>
   <p>Billing Address Line 1:</p>
   <Input
@@ -214,49 +346,27 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     sx={styles.textInput}
     placeholder="Enter Billing Post Code"
   />
-</div> </>: <>
+</div> 
 <div style={styles.inputContainer}>
-  <p>Card Number:</p>
+  <p>Billing City:</p>
   <Input
-    value={cardNumber}
+    value={billingCity}
     disableUnderline={true}
-    onChange={(event) => setCardNumber(event.target.value)}
-    id="cardNumber"
+    onChange={(event) => setBillingCity(event.target.value)}
+    id="billingCity"
     sx={styles.textInput}
-    placeholder="Enter Card Number"
+    placeholder="Enter Billing City"
   />
 </div>
 <div style={styles.inputContainer}>
-  <p>Sort Code:</p>
+  <p>Billing Region / County:</p>
   <Input
-    value={sortCode}
+    value={billingRegion}
     disableUnderline={true}
-    onChange={(event) => setSortCode(event.target.value)}
-    id="sortCode"
+    onChange={(event) => setBillingRegion(event.target.value)}
+    id="billingRegion"
     sx={styles.textInput}
-    placeholder="Enter Sort Code"
-  />
-</div>
-<div style={styles.inputContainer}>
-  <p>Expires At:</p>
-  <Input
-    value={expiresAt}
-    disableUnderline={true}
-    onChange={(event) => setExpiresAt(event.target.value)}
-    id="expiresAt"
-    sx={styles.textInput}
-    placeholder="Enter Expires At"
-  />
-</div>
-<div style={styles.inputContainer}>
-  <p>CVC:</p>
-  <Input
-    value={CVC}
-    disableUnderline={true}
-    onChange={(event) => setCVC(event.target.value)}
-    id="CVC"        
-    sx={styles.textInput}
-    placeholder="Enter CVC"
+    placeholder="Enter Billing Region"
   />
 </div>
 </>
@@ -266,7 +376,16 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(true)}>
           Next
         </Button> 
-        : page === 2 ? 
+        : (page === 2 && billingSameAs) || (page === 3) ? 
+        <>  
+        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
+          Back
+        </Button>
+          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditBillingDialog(true)}>
+          Update Billing Profile
+        </Button>
+        </> 
+        :
         <>  
         <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
           Back
@@ -275,15 +394,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
          Next
         </Button>
         </>
-        : 
-        <>  
-        <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => handlePage(false)}>
-          Back
-        </Button>
-          <Button variant="contained" size="large" style={styles.addButton}  disableElevation onClick={() => setEditBillingDialog(true)}>
-          Update Billing Profile
-        </Button>
-        </>
+        
         }
         <Button variant="outlined" style={styles.cancelButton} size="medium"  disableElevation onClick={() => exit()}>
           Cancel

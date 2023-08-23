@@ -69,18 +69,18 @@ app.on('activate', () => {
 
 let pythonProcesses = new Map();
 
-ipcMain.on('kill', (event, id) => {
-  if (!pythonProcesses.has(id)) {
-    console.log(`Python process with pid ${id} not running`);
+ipcMain.on('kill', (event, taskId) => {
+  if (!pythonProcesses.has(taskId)) {
+    console.log(`Python process with ${taskId} not running`);
     return;
   }
-  const pythonProcess = pythonProcesses.get(id);
+  const pythonProcess = pythonProcesses.get(taskId);
   pythonProcess.stdin.write('End\n');
   pythonProcess.stdin.end();
-  pythonProcesses.delete(id); 
+  pythonProcesses.delete(taskId); 
 })
 
-ipcMain.on('amazon', (event, id, params) => {
+ipcMain.on('amazon', (event, taskId, taskGroupId, params) => {
 
   let pythonProcess = {}
 
@@ -94,24 +94,21 @@ ipcMain.on('amazon', (event, id, params) => {
 
   pythonProcess.stdout.on('data', (data) => {
     const stringData = data.toString();
-    console.log(stringData)
-    win.webContents.send(`amazonDataGood`, id, stringData)
+    win.webContents.send(`amazonDataGood`, taskId, taskGroupId, stringData)
   });
 
   pythonProcess.stderr.on('data', (data) => {
     const stringData = data.toString();
-    console.log(stringData)
-    win.webContents.send(`amazonDataBad`, id, stringData)
+    win.webContents.send(`amazonDataBad`, taskId, taskGroupId, stringData)
   });
 
   pythonProcess.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
     pythonProcess.stdin.write('End\n');
     pythonProcess.stdin.end();
-    pythonProcesses.delete(id); 
-    win.webContents.send(`amazonDataClose`,id, code)
+    pythonProcesses.delete(taskId); 
+    win.webContents.send(`amazonDataClose`, taskId, taskGroupId, code)
   });
 
-  pythonProcesses.set(id, pythonProcess);
+  pythonProcesses.set(taskId, pythonProcess);
 });
 
