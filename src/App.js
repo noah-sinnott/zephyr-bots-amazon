@@ -21,9 +21,7 @@ export const Context = createContext({
     typingSpeed: [0.1, 0.3],
     waitSpeed: [1, 1.5],
     refreshRate: [10, 15],
-    taskCompleteOpen: true,
-    taskErrorOpen: false,
-    endpoint: {value: 'Success Page', label: 'Success Page'}
+    visible: false,
   }
 
   const defaultUserInfo = { 
@@ -62,6 +60,7 @@ function App() {
     const handleAmazonDataGood = (event, taskId, taskGroupId, eventData) => {
       const currentData = dataRef.current; 
       const cleanStr = eventData.toString().replace(/[\r\n]+/gm, '');
+      console.log(currentData.database.taskGroups, taskGroupId)
       let notifs = currentData.database.taskGroups[taskGroupId].tasks[taskId].notifications;
       let newNotifs = [...notifs, cleanStr];
       let newDB = currentData.database;
@@ -70,7 +69,11 @@ function App() {
     }
 
     const handleAmazonDataBad = (event, taskId, taskGroupId, eventData) => {
+      const currentData = dataRef.current; 
       console.error(`stderr: ${eventData}`);
+      let newDB = currentData.database;
+      newDB.taskGroups[taskGroupId].tasks[taskId].scriptRunning = false;
+      updateData({ database: newDB })
     }
 
     const handleAmazonDataClose = (event, taskId, taskGroupId, eventData) => {

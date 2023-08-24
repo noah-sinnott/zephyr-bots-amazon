@@ -49,7 +49,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
 
   function startAll(){
     Object.entries(context.data.database.taskGroups[taskGroupId].tasks).forEach(([key, value]) => {
-      stopTask(key, value)
+      startTask(key, value)
     })
   }  
   
@@ -74,10 +74,9 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
   async function startTask(id, task) {
     if (task.scriptRunning !== false) return;
     amazon(id, task, context, taskGroupId);
-
     let taskgroups = context.data.database.taskGroups
     taskgroups[taskGroupId].tasks[id].scriptRunning = true
-
+    taskgroups[taskGroupId].tasks[id].notifications = []
     const updatedDatabase = { ...context.data.database, taskGroups: taskgroups };
     context.updateData({database: updatedDatabase });
   }
@@ -163,7 +162,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                   <td style={styles.tableItem}>{context.data.database.accounts[value.account]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.billing[value.billing]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy]?.name || ''}</td>
-                  <td style={styles.tableItem}>{value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
+                  <td style={styles.tableItem} title={value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}>{value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.scriptRunning !== false ?
                      <IconButton aria-label="Stop" size="small" style={{color: colors.orange}}  onClick={() => stopTask(key, value)}>

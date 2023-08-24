@@ -17,48 +17,54 @@ import threading
 path = sys.argv[0]
 
 proxy = sys.argv[1]
-wait1 = sys.argv[2]
-wait2 = sys.argv[3]
-typing1 = sys.argv[4]
-typing2 = sys.argv[5]
-endAt = sys.argv[6]
+visible = sys.argv[2]
+maxPrice = sys.argv[3]
+refreshRate = sys.argv[4]
+wait1 = sys.argv[5]
+wait2 = sys.argv[6]
+typing1 = sys.argv[7]
+typing2 = sys.argv[8]
 
-url = sys.argv[7]
+url = sys.argv[9]
 
-email = sys.argv[8]
-password = sys.argv[9]
+email = sys.argv[10]
+password = sys.argv[11]
 
-name = sys.argv[10]
-number = sys.argv[11]
+name = sys.argv[12]
+number = sys.argv[13]
+addressPostCode = sys.argv[14]
+addressLine1 = sys.argv[15]
+addressLine2 = sys.argv[16]
+addressCity = sys.argv[17]
+addressRegion = sys.argv[18]
 
-addressPostCode = sys.argv[12]
-addressLine1 = sys.argv[13]
-addressLine2 = sys.argv[14]
-addressCity = sys.argv[15]
-addressRegion = sys.argv[16]
+billingPostCode = sys.argv[19]
+billingLine1 = sys.argv[20]
+billingLine2 = sys.argv[21]
+billingCity = sys.argv[22]
+billingRegion = sys.argv[23]
 
-billingPostCode = sys.argv[17]
-billingLine1 = sys.argv[18]
-billingLine2 = sys.argv[19]
-billingCity = sys.argv[20]
-billingRegion = sys.argv[21]
+BillingCardNumber = sys.argv[24]
+billingName = sys.argv[25]
+billingExpirationDate = sys.argv[26]
+billingCVC = sys.argv[27]
+billingPhoneNumber = sys.argv[28]
 
-BillingCardNumber = sys.argv[22]
-billingName = sys.argv[23]
-billingExpirationDate = sys.argv[24]
-billingCVC = sys.argv[25]
-billingPhoneNumber = sys.argv[26]
-
+print(url, proxy, visible, flush=True)
 try: 
-    # proxy = "your_proxy_host:your_proxy_port"
     chrome_options = Options()
-    # if(proxy): chrome_options.add_argument(f"--proxy-server={proxy}")
+
+    if(visible == 'false'): 
+        chrome_options.add_argument("--headless")
+    
+    if(proxy != 'false'): 
+        chrome_options.add_argument(f"--proxy-server={proxy}")
+
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--start-maximized")
-    # chrome_options.add_argument("--headless") # Show header
     chrome_options.add_argument("--disable-setuid-sandbox")
     chrome_options.add_argument("--disable-features=site-per-process")
     chrome_options.add_argument("--disable-site-isolation-trials")
@@ -67,7 +73,7 @@ try:
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--incognito")
-    service = Service(ChromeDriverManager(version="114.0.5735.90").install())
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     print("opened page", flush=True)
@@ -76,11 +82,18 @@ except Exception as e:
     print("Error occurred while opening page: ", e, flush=True)
     driver.quit()
 
-#placeYourOrder1
+# ==================================================================================================================================
+
+def wait_for_page_load(driver, timeout=30):
+    WebDriverWait(driver, timeout).until(
+        lambda d: d.execute_script('return document.readyState') == 'complete'
+    )
+
+# ==================================================================================================================================
 
 def finishCheckout(): 
+    wait_for_page_load(driver)
     try: 
-
         # add_new_address = WebDriverWait(driver, 10).until(
         #     EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[name="placeYourOrder1"]'))
         # )
@@ -88,13 +101,19 @@ def finishCheckout():
 
         time.sleep(1000)
 
+        if(visible == False):
+            driver.quit() 
+
     except Exception as e:
         print("Error occurred while finalising checkout: ", e, flush=True)
-        time.sleep(1000)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
+
+        
 # ==================================================================================================================================
 
 def payment(): 
+    wait_for_page_load(driver)
     try: 
         add_card_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.ID, 'apx-add-credit-card-action-test-id'))
@@ -320,17 +339,19 @@ def payment():
 
         print("Entered Payment Info", flush=True)
 
-        if(endAt != 'Checkout Page'):
-            finishCheckout()
+        finishCheckout()
 
     except Exception as e:
         print("Error occurred while entering payment info: ", e, flush=True)
-        time.sleep(1000)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
+
+        
 
 # ==================================================================================================================================
 
 def shipping(): 
+    wait_for_page_load(driver)
     try: 
         if driver.find_elements(By.ID, "add-new-address-popover-link"):
             try:
@@ -457,11 +478,13 @@ def shipping():
 
     except Exception as e:
         print("Error occurred while entering shipping info: ", e, flush=True)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
 
 # ==================================================================================================================================
 
 def signin(): 
+    wait_for_page_load(driver)
     try: 
         email_input = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.ID, "ap_email"))
@@ -519,6 +542,9 @@ def signin():
                 print("declined to enter phonenumber", flush=True)
             except Exception as e:
                 print("Error occurred while skipping phone number: ", e, flush=True)
+                if(visible == False):
+                    driver.quit()
+                
 
         print('signed in', flush=True)
         
@@ -526,11 +552,13 @@ def signin():
 
     except Exception as e:
         print("Error occurred while signing in: ", e, flush=True)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
 
 # ==================================================================================================================================
 
 def addingtocart(): 
+    wait_for_page_load(driver)
     try:
         elements = driver.find_elements(By.XPATH, '//*[@data-csa-c-content-id="offer_display_desktop_accordion_header"]')
 
@@ -539,6 +567,27 @@ def addingtocart():
             time.sleep(wait_time)
             elements[0].click()
             print("Clicked on one time purchase", flush=True)
+
+
+        temp = False
+        while not temp:
+            buy_now_button = driver.find_elements(By.ID, 'buy-now-button')     
+            if len(buy_now_button) > 0:
+                temp = True
+            else:
+                time.sleep(float(refreshRate))
+                driver.refresh()
+                wait_for_page_load(driver)
+
+
+        price_container = driver.find_element(By.ID, 'corePrice_feature_div')
+        price_large = price_container.find_element(By.CLASS_NAME, 'a-price-whole')
+        price_small = price_container.find_element(By.CLASS_NAME, 'a-price-fraction')
+        item_price = float(price_large.text + "." + price_small.text)
+        if(item_price > float(maxPrice)): 
+            print("Price exceeds max price", flush=True)
+            if(visible == False):
+                driver.quit() 
 
 
         buy_now_button = WebDriverWait(driver, 10).until(
@@ -552,14 +601,17 @@ def addingtocart():
         print("Clicked on Buy Now button", flush=True)
         
         signin()
+
     except Exception as e:
         print("Error occurred while adding to cart: ", e, flush=True)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
 
 # ==================================================================================================================================
 
 def checkforcookies():
     try:
+        wait_for_page_load(driver)
         if driver.find_elements(By.ID, "sp-cc-rejectall-link"):
             reject_all_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.ID, "sp-cc-rejectall-link"))
@@ -569,12 +621,14 @@ def checkforcookies():
             reject_all_button.click()
             print("Rejected all cookies", flush=True)
 
-        if(endAt != 'Item Page'):
             addingtocart()
         
     except Exception as e:
         print("Error occurred while rejecting cookies: ", e, flush=True)
-        driver.quit()
+        if(visible == False):
+            driver.quit()
+
+        
 
 # ==================================================================================================================================
 
@@ -583,7 +637,6 @@ def checkStatus():
         line = sys.stdin.readline().strip()
         if line == 'End':
             driver.quit()
-            sys.exit()
             
 # ===================================================================================================================================
 

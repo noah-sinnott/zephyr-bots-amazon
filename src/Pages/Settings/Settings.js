@@ -15,35 +15,25 @@ import colors from '../../colors/colors';
     const [typingSpeed, setTypingSpeed] = useState(context.data.database.settings.typingSpeed);
     const [waitSpeed, setWaitSpeed] = useState(context.data.database.settings.waitSpeed);
     const [refreshRate, setRefreshRate] = useState(context.data.database.settings.refreshRate);
-    const [taskCompleteOpen, setTaskCompleteOpen] = useState(context.data.database.settings.taskCompleteOpen);
-    const [taskErrorOpen, setTaskErrorOpen] = useState(context.data.database.settings.taskErrorOpen);
-    const [endpoint, setEndpoint] = useState(context.data.database.settings.endpoint);
-
-    const endpoints = [{ value: 'Item Page', label: 'Item Page' },
-    { value: 'Checkout Page', label: 'Checkout Page' },
-    { value: 'Success Page', label: 'Success Page' },
-  ]
+    const [visible, setVisible] = useState(context.data.database.settings.visible);
 
     useEffect(() => {
       let settings = {
         typingSpeed: typingSpeed,
         waitSpeed: waitSpeed,
-        taskCompleteOpen: taskCompleteOpen,
-        taskErrorOpen: taskErrorOpen,
+        visible: visible,
         refreshRate: refreshRate,
-        endpoint: endpoint
       }
       const updatedDatabase = { ...context.data.database, settings: settings };
       context.updateData({database: updatedDatabase });
-    }, [typingSpeed, waitSpeed, taskCompleteOpen, taskErrorOpen, refreshRate, endpoint])
+    }, [typingSpeed, waitSpeed, refreshRate, visible])
 
     return (
       <div style={styles.containerMain}>
         <Navbar/>
           <div style={styles.area}>
             <div style={styles.mainArea}>
-                <FormControlLabel control={<Checkbox checked={taskCompleteOpen} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setTaskCompleteOpen(e.target.checked)}/>} label="Open on task Completion" />
-                <FormControlLabel control={<Checkbox checked={taskErrorOpen} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setTaskErrorOpen(e.target.checked)}/>} label="Open on task Error" />
+                <FormControlLabel control={<Checkbox checked={visible} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setVisible(e.target.checked)}/>} label="Tasks are visible" />
                 <div style={styles.sliderContainer}>
                 <p>Refresh Rate</p>
                   <Slider
@@ -120,16 +110,6 @@ import colors from '../../colors/colors';
                       },
                     }}  
                   />  
-                </div>
-                <div style={styles.sliderContainer}>
-                <p>End At</p>
-                    <Select
-                      name="Ends At"
-                      options={endpoints}
-                      onChange={(e) => setEndpoint(e)}
-                      styles={styles.dropDown}
-                      value={endpoint}
-                    />
                 </div>
                 <Button variant="contained" size="medium" style={styles.logoutButton}  disableElevation>
                   Log Out

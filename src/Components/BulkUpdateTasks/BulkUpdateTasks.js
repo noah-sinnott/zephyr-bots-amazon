@@ -199,7 +199,7 @@ function formatFields(inputedFields){
 
         {activeFields.includes('maxPrice') && 
         <div  style={styles.inputContainer}>
-          <p>Max overall price:</p>
+          <p>Max Price Excluding Shipping:</p>
           <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
         </div>}
           

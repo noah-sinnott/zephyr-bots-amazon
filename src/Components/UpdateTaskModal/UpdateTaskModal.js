@@ -136,7 +136,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
         </div>
 
         <div  style={styles.inputContainer}>
-          <p>Max overall:</p>
+          <p>Max Price Excluding Shipping:</p>
           <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
         </div>
 
