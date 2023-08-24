@@ -3,43 +3,45 @@
 const url1 = "https://www.amazon.co.uk/gp/product/B0BV9TD8SH/ref=ewc_pr_img_1?smid=A2UG920FDFK00D&psc=1"
 // const url1 = "https://www.amazon.co.uk/Gigabyte-GeForce-4080-GAMING-Graphics/dp/B0BLT45YZ1/ref=sr_1_16?crid=1II73RX8V8FSZ&keywords=graphics+cards&qid=1692827193&sprefix=graph%2Caps%2C129&sr=8-16"
 
-export function amazon(taskId, task, context, taskGroupId) {
+export function amazon(taskId, task, taskGroupId) {
 
-  window.electronAPI.amazonStart(taskId,taskGroupId, [
-    'false',
-    'true',
-    30, 
-    10, 
-    0.1,
-    1.7,
-    0.1, 
-    0.2, 
+  window.electronAPI.amazonStart(taskId,taskGroupId, JSON.stringify({
+    proxy: 'false',
+    visible: 'true',
+    maxPrice: 30, 
+    refreshRate: 10, 
+    wait1: 0.1,
+    wait2: 1.7,
+    typing1: 0.1, 
+    typing2: 0.2, 
 
-    url1,
+    url: url1,
 
-    'noah.sinnott12@gmail.com',
-    '123456',
+    email: 'noah.sinnott12@gmail.com',
+    password: '123456',
 
-    'Noah Sinnott',
-    '07484783803',
-    'ln44hn',
-    'st michaels house',
-    'church street',
-    'billinghay',
-    'Lincolnshire',
+    name: 'Noah Sinnott',
+    number: '07484783803',
+    addressPostCode: 'ln44hn',
+    addressLine1: 'st michaels house',
+    addressLine2: 'church street',
+    addressCity: 'billinghay',
+    addressRegion: 'Lincolnshire',
 
-    'ln44hn',
-    'st michaels house',
-    'church street',
-    'billinghay',
-    'Lincolnshire',
+    billingPostCode: 'ln44hn',
+    billingLine1: 'st michaels house',
+    billingLine2: 'church street',
+    billingCity: 'billinghay',
+    billingRegion: 'Lincolnshire',
 
-    "4921819986286533",
-    "Noah Sinnott",
-    "06/26",
-    "205",
-    "07484783803"
-  ])
+    billingCardNumber: "4921819986286533",
+    billingName:"Noah Sinnott",
+    billingExpirationDate: "06/26",
+    billingCVC: "205",
+    billingPhoneNumber: "07484783803"
+  })
+  
+  )
 }
 
 export function kill(taskId) {

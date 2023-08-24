@@ -11,44 +11,46 @@ import random
 import sys
 import time
 import threading
+import json
 
 # ==================================================================================================================================
 
-path = sys.argv[0]
+json_str = sys.argv[1]
+data = json.loads(json_str)
 
-proxy = sys.argv[1]
-visible = sys.argv[2]
-maxPrice = sys.argv[3]
-refreshRate = sys.argv[4]
-wait1 = sys.argv[5]
-wait2 = sys.argv[6]
-typing1 = sys.argv[7]
-typing2 = sys.argv[8]
+proxy = data['proxy']
+visible = data['visible']
+maxPrice = data['maxPrice']
+refreshRate = data['refreshRate']
+wait1 = data['wait1']
+wait2 = data['wait2']
+typing1 = data['typing1']
+typing2 = data['typing2']
 
-url = sys.argv[9]
+url = data['url']
 
-email = sys.argv[10]
-password = sys.argv[11]
+email = data['email']
+password = data['password']
 
-name = sys.argv[12]
-number = sys.argv[13]
-addressPostCode = sys.argv[14]
-addressLine1 = sys.argv[15]
-addressLine2 = sys.argv[16]
-addressCity = sys.argv[17]
-addressRegion = sys.argv[18]
+name = data['name']
+number = data['number']
+addressPostCode = data['addressPostCode']
+addressLine1 = data['addressLine1']
+addressLine2 = data['addressLine2']
+addressCity = data['addressCity']
+addressRegion = data['addressRegion']
 
-billingPostCode = sys.argv[19]
-billingLine1 = sys.argv[20]
-billingLine2 = sys.argv[21]
-billingCity = sys.argv[22]
-billingRegion = sys.argv[23]
+billingPostCode = data['billingPostCode']
+billingLine1 = data['billingLine1']
+billingLine2 = data['billingLine2']
+billingCity = data['billingCity']
+billingRegion = data['billingRegion']
 
-BillingCardNumber = sys.argv[24]
-billingName = sys.argv[25]
-billingExpirationDate = sys.argv[26]
-billingCVC = sys.argv[27]
-billingPhoneNumber = sys.argv[28]
+billingCardNumber = data['billingCardNumber']
+billingName = data['billingName']
+billingExpirationDate = data['billingExpirationDate']
+billingCVC = data['billingCVC']
+billingPhoneNumber = data['billingPhoneNumber']
 
 try: 
     chrome_options = Options()
@@ -132,7 +134,7 @@ def payment():
         card_number_input.click()
         card_number_input.clear()
 
-        for char in BillingCardNumber:
+        for char in billingCardNumber:
             wait_time = random.uniform(float(typing1), float(typing2))
             time.sleep(wait_time)
             card_number_input.send_keys(char)

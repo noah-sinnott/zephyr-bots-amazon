@@ -73,7 +73,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
 
   async function startTask(id, task) {
     if (task.scriptRunning !== false) return;
-    amazon(id, task, context, taskGroupId);
+    amazon(id, task, taskGroupId);
     let taskgroups = context.data.database.taskGroups
     taskgroups[taskGroupId].tasks[id].scriptRunning = true
     taskgroups[taskGroupId].tasks[id].notifications = []

@@ -99,7 +99,6 @@ function formatFields(inputedFields){
             amazon(
               key,
               updatedValue,
-              context,
               taskGroupId
             );
             updatedValue.scriptRunning = true;

@@ -87,7 +87,7 @@ ipcMain.on('amazon', (event, taskId, taskGroupId, params) => {
 
   if (isDev) {
     const pyPath = path.join(process.cwd(), 'python', "amazon.py");
-    pythonProcess = spawn('python', ["-u", pyPath, ...params]);
+    pythonProcess = spawn('python', ["-u", pyPath, params]);
   } else {
     const exePath = path.join(process.resourcesPath, 'app.asar.unpacked', 'build_python', "amazon.exe");
     pythonProcess = spawn(exePath, params);
