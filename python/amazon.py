@@ -50,7 +50,6 @@ billingExpirationDate = sys.argv[26]
 billingCVC = sys.argv[27]
 billingPhoneNumber = sys.argv[28]
 
-print(url, proxy, visible, flush=True)
 try: 
     chrome_options = Options()
 
