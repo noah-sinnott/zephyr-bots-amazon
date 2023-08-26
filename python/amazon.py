@@ -230,7 +230,7 @@ def payment():
             time.sleep(wait_time)
             adressLine1_input.send_keys(char)
 
-        if(addressLine2 != False):
+        if(billingLine2 != "false"):
             wait_time = random.uniform(float(wait1), float(wait2))
             time.sleep(wait_time)
 
@@ -426,7 +426,7 @@ def shipping():
             time.sleep(wait_time)
             adressLine1_input.send_keys(char)
 
-        if(addressLine2 != False):
+        if(addressLine2 != "false"):
             wait_time = random.uniform(float(wait1), float(wait2))
             time.sleep(wait_time)
 

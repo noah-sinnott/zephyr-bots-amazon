@@ -15,9 +15,9 @@ import { generateId } from "../../helpers/generateId";
     const [password, setPassword] = useState('');
 
     async function addAccount(){
-      if(!name) return
-      if(!username) return
-      if(!password) return
+      if(!name || name === "") return
+      if(!username || username == "") return
+      if(!password|| password == "") return
 
       let id = generateId()
 

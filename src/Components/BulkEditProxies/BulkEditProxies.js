@@ -38,6 +38,13 @@ import Select from 'react-select'
    
     function update(){
       
+      if(activeFields.includes('ip')){
+        if(!ip || ip === "") return
+      }
+      if(activeFields.includes('port')){
+        if(!port || port === "") return
+      }
+
       let proxyGroups = context.data.database.proxyGroups
 
       Object.entries(proxyGroups[proxyGroupId].proxies).forEach(([key, value], index) => {
@@ -75,7 +82,7 @@ import Select from 'react-select'
         </div>
 
         <div style={styles.dropDownContainer}>
-            <p>Fields</p>
+            <p>Fields:</p>
             <Select
               name="Fields"
               options={fields}
@@ -88,8 +95,8 @@ import Select from 'react-select'
 
         {activeFields.includes('ip') && 
         <div style={styles.inputContainer}>
-        <p>Ip:</p>
-        <Input value={ip} disableUnderline={true} onChange={(event) => setIp(event.target.value)} id="ip" sx={styles.textInput} placeholder="Enter Ip"/>
+        <p>IP:</p>
+        <Input value={ip} disableUnderline={true} onChange={(event) => setIp(event.target.value)} id="ip" sx={styles.textInput} placeholder="Enter IP"/>
         </div>}
 
         {activeFields.includes('port') && 

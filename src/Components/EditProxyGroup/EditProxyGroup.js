@@ -20,7 +20,8 @@ import { kill } from "../../helpers/ScriptRunner";
     }, [proxyGroupId])
 
     function saveChanges(){
-
+      if(!name || name === "") return
+      
       let proxyGroups = context.data.database.proxyGroups
       proxyGroups[proxyGroupId].name = name
 

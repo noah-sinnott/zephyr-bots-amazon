@@ -70,6 +70,11 @@ function formatFields(inputedFields){
 
   async function update(start) {
 
+    if(activeFields.includes('maxPrice') && (!maxPrice || maxPrice == '')) return
+    if(activeFields.includes('url') && (!url || url == '')) return
+    if(activeFields.includes('account') && (!account?.value)) return
+    if(activeFields.includes('billingProfile') && (!billing?.value)) return
+
   let taskGroups = context.data.database.taskGroups;
   
       Object.entries(taskGroups[taskGroupId].tasks).map(
@@ -143,7 +148,7 @@ function formatFields(inputedFields){
         </div>
 
         <div style={styles.multiContainer}>
-            <p>Fields</p>
+            <p>Fields:</p>
             <Select
               name="Fields"
               options={fields}
@@ -156,7 +161,7 @@ function formatFields(inputedFields){
 
         {activeFields.includes('account') && 
         <div style={styles.inputContainer}>
-            <p>Accounts</p>
+            <p>Account:</p>
             <Select
               name="Accounts"
               options={accounts}
@@ -168,7 +173,7 @@ function formatFields(inputedFields){
           
         {activeFields.includes('billingProfile') && 
           <div style={styles.inputContainer}>
-          <p>Billing Profile</p>
+          <p>Billing Profile:</p>
           <Select
               name="Billing Profile"
               options={billings}
@@ -180,7 +185,7 @@ function formatFields(inputedFields){
 
           {activeFields.includes('proxies') && 
           <div style={styles.inputContainer}>
-          <p>Proxy</p>
+          <p>Proxy:</p>
           <Select
               name="Proxy"
               options={proxies}
@@ -192,14 +197,14 @@ function formatFields(inputedFields){
 
       {activeFields.includes('url') && 
         <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+          <p>Item URL:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter Item URL"/>
         </div>}
 
         {activeFields.includes('maxPrice') && 
         <div  style={styles.inputContainer}>
           <p>Max Price Excluding Shipping:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter Max Price"/>
         </div>}
           
         <div style={styles.submitButtons}>

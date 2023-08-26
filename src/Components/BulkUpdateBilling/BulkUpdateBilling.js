@@ -139,6 +139,29 @@ const fields3 = [
       }
 
     async function update(){     
+      
+      if (activeFields1.includes("name") && (!name || name === "")) return;
+      if (activeFields1.includes("cardHolderName") && (!cardHolderName || cardHolderName === "")) return;
+      if (activeFields1.includes("cardNumber") && (!cardNumber || cardNumber === "")) return;
+      if (activeFields1.includes("CVC") && (!CVC || CVC === "")) return;
+      if (activeFields1.includes("expiresAt") && (!expiresAt || expiresAt === "")) return;
+      if (activeFields1.includes("cardHolderNumber") && (!cardHolderNumber || cardHolderNumber === "")) return;
+
+      if (activeFields2.includes("shippingFullName") && (!shippingFullName || shippingFullName === "")) return;
+      if (activeFields2.includes("shippingNumber") && (!shippingNumber || shippingNumber === "")) return;
+      if (activeFields2.includes("shippingPostCode") && (!shippingPostCode || shippingPostCode === "")) return;
+      if (activeFields2.includes("shippingAddressLine1") && (!shippingAddressLine1 || shippingAddressLine1 === "")) return;
+      if (activeFields2.includes("shippingAddressLine2") && (!shippingAddressLine2 || shippingAddressLine2 === "")) return;
+      if (activeFields2.includes("shippingRegion") && (!shippingRegion || shippingRegion === "")) return;
+      if (activeFields2.includes("shippingCity") && (!shippingCity || shippingCity === "")) return;
+
+      if (activeFields3.includes("billingPostCode") && (!billingPostCode || billingPostCode === "")) return;
+      if (activeFields3.includes("billingAddressLine1") && (!billingAddressLine1 || billingAddressLine1 === "")) return;
+      if (activeFields3.includes("billingAddressLine2") && (!billingAddressLine2 || billingAddressLine2 === "")) return;
+      if (activeFields3.includes("billingRegion") && (!billingRegion || billingRegion === "")) return;
+      if (activeFields3.includes("billingCity") && (!billingCity || billingCity === "")) return;
+
+
     let billing = context.data.database.billing
     let taskGroups = context.data.database.taskGroups
 
@@ -238,7 +261,7 @@ const fields3 = [
 
 {page === 1 ? <>
         <div style={styles.dropDownContainer}>
-            <p>Section 1 Fields</p>
+            <p>Section 1 Fields:</p>
             <Select
               name="Fields"
               options={fields1}
@@ -326,14 +349,14 @@ const fields3 = [
     onChange={(event) => setCardHolderNumber(event.target.value)}
     id="cardHolderNumber"
     sx={styles.textInput}
-    placeholder="Enter Card Holder's Number"
+    placeholder="Enter Card Holder's Phone Number"
   />
 </div> 
 }
 </>: page === 2 ? <>
 
 <div style={styles.dropDownContainer}>
-<p>Section 2 Fields</p>
+<p>Section 2 Fields:</p>
 <Select
   name="Fields"
   options={fields2}
@@ -436,7 +459,7 @@ const fields3 = [
 </>:<>
 
 <div style={styles.dropDownContainer}>
-<p>Section 3 Fields</p>
+<p>Section 3 Fields:</p>
 <Select
   name="Fields"
   options={fields3}

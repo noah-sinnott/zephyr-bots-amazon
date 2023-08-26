@@ -48,6 +48,29 @@ function AddBillingModal({setOpen, isOpen}) {
       
       let id = generateId()
 
+      if (!name || name === "") return;
+      if (!cardHolderName || cardHolderName === "") return;
+      if (!cardNumber || cardNumber === "") return;
+      if (!CVC || CVC === "") return;
+      if (!expiresAt || expiresAt === "") return;
+      if (!cardHolderNumber || cardHolderNumber === "") return;
+
+      if (!shippingFullName || shippingFullName === "") return;
+      if (!shippingNumber || shippingNumber === "") return;
+      if (!shippingPostCode || shippingPostCode === "") return;
+      if (!shippingAddressLine1 || shippingAddressLine1 === "") return;
+      if (!shippingAddressLine2 || shippingAddressLine2 === "") return;
+      if (!shippingRegion || shippingRegion === "") return;
+      if (!shippingCity || shippingCity === "") return;
+
+      if(billingSameAs){
+        if (!billingPostCode || billingPostCode === "") return;
+        if (!billingAddressLine1 || billingAddressLine1 === "") return;
+        if (!billingAddressLine2 || billingAddressLine2 === "") return;
+        if (!billingRegion || billingRegion === "") return;
+        if (!billingCity || billingCity === "") return;
+      }
+
       let billing = context.data.database.billing
 
       let newBillingProfile ={
@@ -188,7 +211,7 @@ function AddBillingModal({setOpen, isOpen}) {
     onChange={(event) => setCardHolderNumber(event.target.value)}
     id="cardHolderNumber"
     sx={styles.textInput}
-    placeholder="Enter Card Holder's Number"
+    placeholder="Enter Card Holder's Phone Number"
   />
 </div> 
 </> : page === 2 ? <>
@@ -269,7 +292,10 @@ function AddBillingModal({setOpen, isOpen}) {
     placeholder="Enter Shipping Region"
   />
 </div>
-<FormControlLabel control={<Checkbox checked={billingSameAs} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setBillingSameAs(e.target.checked)}/>} label="Billing Address Same As Shipping" />
+<div style={styles.inputContainer}>
+  <p style={{visibility: 'hidden'}}>.</p>
+  <FormControlLabel control={<Checkbox checked={billingSameAs} sx={{color: colors.text, '&.Mui-checked': {color: colors.text}}} onChange={(e) => setBillingSameAs(e.target.checked)}/>} label="Billing Address Same As Shipping" />
+</div>
 </> 
 : 
  <>

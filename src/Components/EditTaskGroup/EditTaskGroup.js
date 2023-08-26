@@ -21,6 +21,7 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
     }, [taskGroupId])
 
     function saveChanges(){
+      if(!name || name === "") return
 
       let taskgroups = context.data.database.taskGroups
       taskgroups[taskGroupId].name = name

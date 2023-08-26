@@ -39,6 +39,16 @@ function UpdateAccountModal({setOpen, isOpen}) {
 
     async function update(){
       
+    if(activeFields.includes("name")){
+      if(!name || name == "") return
+    }
+    if(activeFields.includes("username")){
+      if(!username || username == "") return
+    }    
+    if(activeFields.includes("password")){
+      if(!password || password == "") return
+    }
+    
     let accounts = context.data.database.accounts
 
     let taskGroups = context.data.database.taskGroups
@@ -94,7 +104,7 @@ function UpdateAccountModal({setOpen, isOpen}) {
         </div>
 
         <div style={styles.dropDownContainer}>
-            <p>Fields</p>
+            <p>Fields:</p>
             <Select
               name="Fields"
               options={fields}

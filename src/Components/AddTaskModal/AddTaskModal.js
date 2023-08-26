@@ -43,6 +43,12 @@ import Select from "react-select";
 
   
   async function AddTask(start) {
+
+    if(!maxPrice || maxPrice == '') return
+    if(!url || url == '') return
+    if(!account?.value) return
+    if(!billing?.value) return
+
     let taskgroups = context.data.database.taskGroups;
   
     for (let i = 0; i < quantity; i++) {
@@ -96,7 +102,7 @@ import Select from "react-select";
         </div>
 
         <div  style={styles.inputContainer}>
-            <p>Account</p>
+            <p>Account:</p>
             <Select
               name="Accounts"
               options={accounts}
@@ -106,7 +112,7 @@ import Select from "react-select";
         </div>
           
           <div style={styles.inputContainer}>
-          <p>Billing Profile</p>
+          <p>Billing Profile:</p>
           <Select
               name="Billing Profiles"
               options={billings}
@@ -116,7 +122,7 @@ import Select from "react-select";
           </div>
 
           <div style={styles.inputContainer}>
-          <p>Proxy</p>
+          <p>Proxy:</p>
           <Select
               name="Proxy"
               options={proxies}
@@ -127,13 +133,13 @@ import Select from "react-select";
           </div>
 
         <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+          <p>Item URL:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter Item URL"/>
         </div>
 
         <div  style={styles.inputContainer}>
           <p>Max Price Excluding Shipping:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter Max Price"/>
         </div>
 
         <div  style={styles.inputContainer}>
@@ -141,13 +147,11 @@ import Select from "react-select";
           <Input value={quantity} 
           disableUnderline={true}   
           onChange={(event) => {
-              const value = parseInt(event.target.value);
-              if (value >= 1) {  
-                setQuantity(value);
-              }
-            }} 
+            if(event.target.value.match(/^[0-9]*$/)) setQuantity(event.target.value);
+          }} 
          id="quantity" style={styles.textInput} 
-         placeholder="Enter Task Quantity"/>
+         placeholder="Enter Task Quantity"
+         />
       </div>
  
 

@@ -51,6 +51,11 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
 
     async function update(start){
       
+      if(!maxPrice || maxPrice == '') return
+      if(!url || url == '') return
+      if(!account?.value) return
+      if(!billing?.value) return
+
       let taskGroups = context.data.database.taskGroups
 
       if(taskGroups[taskGroupId].tasks[taskId].scriptRunning !== false){
@@ -98,7 +103,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
         </div>
 
         <div style={styles.inputContainer}>
-            <p>Accounts</p>
+            <p>Account:</p>
             <Select
               name="Accounts"
               options={accounts}
@@ -109,7 +114,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
         </div>
           
           <div style={styles.inputContainer}>
-          <p>Billing Profile</p>
+          <p>Billing Profile:</p>
           <Select
               name="Billing Profile"
               options={billings}
@@ -120,7 +125,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
           </div>
 
           <div style={styles.inputContainer}>
-          <p>Proxy</p>
+          <p>Proxy:</p>
           <Select
               name="Proxy"
               options={proxies}
@@ -131,13 +136,13 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
           </div>
 
         <div style={styles.inputContainer}>
-          <p>Item url:</p>
-          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter item URL"/>
+          <p>Item URL:</p>
+          <Input value={url} disableUnderline={true} onChange={(event) => setURL(event.target.value)} id="url" style={styles.textInput} placeholder="Enter Item URL"/>
         </div>
 
         <div  style={styles.inputContainer}>
           <p>Max Price Excluding Shipping:</p>
-          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter max price"/>
+          <Input value={maxPrice} disableUnderline={true} onChange={(event) => setMaxPrice(event.target.value)} id="maxPrice" style={styles.textInput} placeholder="Enter Max Price"/>
         </div>
 
         <div style={styles.submitButtons}>

@@ -23,6 +23,10 @@ import { kill } from "../../helpers/ScriptRunner";
 
     async function update(){
       
+      if(!name || name === "") return
+      if(!username || username === "") return
+      if(!password || password === "") return
+
       let taskGroups = context.data.database.taskGroups
 
       Object.entries(taskGroups).forEach(([key, taskGroup]) => {

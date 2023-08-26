@@ -32,7 +32,7 @@ import { Input, Modal, Button } from "@mui/material";
 
     
     function update(){
-    if(!ip || !port) return
+    if(!ip || !port || ip == "" || port == "") return
 
     let proxyGroups = context.data.database.proxyGroups
 
@@ -69,8 +69,8 @@ import { Input, Modal, Button } from "@mui/material";
 
  
         <div style={styles.inputContainer}>
-        <p>Ip:</p>
-        <Input value={ip} disableUnderline={true} onChange={(event) => setIp(event.target.value)} id="ip" sx={styles.textInput} placeholder="Enter Ip"/>
+        <p>IP:</p>
+        <Input value={ip} disableUnderline={true} onChange={(event) => setIp(event.target.value)} id="ip" sx={styles.textInput} placeholder="Enter IP"/>
         </div>
 
         <div style={styles.inputContainer}>
