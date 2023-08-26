@@ -21,7 +21,8 @@ data = json.loads(json_str)
 proxy = data['proxy']
 visible = data['visible']
 maxPrice = data['maxPrice']
-refreshRate = data['refreshRate']
+refreshRate1= data['refreshRate1']
+refreshRate2 = data['refreshRate2']
 wait1 = data['wait1']
 wait2 = data['wait2']
 typing1 = data['typing1']
@@ -576,7 +577,8 @@ def addingtocart():
             if len(buy_now_button) > 0:
                 temp = True
             else:
-                time.sleep(float(refreshRate))
+                wait_time = random.uniform(float(refreshRate1), float(refreshRate2))
+                time.sleep(wait_time)
                 driver.refresh()
                 wait_for_page_load(driver)
 

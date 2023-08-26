@@ -71,7 +71,7 @@ import { amazon, kill } from "../../helpers/ScriptRunner";
       taskGroups[taskGroupId].tasks[taskId].notifications = []
 
       if(start){
-          amazon(taskId, taskGroups[taskGroupId].tasks[taskId], taskGroupId);
+          amazon(taskId, taskGroupId, taskGroups[taskGroupId].tasks[taskId], context.data.database);
           taskGroups[taskGroupId].tasks[taskId].scriptRunning = true;
       }             
       

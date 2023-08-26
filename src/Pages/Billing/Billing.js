@@ -108,8 +108,8 @@ import { kill } from '../../helpers/ScriptRunner';
               return (
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut}  style={styles.tableRow} key={key}>
                   <td  style={styles.tableItem}>{value.name}</td>
-                  <td  style={styles.tableItem}>{value.shippingPostCode}</td>
-                  <td  style={styles.tableItem}>{value.cardNumber === '' ? '': value.cardNumber.length > 5 ? value.cardNumber.substring(0,5) + '...' : value.cardNumber }</td>
+                  <td  style={styles.tableItem}>{value.shippingAddressLine1}, {value.shippingPostCode}</td>
+                  <td  style={styles.tableItem}>{value.cardNumber === '' ? '': value.cardNumber.length > 4 ? '...' + value.cardNumber.substring(value.cardNumber.length - 4, value.cardNumber.length) : value.cardNumber }</td>
                   <td  style={styles.tableItem}>
                   <IconButton aria-label="delete" size="small" style={{color: colors.red}}onClick={() => {
                     setDeleteBillingDialog(true)

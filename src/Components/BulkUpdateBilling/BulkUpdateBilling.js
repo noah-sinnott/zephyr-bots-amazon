@@ -151,13 +151,11 @@ const fields3 = [
       if (activeFields2.includes("shippingNumber") && (!shippingNumber || shippingNumber === "")) return;
       if (activeFields2.includes("shippingPostCode") && (!shippingPostCode || shippingPostCode === "")) return;
       if (activeFields2.includes("shippingAddressLine1") && (!shippingAddressLine1 || shippingAddressLine1 === "")) return;
-      if (activeFields2.includes("shippingAddressLine2") && (!shippingAddressLine2 || shippingAddressLine2 === "")) return;
       if (activeFields2.includes("shippingRegion") && (!shippingRegion || shippingRegion === "")) return;
       if (activeFields2.includes("shippingCity") && (!shippingCity || shippingCity === "")) return;
 
       if (activeFields3.includes("billingPostCode") && (!billingPostCode || billingPostCode === "")) return;
       if (activeFields3.includes("billingAddressLine1") && (!billingAddressLine1 || billingAddressLine1 === "")) return;
-      if (activeFields3.includes("billingAddressLine2") && (!billingAddressLine2 || billingAddressLine2 === "")) return;
       if (activeFields3.includes("billingRegion") && (!billingRegion || billingRegion === "")) return;
       if (activeFields3.includes("billingCity") && (!billingCity || billingCity === "")) return;
 

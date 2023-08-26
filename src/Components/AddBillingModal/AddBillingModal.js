@@ -59,14 +59,12 @@ function AddBillingModal({setOpen, isOpen}) {
       if (!shippingNumber || shippingNumber === "") return;
       if (!shippingPostCode || shippingPostCode === "") return;
       if (!shippingAddressLine1 || shippingAddressLine1 === "") return;
-      if (!shippingAddressLine2 || shippingAddressLine2 === "") return;
       if (!shippingRegion || shippingRegion === "") return;
       if (!shippingCity || shippingCity === "") return;
 
-      if(billingSameAs){
+      if(!billingSameAs){
         if (!billingPostCode || billingPostCode === "") return;
         if (!billingAddressLine1 || billingAddressLine1 === "") return;
-        if (!billingAddressLine2 || billingAddressLine2 === "") return;
         if (!billingRegion || billingRegion === "") return;
         if (!billingCity || billingCity === "") return;
       }

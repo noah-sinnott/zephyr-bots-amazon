@@ -64,7 +64,8 @@ import Select from "react-select";
         billing: billing.value,
       };
       if (start) {
-        amazon(id, newTask, taskGroupId)
+        console.log(1, context.data.database)
+        amazon(id, taskGroupId, newTask, context.data.database)
         newTask.scriptRunning = true;
         taskgroups[taskGroupId].tasks[id] = newTask;       
       } else {

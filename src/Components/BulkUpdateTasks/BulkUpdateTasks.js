@@ -103,8 +103,9 @@ function formatFields(inputedFields){
             };
             amazon(
               key,
+              taskGroupId,
               updatedValue,
-              taskGroupId
+              context.data.database
             );
             updatedValue.scriptRunning = true;
           }

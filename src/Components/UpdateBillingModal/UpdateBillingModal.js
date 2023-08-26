@@ -125,13 +125,11 @@ import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
       billing[billingId].shippingFullName = shippingFullName;
       billing[billingId].shippingNumber = shippingNumber;
       billing[billingId].shippingAddressLine1 = shippingAddressLine1;
-      billing[billingId].shippingAddressLine2 = shippingAddressLine2;
       billing[billingId].shippingPostCode = shippingPostCode;
       billing[billingId].shippingCity = shippingCity;
       billing[billingId].shippingRegion = shippingRegion;
     
       billing[billingId].billingAddressLine1 = billingSameAs ? shippingAddressLine1 : billingAddressLine1;
-      billing[billingId].billingAddressLine2 = billingSameAs ? shippingAddressLine2 : billingAddressLine2;
       billing[billingId].billingPostCode = billingSameAs ? shippingPostCode : billingPostCode;
       billing[billingId].billingCity = billingSameAs ? shippingCity : billingCity;
       billing[billingId].billingRegion = billingSameAs ? shippingRegion : billingRegion;

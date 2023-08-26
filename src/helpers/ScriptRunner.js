@@ -3,45 +3,57 @@
 const url1 = "https://www.amazon.co.uk/gp/product/B0BV9TD8SH/ref=ewc_pr_img_1?smid=A2UG920FDFK00D&psc=1"
 // const url1 = "https://www.amazon.co.uk/Gigabyte-GeForce-4080-GAMING-Graphics/dp/B0BLT45YZ1/ref=sr_1_16?crid=1II73RX8V8FSZ&keywords=graphics+cards&qid=1692827193&sprefix=graph%2Caps%2C129&sr=8-16"
 
-export function amazon(taskId, task, taskGroupId) {
+function getProxy(obj) {
+  const keys = Object.keys(obj);
+  const randomIndex = Math.floor(Math.random() * keys.length);
+  const randomKey = keys[randomIndex];
+  return obj[randomKey].ip  + ":" + obj[randomKey].port + ":" + obj[randomKey].username + ":" + obj[randomKey].password
+}
 
-  window.electronAPI.amazonStart(taskId,taskGroupId, JSON.stringify({
-    proxy: 'false',
-    visible: 'true',
-    maxPrice: 30, 
-    refreshRate: 10, 
-    wait1: 0.1,
-    wait2: 1.7,
-    typing1: 0.1, 
-    typing2: 0.2, 
+export function amazon(taskId, taskGroupId, task, db) {
+  let proxy = !task.proxy ?  "false" : getProxy(db.proxyGroups[task.proxy].proxies)
+  let account = db.accounts[task.account]
+  let billing = db.billing[task.billing]
 
-    url: url1,
+  let data = JSON.stringify({
+    proxy: proxy,
+    visible: db.settings.visible,
+    maxPrice: task.maxPrice, 
+    refreshRate1: db.settings.refreshRate[0], 
+    refreshRate2: db.settings.refreshRate[1], 
+    wait1: db.settings.waitSpeed[0],
+    wait2: db.settings.waitSpeed[1],
+    typing1: db.settings.typingSpeed[0], 
+    typing2: db.settings.typingSpeed[1], 
 
-    email: 'noah.sinnott12@gmail.com',
-    password: '123456',
+    url: task.url,
 
-    name: 'Noah Sinnott',
-    number: '07484783803',
-    addressPostCode: 'ln44hn',
-    addressLine1: 'st michaels house',
-    addressLine2: 'church street',
-    addressCity: 'billinghay',
-    addressRegion: 'Lincolnshire',
+    email: account.username,
+    password: account.password,
 
-    billingPostCode: 'ln44hn',
-    billingLine1: 'st michaels house',
-    billingLine2: 'church street',
-    billingCity: 'billinghay',
-    billingRegion: 'Lincolnshire',
+    name: billing.shippingFullName,
+    number: billing.shippingNumber,
+    addressPostCode: billing.shippingPostCode,
+    addressLine1: billing.shippingAddressLine1,
+    addressLine2: billing.shippingAddressLine2 == "" ? "false" : billing.shippingAddressLine2,
+    addressCity: billing.shippingCity,
+    addressRegion: billing.shippingRegion,
 
-    billingCardNumber: "4921819986286533",
-    billingName:"Noah Sinnott",
-    billingExpirationDate: "06/26",
-    billingCVC: "205",
-    billingPhoneNumber: "07484783803"
+    billingPostCode: billing.billingPostCode,
+    billingLine1: billing.billingAddressLine1,
+    billingLine2: billing.billingAddressLine2 == "" ? "false" : billing.billingAddressLine2,
+    billingCity: billing.billingCity,
+    billingRegion: billing.billingRegion,
+
+    billingCardNumber: billing.cardNumber,
+    billingName: billing.cardHolderName,
+    billingExpirationDate: billing.expiresAt,
+    billingCVC: billing.CVC,
+    billingPhoneNumber: billing.cardHolderNumber
   })
+  console.log(data)
+  // window.electronAPI.amazonStart(taskId,taskGroupId, data)
   
-  )
 }
 
 export function kill(taskId) {
