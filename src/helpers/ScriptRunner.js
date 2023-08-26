@@ -51,9 +51,8 @@ export function amazon(taskId, taskGroupId, task, db) {
     billingCVC: billing.CVC,
     billingPhoneNumber: billing.cardHolderNumber
   })
-  console.log(data)
-  // window.electronAPI.amazonStart(taskId,taskGroupId, data)
-  
+
+  window.electronAPI.amazonStart(taskId,taskGroupId, data)
 }
 
 export function kill(taskId) {
