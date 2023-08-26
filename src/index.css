@@ -9,3 +9,24 @@ code {
   font-family: 'Roboto', sans-serif;
 }
   
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #032D46;
+  border-width: 1px;
+  border-radius: 6px;
+  border-color: #032D46;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #03273c; 
+  border-width: 1px;
+  border-radius: 6px;
+  border-color: #03273c;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #043a5a;
+}
