@@ -59,7 +59,7 @@ import colors from '../../colors/colors';
                     }}     
                    />  
                 </div>
-                <div style={styles.advancedSettings}>Advanced settings</div>
+                <div style={styles.advancedSettings}><p>Advanced settings</p></div>
 
                 <div style={styles.sliderContainer}>
                 <p>Wait Speed</p>

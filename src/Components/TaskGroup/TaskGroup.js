@@ -161,7 +161,7 @@ function TaskGroup({taskGroupId, setTaskGroupId}) {
                 <tr onMouseOver={MouseOver} onMouseOut={MouseOut} style={styles.tableRow} key={key}>
                   <td style={styles.tableItem}>{context.data.database.accounts[value.account]?.name || ''}</td>
                   <td style={styles.tableItem}>{context.data.database.billing[value.billing]?.name || ''}</td>
-                  <td style={styles.tableItem}>{context.data.database.proxyGroups[value.proxy]?.name || ''}</td>
+                  <td style={styles.tableItem}>{context.data.database.proxyGroups[value?.proxy]?.name || 'None'}</td>
                   <td style={styles.tableItem} title={value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}>{value.scriptRunning !== false ? (value.notifications.length !== 0 ? value.notifications[value.notifications.length - 1] : 'starting') : 'idle'}</td>
                   <td style={styles.tableItem}>
                     {value.scriptRunning !== false ?

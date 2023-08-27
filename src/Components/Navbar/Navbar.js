@@ -28,9 +28,9 @@ function Navbar() {
         <button  style={location.pathname !=='/Proxies'? styles.button: styles.selectedButton} onClick={() => navigate('/Proxies')}>
           <img style={styles.image} alt={'Proxies'} src={Proxy}/>
         </button>
-        <button  style={location.pathname !=='/Help'? styles.button: styles.selectedButton} onClick={() => navigate('/Help')}>
+        {/* <button  style={location.pathname !=='/Help'? styles.button: styles.selectedButton} onClick={() => navigate('/Help')}>
           <img style={styles.image} alt={'Help'} src={Help}/>
-        </button>
+        </button> */}
         <button  style={location.pathname !=='/Settings'? styles.button: styles.selectedButton} onClick={() => navigate('/Settings')}>
           <img style={styles.image} alt={'Settings'} src={gear}/>
         </button>

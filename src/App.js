@@ -31,20 +31,30 @@ export const Context = createContext({
 
 function App() {
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState({database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}});
+  const [data, setData] = useState({});
   const dataRef = useRef(data);
 
   useEffect(() => {
     const storedDatabase = localStorage.getItem("database");
-    if (!storedDatabase) {
+    if (!storedDatabase || storedDatabase === "{}") {
       const initialDatabase = {database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
       localStorage.setItem("database", JSON.stringify(initialDatabase));
+      setData(initialDatabase);
       setLoading(false)
     } else {
-      const parsedDatabase = JSON.parse(storedDatabase);
-      setData(parsedDatabase);
+      let parsedDatabase = JSON.parse(storedDatabase);
+      console.log(parsedDatabase, 1)
+      Object.entries(parsedDatabase?.database?.taskGroups).forEach(([key, value]) => {
+        Object.entries(value?.tasks).forEach(([key, value]) => {
+          value.notifications = []
+          value.scriptRunning = false
+        })
+      })
+      console.log(parsedDatabase, 2)
+      updateData(parsedDatabase);
       setLoading(false)
     }
+    console.log('i fire once');
   }, []);
 
   useEffect(() => {
