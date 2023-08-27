@@ -43,24 +43,27 @@ function App() {
       setLoading(false)
     } else {
       let parsedDatabase = JSON.parse(storedDatabase);
-      console.log(parsedDatabase, 1)
       Object.entries(parsedDatabase?.database?.taskGroups).forEach(([key, value]) => {
         Object.entries(value?.tasks).forEach(([key, value]) => {
           value.notifications = []
           value.scriptRunning = false
         })
       })
-      console.log(parsedDatabase, 2)
       updateData(parsedDatabase);
       setLoading(false)
     }
-    console.log('i fire once');
   }, []);
 
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
+  
   useEffect(() => {
-    dataRef.current = data;
-    localStorage.setItem("database", JSON.stringify(data));
-  }, [data])
+    if(!isEmpty(data)) {
+      dataRef.current = data;
+      localStorage.setItem("database", JSON.stringify(data));
+    }
+  }, [data]);
 
   const updateData = (newData) => {
     setData({...data, ...newData})
