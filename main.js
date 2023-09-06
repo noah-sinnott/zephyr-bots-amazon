@@ -1,10 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
+const { machineId } = require('node-machine-id');
 
 let win = null
 
 const isDev = process.env.NODE_ENV === 'development' ? true : false
+
+const backendURL = "http://localhost:3005"
 
 function createWindow () {
   win = new BrowserWindow({
@@ -12,6 +15,7 @@ function createWindow () {
     height: 600,
     frame: false,
     maximizable: true,
+    isMaximized: true,
     show: false,
     webPreferences: {
       nodeIntegration: true,
@@ -21,7 +25,6 @@ function createWindow () {
     }
   })
 
-  win.maximize()
   win.setMinimumSize(1080, 600);
 
   if (isDev) {
@@ -31,6 +34,14 @@ function createWindow () {
   }  
   
   win.show()
+
+  ipcMain.on('authenticated', () => {
+    win.maximize()
+  });
+
+  ipcMain.on('unAuthenticated', () => {
+    win.setSize(1080, 600)
+  });
 
   ipcMain.on('window-minimize', () => {
     win.minimize();
@@ -63,10 +74,10 @@ app.on('activate', () => {
   }
 })
 
-// --------------------- for scripts ------------------------------------
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
+ipcMain.handle("getMachineId", async () => {
+  const machine = await machineId();
+  return machine;
+});
 
 let pythonProcesses = new Map();
 
@@ -87,10 +98,10 @@ ipcMain.on('amazon', (event, taskId, taskGroupId, params) => {
 
   if (isDev) {
     const pyPath = path.join(process.cwd(), 'python', "amazon.py");
-    pythonProcess = spawn('python', ["-u", pyPath, params]);
+    pythonProcess = spawn('python', ["-u", pyPath, params, backendURL]);
   } else {
     const exePath = path.join(process.resourcesPath, 'app.asar.unpacked', 'build_python', "amazon.exe");
-    pythonProcess = spawn(exePath, params);
+    pythonProcess = spawn(exePath, params, backendURL);
   }
 
   pythonProcess.stdout.on('data', (data) => {

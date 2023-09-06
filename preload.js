@@ -11,7 +11,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
   windowClose: () => {
     ipcRenderer.send('window-close');
   },
-  
+  authenticated: () => {
+    ipcRenderer.send('authenticated');
+  },
+  unAuthenticated: () => {
+    ipcRenderer.send('unAuthenticated');
+  },
+
+  getMachineId: async () => {
+    return await ipcRenderer.invoke('getMachineId');
+  },
+
   //-----------------------------------
 
   kill: (taskId) => {

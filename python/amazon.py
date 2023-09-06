@@ -11,47 +11,49 @@ import random
 import sys
 import time
 import threading
+import requests
 import json
 
 # ==================================================================================================================================
+backendURL = sys.argv[2]
 
-json_str = sys.argv[1]
-data = json.loads(json_str)
+param_str = sys.argv[1]
+params = json.loads(param_str)
 
-proxy = data['proxy']
-visible = data['visible']
-maxPrice = data['maxPrice']
-refreshRate1= data['refreshRate1']
-refreshRate2 = data['refreshRate2']
-wait1 = data['wait1']
-wait2 = data['wait2']
-typing1 = data['typing1']
-typing2 = data['typing2']
+proxy = params['proxy']
+visible = params['visible']
+maxPrice = params['maxPrice']
+refreshRate1= params['refreshRate1']
+refreshRate2 = params['refreshRate2']
+wait1 = params['wait1']
+wait2 = params['wait2']
+typing1 = params['typing1']
+typing2 = params['typing2']
 
-url = data['url']
+url = params['url']
 
-email = data['email']
-password = data['password']
+email = params['email']
+password = params['password']
 
-name = data['name']
-number = data['number']
-addressPostCode = data['addressPostCode']
-addressLine1 = data['addressLine1']
-addressLine2 = data['addressLine2']
-addressCity = data['addressCity']
-addressRegion = data['addressRegion']
+name = params['name']
+number = params['number']
+addressPostCode = params['addressPostCode']
+addressLine1 = params['addressLine1']
+addressLine2 = params['addressLine2']
+addressCity = params['addressCity']
+addressRegion = params['addressRegion']
 
-billingPostCode = data['billingPostCode']
-billingLine1 = data['billingLine1']
-billingLine2 = data['billingLine2']
-billingCity = data['billingCity']
-billingRegion = data['billingRegion']
+billingPostCode = params['billingPostCode']
+billingLine1 = params['billingLine1']
+billingLine2 = params['billingLine2']
+billingCity = params['billingCity']
+billingRegion = params['billingRegion']
 
-billingCardNumber = data['billingCardNumber']
-billingName = data['billingName']
-billingExpirationDate = data['billingExpirationDate']
-billingCVC = data['billingCVC']
-billingPhoneNumber = data['billingPhoneNumber']
+billingCardNumber = params['billingCardNumber']
+billingName = params['billingName']
+billingExpirationDate = params['billingExpirationDate']
+billingCVC = params['billingCVC']
+billingPhoneNumber = params['billingPhoneNumber']
 
 try: 
     chrome_options = Options()
@@ -103,12 +105,12 @@ def finishCheckout():
 
         time.sleep(1000)
 
-        if(visible == False):
+        if(visible == "false"):
             driver.quit() 
 
     except Exception as e:
         print("Error occurred while finalising checkout: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
         
@@ -345,7 +347,7 @@ def payment():
 
     except Exception as e:
         print("Error occurred while entering payment info: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
         
@@ -480,7 +482,7 @@ def shipping():
 
     except Exception as e:
         print("Error occurred while entering shipping info: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
 # ==================================================================================================================================
@@ -544,7 +546,7 @@ def signin():
                 print("declined to enter phonenumber", flush=True)
             except Exception as e:
                 print("Error occurred while skipping phone number: ", e, flush=True)
-                if(visible == False):
+                if(visible == "false"):
                     driver.quit()
                 
 
@@ -554,7 +556,7 @@ def signin():
 
     except Exception as e:
         print("Error occurred while signing in: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
 # ==================================================================================================================================
@@ -589,7 +591,7 @@ def addingtocart():
         item_price = float(price_large.text + "." + price_small.text)
         if(item_price > float(maxPrice)): 
             print("Price exceeds max price", flush=True)
-            if(visible == False):
+            if(visible == "false"):
                 driver.quit() 
 
 
@@ -607,7 +609,7 @@ def addingtocart():
 
     except Exception as e:
         print("Error occurred while adding to cart: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
 # ==================================================================================================================================
@@ -624,14 +626,89 @@ def checkforcookies():
             reject_all_button.click()
             print("Rejected all cookies", flush=True)
 
-            addingtocart()
+        addingtocart()
         
     except Exception as e:
         print("Error occurred while rejecting cookies: ", e, flush=True)
-        if(visible == False):
+        if(visible == "false"):
             driver.quit()
 
         
+# ==================================================================================================================================
+
+
+def solveCaptcha():
+    try:
+        captcha_elements = driver.find_elements(By.ID, "captchacharacters")
+
+        captcha_input = captcha_elements[0]
+        parent_div = captcha_input.find_element(By.XPATH, './..')
+        sibling_div = parent_div.find_element(By.XPATH, './preceding-sibling::div[@class="a-row a-text-center"]')
+        captcha_img = sibling_div.find_element(By.XPATH, './img')
+        captcha_uri = captcha_img.get_attribute("src")
+        
+        payload = {
+                "username": "your_username",
+                "password": "your_password",
+                "uri": captcha_uri
+            }
+
+        print(captcha_uri, backendURL, payload, flush=True)
+
+        response = requests.post(backendURL + "/solveCaptch", json=payload).json()
+
+        print(response, response["status_code"], flush=True)
+
+        if response["status_code"] == 200:
+            captcha_input.click()
+            captcha_input.clear()
+            for char in response["data"]:
+                wait_time = random.uniform(float(typing1), float(typing2))
+                time.sleep(wait_time)
+                captcha_input.send_keys(char)
+
+            continue_button = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, '//button[text()="Continue shopping"]'))
+                )
+            
+            wait_time = random.uniform(float(wait1), float(wait2))
+
+            time.sleep(wait_time)
+            continue_button.click()
+            
+            return True
+        
+        else:
+            print("Failed:", response["status_code"], response["error"])
+            return False
+        
+    except Exception as e:
+        print("Error occurred while solving For Capcha: ", e, flush=True)
+        if(visible == "false"):
+            driver.quit()
+    
+
+# ==================================================================================================================================
+
+
+def checkForCaptcha():
+    try:
+        wait_for_page_load(driver)
+        captcha_elements = driver.find_elements(By.ID, "captchacharacters")
+        if captcha_elements:
+            print("Found Captcha:", flush=True)
+            temp = solveCaptcha()
+            print(temp, flush=True)
+            if temp == False:
+                raise Exception("Could not solve")
+                
+        checkforcookies()
+
+    except Exception as e:
+        print("Error occurred while Checking For Captcha:", e, flush=True)
+        if visible == "false":  
+            driver.quit()
+    
 
 # ==================================================================================================================================
 
@@ -644,12 +721,12 @@ def checkStatus():
 # ===================================================================================================================================
 
 status_thread = threading.Thread(target=checkStatus)
-cookies_thread = threading.Thread(target=checkforcookies)
+captcha_thread = threading.Thread(target=checkForCaptcha)
 status_thread.start()
-cookies_thread.start()
+captcha_thread.start()
 
 status_thread.join()
-cookies_thread.join()
+captcha_thread.join()
 
 
 

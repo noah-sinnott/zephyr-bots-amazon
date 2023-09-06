@@ -15,6 +15,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "child_process": "^1.0.2",
+    "node-machine-id": "^1.1.12",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,7 +36,6 @@
     "start": "concurrently \"npm run start-react\" \"npm run start-electron\"",
     "start-react": "react-scripts start",
     "start-electron": "cross-env NODE_ENV=development electron .",
-
     "build-react": "(if exist build_react rmdir /S /Q build_react) && (react-scripts build) && (rename build build_react)",
     "build-electron": "electron-builder build",
     "build-python": "FOR %f IN (python\\*.py) DO (pyinstaller --onefile --distpath build_python %f && del %~nf.spec) && rd /s /q build",

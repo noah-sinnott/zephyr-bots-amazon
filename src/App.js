@@ -10,6 +10,8 @@ import Help from './Pages/Help/Help'
 import Proxies from './Pages/Proxies/Proxies'
 import Accounts from './Pages/Accounts/Accounts'
 import Billing from './Pages/Billing/Billing'
+import Login from "./Pages/Login/Login";
+import { apiCheckKeyMachineValid } from "./helpers/api";
 
 
 export const Context = createContext({ 
@@ -17,63 +19,96 @@ export const Context = createContext({
     updateData: () => {}
   });
 
-  const defaultSettings = { 
-    typingSpeed: [0.1, 0.3],
-    waitSpeed: [1, 1.5],
-    refreshRate: [10, 15],
-    visible: false,
-  }
-
-  const defaultUserInfo = { 
-    taskGroup: false,
-    proxyGroup: false
-  }
-
 function App() {
-  const [loading, setLoading] = useState(true)
   const [data, setData] = useState({});
+  const [authenticated, setAuthenticated] = useState(false);
+  const [licenceKey, setLicenceKey] = useState(false);
+  const [ws, setWs] = useState(null);
+
   const dataRef = useRef(data);
+  const timerRef = useRef(null);
+  
+  useEffect(() => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      if (authenticated) {
+        if (authenticated?.ends_at) {
+          let endsAt = new Date(authenticated.ends_at);
+          let currentTime = new Date();
+          let timeToWait = endsAt - currentTime;
+          if (timeToWait > 0) {
+            timerRef.current = setTimeout(() => {
+              checkAuthenticationStatus();
+            }, timeToWait);
+          } else {
+            checkAuthenticationStatus();
+          }
+        }          
+        window.electronAPI.authenticated()
+      } else {
+        window.electronAPI.unAuthenticated()
+      }
+
+    return () => {
+          if (timerRef.current) {
+            clearTimeout(timerRef.current);
+          }
+        };
+  }, [authenticated]);
+
 
   useEffect(() => {
-    const storedDatabase = localStorage.getItem("database");
-    if (!storedDatabase || storedDatabase === "{}") {
-      const initialDatabase = {database: {userInfo: defaultUserInfo, taskGroups: {}, settings: defaultSettings, accounts: {}, billing: {}, proxyGroups: {}}};
-      localStorage.setItem("database", JSON.stringify(initialDatabase));
-      setData(initialDatabase);
-      setLoading(false)
-    } else {
-      let parsedDatabase = JSON.parse(storedDatabase);
-      Object.entries(parsedDatabase?.database?.taskGroups).forEach(([key, value]) => {
-        Object.entries(value?.tasks).forEach(([key, value]) => {
-          value.notifications = []
-          value.scriptRunning = false
-        })
-      })
-      updateData(parsedDatabase);
-      setLoading(false)
+    if (ws) {
+      ws.close();
     }
-  }, []);
+    if (licenceKey) {
+      const newWs = new WebSocket(`ws://localhost:3005/${licenceKey}`);
+      newWs.onmessage = function(event) {
+        checkAuthenticationStatus();
+      };      
+      newWs.onopen = function(event) {
+        console.log("opened");
+      };      
+      setWs(newWs);
+    }
+  }, [licenceKey]);
+
+  useEffect(() => {
+    if (!isEmpty(data)) {
+      dataRef.current = data;
+      localStorage.setItem('database', JSON.stringify(data));
+    }
+  }, [data]);
 
   function isEmpty(obj) {
     return Object.keys(obj).length === 0;
   }
   
-  useEffect(() => {
-    if(!isEmpty(data)) {
-      dataRef.current = data;
-      localStorage.setItem("database", JSON.stringify(data));
+  async function checkAuthenticationStatus() {
+    if(!licenceKey) return 
+    const machine = await window.electronAPI.getMachineId();
+    let res = await apiCheckKeyMachineValid(licenceKey, machine)
+    if(res.error){
+      localStorage.setItem("database", JSON.stringify({}));
+      localStorage.setItem("licenceKey", false);
+      setAuthenticated(false)
+      setLicenceKey(false)
+    } else {
+      localStorage.setItem("licenceKey", licenceKey)
+      setLicenceKey(licenceKey)
+      setAuthenticated(res.data)
     }
-  }, [data]);
+  }
 
   const updateData = (newData) => {
     setData({...data, ...newData})
   };
 
-  useEffect(() => { 
+  useEffect(()=> {
     const handleAmazonDataGood = (event, taskId, taskGroupId, eventData) => {
       const currentData = dataRef.current; 
       const cleanStr = eventData.toString().replace(/[\r\n]+/gm, '');
-      console.log(currentData.database.taskGroups, taskGroupId)
       let notifs = currentData.database.taskGroups[taskGroupId].tasks[taskId].notifications;
       let newNotifs = [...notifs, cleanStr];
       let newDB = currentData.database;
@@ -100,9 +135,9 @@ function App() {
     window?.electronAPI?.amazonDataGood(handleAmazonDataGood);
     window?.electronAPI?.amazonDataBad(handleAmazonDataBad);
     window?.electronAPI?.amazonDataClose(handleAmazonDataClose);
-  }, []);
+  },[])
 
-  if(loading) return null
+  if(!authenticated) return <Login setAuthenticated={setAuthenticated} setLicenceKey={setLicenceKey} updateData={updateData}/>
 
   return (
     <Context.Provider value={{ data, updateData }}>

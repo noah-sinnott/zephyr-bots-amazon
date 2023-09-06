@@ -7,6 +7,7 @@ import Select from 'react-select';
 import {FormControlLabel, Checkbox, Button } from '@mui/material';
 
 import colors from '../../colors/colors';
+import { apiSignOut } from '../../helpers/api';
 
   function Settings() {
 
@@ -27,6 +28,13 @@ import colors from '../../colors/colors';
       const updatedDatabase = { ...context.data.database, settings: settings };
       context.updateData({database: updatedDatabase });
     }, [typingSpeed, waitSpeed, refreshRate, visible])
+
+
+    async function handleLogout() {
+      const machine = await window.electronAPI.getMachineId();
+      let key = localStorage.getItem("licenceKey")
+      apiSignOut(key, machine)
+    }
 
     return (
       <div style={styles.containerMain}>
@@ -111,7 +119,7 @@ import colors from '../../colors/colors';
                     }}  
                   />  
                 </div>
-                <Button variant="contained" size="medium" style={styles.logoutButton}  disableElevation>
+                <Button variant="contained" size="medium" onClick={() => handleLogout()}style={styles.logoutButton}  disableElevation>
                   Log Out
                 </Button> 
             </div>
