@@ -114,7 +114,7 @@ function App() {
     if(!licenceKey) return 
     const machine = await window.electronAPI.getMachineId();
     let res = await apiCheckKeyMachineValid(licenceKey, machine)
-    if(!res || res.error){
+    if(!res || !res.data){
       localStorage.setItem("database", JSON.stringify({}));
       localStorage.setItem("licenceKey", false);
       setAuthenticated(false)

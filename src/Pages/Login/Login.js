@@ -31,7 +31,7 @@ import { apiSignIn } from "../../helpers/api";
       const machine = await window.electronAPI.getMachineId();
       
         let res = await apiSignIn(licenceKey, machine)
-        if(res.error){
+        if(!res.data){
            localStorage.setItem("database", JSON.stringify({}));
            localStorage.setItem("licenceKey", false)
            setLicenceKey(false)
