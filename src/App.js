@@ -24,6 +24,7 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [licenceKey, setLicenceKey] = useState(false);
   const [ws, setWs] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);  
 
   const dataRef = useRef(data);
   const timerRef = useRef(null);
@@ -58,21 +59,45 @@ function App() {
   }, [authenticated]);
 
 
-  useEffect(() => {
+  const connectWebSocket = () => {
+
+    const maxRetries = 5; 
+    const retryInterval = 5000; 
+
     if (ws) {
       ws.close();
     }
+
     if (licenceKey) {
       const newWs = new WebSocket(`ws://localhost:3005/${licenceKey}`);
+
       newWs.onmessage = function(event) {
         checkAuthenticationStatus();
-      };      
+      };
+
       newWs.onopen = function(event) {
-        console.log("opened");
-      };      
+        setRetryCount(0); 
+      };
+
+      newWs.onclose = function(event) {
+        if (retryCount < maxRetries) {
+          setTimeout(() => {
+            setRetryCount(prevCount => prevCount + 1);
+            connectWebSocket(); 
+          }, retryInterval);
+        } else {
+            setAuthenticated(false)
+            setLicenceKey(false)
+        }
+      };
+
       setWs(newWs);
     }
-  }, [licenceKey]);
+  };
+
+  useEffect(() => {
+    connectWebSocket();
+  }, [licenceKey, retryCount]);
 
   useEffect(() => {
     if (!isEmpty(data)) {
@@ -89,7 +114,7 @@ function App() {
     if(!licenceKey) return 
     const machine = await window.electronAPI.getMachineId();
     let res = await apiCheckKeyMachineValid(licenceKey, machine)
-    if(res.error){
+    if(!res || res.error){
       localStorage.setItem("database", JSON.stringify({}));
       localStorage.setItem("licenceKey", false);
       setAuthenticated(false)
